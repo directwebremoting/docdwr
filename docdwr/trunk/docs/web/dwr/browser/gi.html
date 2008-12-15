@@ -1,0 +1,77 @@
+﻿<html>
+<head>
+  <title>gi.js</title>
+  <meta name='nid' content='221'>
+  <meta name='parent' content='28'>
+  <meta name='weight' content='0'>
+  <meta name='filename' content='dwr/browser/gi.html'>
+  <meta name='alias' content='/dwr/browser/gi'>
+  <link rel="stylesheet" type="text/css" href="../styles.css">
+</head>
+<body>
+
+<h1>DWR/TIBCO GI Integration: gi.js</h1>
+
+<p><code>gi.js</code> is a library to help integrate DWR with <a href="http://www.tibco.com/mk/gi/?CID=DWR">TIBCO GI</a>. It is due for official release with DWR 3.0, however it is reasonably stable now, and will probably only undergo performance tweaking before the official 3.0 release.</p>
+
+<p>Since it doesn't have any dependencies on DWR, it can be used without waiting for an official release. The best place to download it is either via a milestone release of DWR (see the <a href="https://dwr.dev.java.net/servlets/ProjectDocumentList">java.net download page</a>), or through the <a href=""http://fisheye5.cenqua.com/browse/dwr/>FishEye view of the DWR CVS repository</a>. See this <a href="http://fisheye5.cenqua.com/browse/~raw,r=MAIN/dwr/java/org/directwebremoting/gi.js">direct link to gi.js</a>.</p>
+
+<h2>dwr.gi.toCdfDocument()</h2>
+
+<p>The <code>toCdfDocument()</code> function is useful for creating ready made CDF documents from JavaScript objects. It is particularly useful when you have some collection of object on the server, which are converted into a JavaScript array of objects by DWR.</p>
+
+<p>CDF documents are XML documents that conform to the "Common Data Format" to which GI's controls easily bind. You can find out more about <a href="http://media.tibco.com/gi/tutorials/3_cdf_data/3_cdf_data.html">CDF from the GI documentation</a>.</p>
+
+<p>The signature of this function is: <code>toCdfDocument(data, jsxid)</code>. The first parameter (<code>data</code>) is the array or object that you wish to be converted into a CDF document, the second is the jsxid attribute to be applied to the root node of the document.</p>
+
+<p>For example, suppose you have some service that is exported by DWR:</p>
+
+<pre>
+public class SocialNetwork {
+  public List<People> getFriends() ...
+  // ...
+}
+</pre>
+
+<p>And you call this from JavaScript like this:</p>
+
+<pre>
+SocialNetwork.getFriends(function(friendList) {
+  alert("You have " + friendList.length + " friends.");
+});
+</pre>
+
+<p>The <code>friendList</code> variable is an array of objects that might look something like this:</p>
+
+<pre>
+friendList = [
+  { id:'1', address:'71 Yellow Drive', name:'Shiela MacDonald' },
+  { id:'2', address:'23 Red Close', name:'Joe Smith' },
+  ...
+];
+</pre>
+
+<p>But what you really want to do is to display your friends in a <a href="http://www.tibco.com/devnet/resources/gi/3_5/doc/html/wwhelp/wwhimpl/js/html/wwhelp.htm?href=tib_gi_component_guide/component.5.44.htm">GI matrix</a>, or some other widget. To achieve this you would normally put a CDF document into your applications data cache. You can create a CDF document from an array of objects like this:</p>
+
+<pre>
+SocialNetwork.getFriends(function(friendList) {
+  var cdf = dwr.gi.toCdfDocument(friendList, "jsxid");
+  giApp.getCache().setDocument("friendDataId", cdf);
+  giApp.getJSXByName('friendMatrix').repaint();  
+});
+</pre>
+
+<p>The <code>cdf</code> variable above is a CDF document that might contain records that look something like this:
+
+<pre>
+&lt;data jsxid='jsxid'&gt;
+  &lt;record jsxid='1187' id='1' address='71 Yellow Drive' name='Shiela MacDonald'/&gt;
+  &lt;record jsxid='1195' id='2' address='23 Red Close' name='Joe Smith'/&gt;
+  ...
+&lt;/data&gt;
+</pre>
+
+<p><code>toCdfDocument()</code> will ensure that if objects passed to it have a jsxid property, this will be used as the jsxid for that record, or if none is available, one will be automatically generated.</p>
+
+</body>
+</html>

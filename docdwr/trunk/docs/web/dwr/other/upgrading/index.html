@@ -1,0 +1,88 @@
+﻿<html>
+<head>
+  <title>Upgrading DWR</title>
+  <meta name='nid' content='39'>
+  <meta name='parent' content='28'>
+  <meta name='weight' content='14'>
+  <meta name='filename' content='dwr/other/upgrading.html'>
+  <meta name='alias' content='/dwr/other/upgrading'>
+  <link rel="stylesheet" type="text/css" href="../../styles.css">
+</head>
+<body>
+
+<h1>How to Upgrade your version of DWR</h1>
+
+<p>This is not a complete list of changes (for that you should see the <a href="../../changelog/index.html">changelog</a>) but it does go into a bit more depth on the (hopefully small) changes that you may need to make to your program when you upgrade to a new version of DWR.</p>
+
+<h2>Upgrading to DWR 3.0</h2>
+
+<p>Full documentation on upgrading from <a href="dwr30.html">version 2.0 to version 3.0</a>.</p>
+
+<h2>Upgrading to DWR 2.0</h2>
+
+<p>Version 2 has a number of changes, many of which are optional. The changes are documented under <a href="dwr20.html">upgrading to version 2.0</a>.</p>
+
+<h2>Upgrading to DWR 1.1</h2>
+
+<p>Version 1.1 is largely backwards compatible with 1.0</p>
+
+<p>Of the changes for 1.1 the change most likely to cause compatibility problems is the updates to <a href="../errors.html">error handling</a>. The changes were largely to fix bugs, so you might be affected if you were relying on buggy functionallity.</p>
+
+<p>ExecutionContext has been deprecated in favor of WebContext and WebContextFactory. It's a straight swap.</p>
+
+<h2>Upgrading to DWR 1.0</h2>
+
+<p>We found some issues with putting callback functions at the start of the parameter list, so the recommended proceedure is to put them at the end.</p>
+
+<h2>Upgrading to DWR 0.9</h2>
+
+<p>A number of Creators which have been deprecated for a while were removed in version 0.9. Generally speaking the 'new' creator will do the job of the old ones, using a scope attribute to specify object lifetime.</p>
+
+<p>We've also done a significant amount of work to get util.js smaller and neater. A number of function that were not DWR's core business have been deprecated, and include a warning message.</p>
+
+<h2>Upgrading to DWR 0.8.5</h2>
+
+<p>It has been true for a while, but it is worth noting the only attributes that are 100% correct for a <code>&lt;create ...</code> element are <code>creator="..."</code> and <code>javascript="..."</code>. Other common attributes like <code>class="..."</code> should be put as a nested param elements. E.g. <code>&lt;param name="class" value="..."/&gt;</code></p>
+
+<h2>Upgrading to DWR 0.8</h2>
+
+<p>There are even more <a href="../../changelog/index.html">new features</a> with this release. The biggest backwards incompatible change is to logging where the output is now more fine grained then before, so you might need to change your logging configuration to avoid being swamped.</p>
+
+<p>Also the Converter interface changed slightly to help pass on extra type info for Collections.</p>
+
+<h2>Upgrading to DWR 0.6</h2>
+
+<p>There are plenty of <a href="../../changelog/index.html">new features with DWR 0.6</a>, however all changes are backwards compatible so no edits are required to your applications.</p>
+
+<h2>Upgrading to DWR 0.5</h2>
+
+<p>All the functions in util.js and engine.js are now 'static class' functions. The old versions are deprecated, and you will get a warning to move over as an alert box. The new versions should have less chance of name clashes.</p>
+
+<p>The Spring Creator has been given an overhall. The resourceName parameter is deprecated, and will be removed soon. It is probably best to look at the <a href="../../server/spring.html">configration documentation</a> to see how the new version works.</p>
+
+<h2>Upgrading to DWR 0.4</h2>
+
+<p>web/WEB-INF/web.xml has a fully fleshed out example of the options for dwr. 2 parameters (config and logLevel) you can safely ignore. The 3rd, debug, you should leave as true if you want the test/debug setup to work (this is what you are using below) I would suggest turning this off in live.</p>
+
+<p>Secondly you will need a dwr.xml file that does the job of the old allow parameter. By default it lives in WEB-INF/dwr.xml (there is an example in the web folder of this too) <br/> I suggest starting with the example in the web/WEB-INF folder and removing the &lt;init&gt; section and for each allow have a &lt;create creator="new" javascript="Test" class="full.java.pkg.Test"/&gt; tag. <br/> The different type of creators allow us to have different sources for the beans. <code>new</code> was all that existed in dwr 0.3. <code>session</code> gets the bean from the session (creating it if it does not exist). <code>spring</code> uses the spring framework and <code>static</code> works on static methods only. <br/> You can remove all the converter options in the allow section. By default all primitive types, arrays and Strings get converted without need for declaration. The system dwr file in <code>java/uk/ltd/getahead/dwr</code> might help you see what is going on a bit.</p>
+
+<p>There is one other breaking change, where in your html you were doing:</p>
+
+<pre>
+&lt;script type='text/javascript'
+    src='/XXX/dwr/interface/full.java.pkg.Test.js'&gt;
+&lt;/script&gt;
+</pre>
+
+<p>You would need to do:</p>
+
+<pre>
+&lt;script type='text/javascript'
+    src='/XXX/dwr/interface/Test.js'&gt;
+&lt;/script&gt;
+</pre>
+
+<p>Where Test is the value you specify in the javascript attribute in your create tag (see above).</p>
+
+</body>
+</html>

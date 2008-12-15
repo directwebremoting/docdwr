@@ -1,0 +1,11 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<classpath>
+	<classpathentry kind="con" path="org.eclipse.jdt.launching.JRE_CONTAINER"/>
+	<classpathentry kind="lib" path="export/lib/mysql-connector-java-3.1.14-bin.jar"/>
+	<classpathentry kind="lib" path="export/lib/commons-logging-1.1.1.jar"/>
+	<classpathentry kind="lib" path="export/lib/log4j-1.2.12.jar"/>
+	<classpathentry kind="src" path="export/main/java"/>
+	<classpathentry kind="src" path="template/main/java"/>
+	<classpathentry combineaccessrules="false" kind="src" path="/drapgen"/>
+	<classpathentry kind="output" path="target/eclipse/classes"/>
+</classpath>

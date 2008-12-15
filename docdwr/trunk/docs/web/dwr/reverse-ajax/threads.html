@@ -1,0 +1,60 @@
+﻿<html>
+<head>
+  <title>Non-Web Threads</title>
+  <meta name='nid' content='217'>
+  <meta name='parent' content='200'>
+  <meta name='weight' content='0'>
+  <meta name='filename' content='dwr/reverse-ajax/threads.html'>
+  <meta name='alias' content='/dwr/reverse-ajax/threads'>
+  <link rel="stylesheet" type="text/css" href="../styles.css">
+</head>
+<body>
+
+<h1>Non-Web Threads and Reverse Ajax</h1>
+
+<p>It's easy to use DWR and Reverse Ajax from a thread outside of DWR. You can't use WebContext though because that's only of use to threads under the control of DWR.</p>
+
+<p>In place of WebContext, you should use ServerContext, which has many of the same operations.</p>
+
+<h2>PageNormalizers</h2>
+
+<p>It is possible that you may get a message like this when you first start to use reverse ajax:</p>
+
+<pre>
+Can't find ServletContext to check for <welcome-file-list> in web.xml. Assuming defaults.
+- To prevent this message from happening, either call the PageNormalizer from a DWR Thread
+- Or seed the PageNormalizer with a ServletContext before access from outside a DWR thread
+</pre>
+
+<p>Reverse Ajax has a problem - calls to getScriptSessionsForPage() need to be able to know that index.html resolves to the same thing as index.htm (for example), but the only way they can do this is to know the "welcome-files" setting in web.xml. This is all the responsibility of the PageNormalizer.</p>
+
+<p>That's OK - it can parse web.xml to read the information, but to do that we need to know the ServletContext, and that isn't available to you if you are starting from nothing.</p>
+
+<p>In essence, how does a PageNormalizer that does not know anything about the web, get in contact with a ServletContext.</p>
+
+<p>There are 2 options:</p>
+
+<ul>
+<li>1. Access PageNormalizer from a DWR thread before you access it from outside of DWR. That way it can use WebContext.get().getServletContext() and cache the result for later use</li>
+
+<li>2. Set the ServletContext manually with DefaultPageNormalizer.getServletContext()</li>
+</ul>
+
+<p>Take a look at the source to <a href="http://fisheye5.cenqua.com/browse/dwr/demo/org/getahead/dwrdemo/gidemo/Publisher.java?r=1.9">Publisher.java</a> - it has this same problem. From the constructor:</p>
+
+<pre>
+WebContext webContext = WebContextFactory.get();
+ServletContext servletContext = webContext.getServletContext();
+
+serverContext = ServerContextFactory.get(servletContext);
+
+// A bit nasty: the call to serverContext.getScriptSessionsByPage()
+// below could fail because the system might need to read web.xml which
+// means it needs a ServletContext, which is only available using
+// WebContext, which in turn requires a DWR thread. We can cache the
+// results simply by calling this in a DWR thread, as we are now.
+webContext.getScriptSessionsByPage("");
+</pre>
+
+</body>
+</html>

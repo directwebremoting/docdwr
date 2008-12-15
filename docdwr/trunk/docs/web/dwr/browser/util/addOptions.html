@@ -1,0 +1,101 @@
+﻿<html>
+<head>
+  <title>addOptions</title>
+  <meta name='nid' content='212'>
+  <meta name='parent' content='59'>
+  <meta name='weight' content='0'>
+  <meta name='filename' content='dwr/browser/addoptions.html'>
+  <meta name='alias' content='/dwr/browser/addoptions'>
+  <link rel="stylesheet" type="text/css" href="../../styles.css">
+</head>
+<body>
+
+<h2>dwr.util.addOptions()</h2>
+
+<p>addOptions allows you to add elements to ol, ul or select elements. For worked examples and see the <a href="lists.html">list manipulation documentation</a>.</p>
+
+<h3>Syntax:</h3>
+
+<pre>dwr.util.addOptions(...);</pre>
+
+<h3>Description:</h3>
+
+<p>dwr.util.addOptions has 5 modes with different options passed in. For each a number of options or list items are created. For &lt;ul&gt; and &lt;ol&gt; lists this will be an &lt;li&gt; element, with customized contents. For &lt;select&gt; lists, this will be an &lt;option&gt; element with customized text (that's shown to the user) and value (that's sent with a form submission).</p>
+
+<p>The modes are:</p>
+
+<h5>Array of Strings</h5>
+
+<p>For example:</p>
+
+<pre>
+dwr.util.addOptions(id, [ "one", "two", "three" ]);
+</pre>
+
+<p>When <code>id</code> is a select element, this will create a set of options with the text and value set to the string version of each array element.</p>
+
+<p>When <code>id</code> is an ol or ul element, this will create a set of li elements with their contents set to the string version of each array element.</p>
+
+<h5>Array of Objects</h5> 
+
+<p>For example:</p>
+
+<pre>
+var data = [ { name:"Fred" }, { name:"Jim" } ];
+dwr.util.addOptions(id, data, "name");
+</pre>
+
+<p>When id is a select element, this creates an option for each array element, with the value and text of the option set to the given property of each object in the array. In this case "Fred" and "Jim".</p>
+
+<p>When is is a ul or ol list, a set of li elements are created with their contents set to these strings.</p>
+
+<h5>Array of Objects (select lists only)</h5>
+
+<p>Syntax:</p>
+
+<pre>
+dwr.util.addOptions(selectid, data, valueprop, textprop);
+</pre>
+
+<p>This version creates an option for each object in the array, with the value of the option set to the given valueprop property of the object, and the option text set to the textprop property.</p>
+
+<p>In addition to passing in the strings for valueprop and textprop, you can also pass in functions which will be called with the object as a parameter, and expected to return data for the option value/text.</p>
+
+<p>This does not work with ol or ul lists.</p>
+
+<h5>Array (ol and ul lists only)</h5>
+
+<p>Syntax:</p>
+
+<pre>
+function formatter(entry) { return "data=" + entry; }
+dwr.util.addOptions(id, data, formatter, [options]);
+</pre>
+
+<p>This allows you to format objects before placing them into a ol or ul list. By default DWR escapes the HTML to protect from XSS attacks, however this action can be changed using an options object: <code>{ escapeHtml:false }</code>. This action is similar to that employed by addRows and setValue.</p>
+
+<h5>Object</h5>
+
+<p>Syntax:</p>
+
+<pre>
+dwr.util.addOptions(selectid, map, reverse);
+</pre>
+
+<p>This creates an option for each property. The property names are used as option values, and the property values are used as option text, which sounds wrong, but is actually normally the right way around. If reverse evaluates to true then the property values are used as option values.</p>
+
+<h5>Map of Objects</h5>
+
+<p>Syntax:</p>
+
+<pre>
+dwr.util.addOptions(selectid, map, valueprop, textprop);
+</pre>
+
+<p>This mode of operation is deprecated and may be removed in the future.</p>
+
+<p>Creates an option for each object in the map, with the value of the option set to the given valueprop property of the object, and the option text set to the textprop property.</p>
+
+
+</body>
+</html>

@@ -1,0 +1,28 @@
+﻿<html>
+<head>
+  <title>Image and Binary File Conversion</title>
+  <meta name='nid' content='223'>
+  <meta name='parent' content='71'>
+  <meta name='weight' content='0'>
+  <meta name='filename' content='dwr/server/dwrxml/converters/file.html'>
+  <meta name='alias' content='/dwr/server/dwrxml/converters/file'>
+  <link rel="stylesheet" type="text/css" href="../../../styles.css">
+</head>
+<body>
+
+<h1>Image and Binary File Conversion</h1>
+
+<p>DWR 3.0 features a new FileConverter that handles the following binary files:</p>
+
+<ul>
+<li>Images (any child of java.awt.BufferedImage)</li>
+<li>InputStreams (any child of java.io.InputStream)</li>
+<li>FileTransfer objects (org.directwebremoting.io.FileTransfer)</li>
+</ul>
+
+<p>In order for upload to work, <a href="http://commons.apache.org/fileupload/">commons-fileupload</a> and <a href="http://commons.apache.org/io/">commons-io</a> are required on the classpath. See the <a href="http://commons.apache.org/fileupload/dependencies.html">commons-upload dependency chart</a> for more information. DWR will give you the error message: "file uploads not supported" if this JAR file is missing.</p>
+
+<p>The DWR war file contains a number of examples of generating PDF files, as well as uploading and downloading images. Full source and explanations are included with these examples.</p>
+
+</body>
+</html>
