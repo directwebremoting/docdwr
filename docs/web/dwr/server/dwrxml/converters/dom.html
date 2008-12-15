@@ -1,0 +1,31 @@
+﻿<html>
+<head>
+  <title>DOM Objects</title>
+  <meta name='nid' content='74'>
+  <meta name='parent' content='71'>
+  <meta name='weight' content='0'>
+  <meta name='filename' content='dwr/server/dwrxml/converters/dom.html'>
+  <meta name='alias' content='/dwr/server/dwrxml/converters/dom'>
+  <link rel="stylesheet" type="text/css" href="../../../styles.css">
+</head>
+<body>
+
+<h1>DOM Objects</h1>
+
+<p>DWR automatically converts DOM trees from DOM, DOM4J, JDOM and XOM. You simply return a Document, Element or Node from any of the above and DWR will automatically convert it into a browser DOM object.</p>
+
+<p>There is a common warning on startup about the JDOM converter, which you can safely ignore (unless you wanted to use JDOM):</p>
+
+<p><code>INFO: Missing classdef for converter 'jdom'. Failed to load uk.ltd.getahead.dwr.convert.JDOMConverter. Cause: org/jdom/Document
+</code></p>
+
+<p>The problem is that DWR has no way of knowing if you wanted to use JDOM or not, so the message is at INFO level.</p>
+
+<p>If you wanted to use JDOM you might be very pleased to know that the converter has not been able to load - which is why we've not taken the message away.</p>
+
+<h3>exist-db.org</h3>
+
+<p>I believe that DWR will work with exist-db out of the box, because builds on top of W3C DOM, which is supported.</p>
+
+</body>
+</html>

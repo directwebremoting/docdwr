@@ -1,0 +1,34 @@
+﻿html {
+  background:white url(data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAoAAAH0CAIAAACLvys3AAAACXBIWXMAAA7DAAAOwwHHb6hkAAABZ0lEQVRoBe3YQa6CQBCEYYEhcv8reQwvI66qFjqV0DEj5HdVSTtD8zWDeW96PJ6375/5e+ldqZXbtq2d/cPm7X5vhdXruhRWt9brrlfbL9qWpfeNXq2+ep6nwn2fd/U0Ve577OrOwG6t2lpv8/Qolq4dNg/lkfcdWgvlWudh81Der12Yd9g8lPe3de/iafXAzkNroVwzr6mF1kK51nnY/LLlkef7j1F5mD6+ecPEOP5H1AIq5R+gcr6PoI483xyDIxMLahyDH6AGc8qYmwCPg2Eo1lhq7zV+5jQHS7WRsNooFWGRhSVYDEMRFllYgsUwFC/LUvt5vywLN6Zn3xIshqEIiywswWIYirDIwhIshqEIiyws1Vj4t4RRKtZQWS1JS7AYhiIssrAEi2EonpeFP7A1RUvnHSid2xgVYZGFJVgMQxEWWViCxTAUYZGFJVgMQxEWWViCxTAUYZGFJVgMQxEWWViqsbwA7XkHMW4an7kAAAAASUVORK5CYII=) top repeat-x;
+  color:#666;
+}
+
+body {
+  font:normal medium 'Calibri','Helvetica Neue','Arial',sans-serif;
+  margin:1.75em auto;
+  width:40em;
+  line-height:1.75;
+  word-spacing:0.1em;
+}
+
+a { background:transparent; text-decoration:none; border-bottom:1px dotted; }
+a:hover { border-bottom:1px solid; }
+a:link { color:#1b67c9; }
+a:visited { color:#335080; }
+
+h1, h2, h3, th { font-weight:normal; color:#000; }
+h1 { font-size:120%; }
+h2 { font-size:110%; }
+
+pre, tt { font-face:'Courier New',monospace; white-space:pre-wrap; line-height:1; color:#336; }
+
+code { color:#336; }
+
+img { border:0; }
+
+table { border-collapse:collapse; }
+td { border: 1px solid #eee; padding:0 10px; }
+th { padding:0 10px; }
+
+strong { font-weight:normal; color:#000; }
+

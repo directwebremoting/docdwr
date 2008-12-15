@@ -1,0 +1,142 @@
+﻿<html>
+<head>
+  <title>DWR 2.0 M1 - New and Noteworthy</title>
+  <meta name='nid' content='118'>
+  <meta name='parent' content='32'>
+  <meta name='weight' content='-2'>
+  <meta name='filename' content='dwr/changelog/dwr20m1.html'>
+  <meta name='alias' content='/dwr/changelog/dwr20m1'>
+  <link rel="stylesheet" type="text/css" href="../styles.css">
+</head>
+<body>
+
+<h1>DWR version 2.0 milestone 1 is released.</h1>
+
+<p>This is probably the biggest release we've ever done in terms of new features.</p>
+
+<h2>Reverse Ajax</h2>
+
+<p>The biggest new feature is what we call Reverse Ajax. DWR 1.x allowed you to asynchronously call Java code from Javascript. DWR 2.0 builds on this to allow you to asynchronously call Javascript code from Java. Reverse Ajax makes writing interactive applications much easier. It can use polling or <a href="http://alex.dojotoolkit.org/?p=545">Comet</a> (long-lived HTTP) queries.</p>
+
+<p>Our 'chat' example contains Java code like this:</p>
+
+<pre>
+WebContext wctx = WebContextFactory.get(); 
+String currentPage = wctx.getCurrentPage();
+ 
+<span class="codecomment">// 'messages' is a List of recent chat messages to display</span>
+<span class="codecomment">// Java objects converted to Javascript have a declaration and a declared variable name.</span> OutboundVariable ov = wctx.toJavascript(messages);
+ 
+<span class="codecomment">// Loop over all the users on the current page</span>
+<span class="java_keyword">for</span> (ScriptSession otherSession : wctx.getScriptSessionsByPage(currentPage)) {
+    otherSession.addScript(ov.getInitCode() );
+    otherSession.addScript("receiveMessages(" + ov.getAssignCode() + ");" );
+    <span class="codecomment">// receiveMessages is a Javascript function that displays the current list of messages</span>
+}
+</pre>
+
+<p>In essence we are looping over all the users on the current page and sending them some Javascript to update their display. The Javascript is even simpler. You just turn polling on:</p>
+
+<pre>
+DWREngine.setPolling(true);
+</pre>
+
+<p>Chat example (included in the war download) includes the Javascript source to receiveMessages() which is a 4-liner that uses DWRUtil to put the messages on the screen.</p>
+
+<p>Other uses for this technology include progress bars, online games, stock tickers and any system where server state changes and we need to push updates to a browser or browsers.</p>
+
+<h2>Cross Domain Ajax: &lt;script&gt; tag manipulation</h2>
+
+<p>Should you need to access servers in a different domain we've enabled a new remoting scheme. From DWR 2.0 you can use manipulation of &lt;script&gt; tags in addition to XMLHttpRequest or iframes. To use is you just need to do the following:</p>
+
+<pre>
+DWREngine.setMethod(DWREngine.ScriptTag);
+</pre>
+
+<h2>The &lt;signatures&gt; Element</h2>
+
+<p>DWR 1.x sometimes needs a &lt;signatures&gt; element to help it get the type conversion right. If you are using DWR 2.0 with JDK5 generic types then you probably don't need &lt;signatures&gt; any more. DWR will automagically get the right type conversion.</p>
+
+<h2>DWRUtil Updates</h2>
+
+<p>We've updated DWRUtils. There is a new DWRUtil.cloneNode(elementId) method that enables you to use HTML fragments as templates that are repeated. For example:</p>
+
+<pre>
+<span class="codecomment">// Loop over all the beans</span>
+<span class="java_keyword">for</span> (var i <span class="java_operator">=</span> 0; i &lt; beanArray.length; i++) {
+  <span class="codecomment">// Fill in the blanks in the template. You will have several lines like this.</span>
+  DWRUtil.setValue("someid", beanArray[i].property);
+  <span class="codecomment">// Clone the node so we don't overwrite it next time</span>
+  DWRUtil.cloneNode("template");
+}
+ 
+<span class="codecomment">// Finally hide the template</span>
+$("template").style.display = "none";
+</pre>
+
+<p>We're also trying an experimental update to getValues to make it work more like a form. A Checkbox will return its value if checked and false if not. This might break backwards compatibility, it is slight non-obvious depending on your perspective so we need feedback on this one.</p>
+
+<h2>New Attribute Scope - Script</h2>
+
+<p>There is a new scope. Servlet/JSP developers are familiar with setting attributes at a request, page, session or application level. DWR 2.0 allows you to use "script" scope. With script scope you can persist variables for long-lived pages like single-page Ajax applications. Script scope is a bit like session scope in its longevity, however it does not require cookies. Script scope attributes are available to any Ajax operations within a single page. It is available to creators dwr.xml:</p>
+
+<pre>
+&lt;create creator="new" javascript="Test" scope="script"&gt;
+  &lt;param name="class" value="com.example.Test"/&gt;
+&lt;/create&gt;
+</pre>
+
+<p>Script scope is also available programatically:</p>
+
+<pre>
+WebContextFactory.get().getScriptSession().setAttribute("key", value);
+</pre>
+
+<h2>Examples</h2>
+
+<p>Starting with DWR 2.0m1 the downloadable war file is quite a bit bigger than before because we are including some examples. We are working on simple Struts and Spring integration demos.</p>
+
+<h2>Refactoring</h2>
+
+<p>Refactoring is often a feature in the eyes of developers because the code feels cleaner, but it can just cause backwards compatibility issues for users. We've done some refactoring for DWR 2.0, but here is what users get out of it: We now use the org.directwebremoting.* package rather than the more obscure uk.ltd.getahead.dwr.*, but we've left stubs behind for backwards compatibility. Please shout if we've missed anything out. We've also tried to make DWR more embeddable, and it should now be possible to create alternative wire protocols like SOAP or JSON-RPC if desired.</p>
+
+<h2>Call Meta-data</h2>
+
+<p>You can now pass request attributes from DWR using call meta-data like this:</p>
+
+<pre>
+Remote.getData(42, {
+  callback:function(str) { alert(str); },
+  customKey:"Fred",
+});
+</pre>
+
+<p>The extra meta-data will then be available to Java in the HttpServletRequest. The following code will return the string "Fred":</p>
+
+<pre>
+WebContextFactory.get().getHttpServletRequest().getAttribute("customKey");
+</pre>
+
+<h2>Other Stuff</h2>
+
+<p>I very much doubt that anyone will notice, but we've removed deprecated.js. It's been deprecated since around DWR version 0.9.</p>
+
+<h2>Security and Stability</h2>
+
+<p>We take security very seriously. DWR 1.x has proved to be very secure so far, but that does not mean we rest on our laurels. DWR 2.0 introduces a lot of new code. Reverse ajax and script based session management are places where we could easily slip up.</p>
+
+<p>In addition in milestone 1, Reverse Ajax will create a much heavier load on your webserver than older stable releases. We've got 2 answers - the design allows server load-monitoring and dynamic back-off. More excitingly we're working with Mortbay to allow DWR to use Jetty6 continuations if available to allow long lived HTTP requests without risking resource starvation.</p>
+
+<p>So please do not use DWR 2.0 in a production system until we've had more testing and inspections.</p>
+
+<h2>Future Releases</h2>
+
+<p>This is just the first in an exciting set of milestones that we will be pushing out over the next few weeks. We've got more stuff coming!</p>
+
+<h2>Download</h2>
+
+<p>You can download DWR 2.0 M1 from the usual <a href="../download.html">download page</a>.</p>
+
+
+</body>
+</html>

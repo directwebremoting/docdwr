@@ -1,0 +1,59 @@
+﻿<html>
+<head>
+  <title>Glossary</title>
+  <meta name='nid' content='131'>
+  <meta name='parent' content='0'>
+  <meta name='weight' content='0'>
+  <meta name='filename' content='dwr/glossary.html'>
+  <meta name='alias' content='/dwr/glossary'>
+  <link rel="stylesheet" type="text/css" href="styles.css">
+</head>
+<body>
+
+<h1>DWR Glossary</h1>
+
+<p>Like any software project DWR has it's fair share of jargon, which can appear confusing. Jargon does help to speed up conversations so it is useful. To help you get into the jargon we've prepared a glossary.</p>
+
+<table class="documentation">
+
+<tr>
+<th>Term</th>
+<th>Description</th>
+</tr>
+
+<tr>
+<td>Asynchronous Scripts</td>
+<td>The output of the <em>Javascript Proxy API</em>, that is sent to the browser using <em>Reverse Ajax</em>.</td>
+</tr>
+
+<tr>
+<td>Comet</td>
+<td>Comet is long-lived HTTP connections used to reduce the latency with which messages are passed to the server.</td>
+</tr>
+
+<tr>
+<td>JavaScript Proxy API</td>
+<td>DWR can dynamically generate JavaScript from a Java API. Because this is done at runtime, we can use it to remote control many browsers. This makes writing things like chat applications, or anything particularly dynamic, very easy. Messages are sent to clients using <em>Reverse Ajax</em>.</td>
+</tr>
+
+<tr>
+<td>Polling</td>
+<td>If Comet connections are not available, DWR polls the server to check for <em>Reverse Ajax</em> updates.</td>
+</tr>
+
+<tr>
+<td>Piggyback</td>
+<td>If <em>Polling</em> and <em>Comet</em> are turned off, DWR gets asynchronous scripts through by holding them until the browser contacts us next time, and then sneaking the script in with the normal response.</td>
+</tr>
+
+<tr>
+<td>Reverse Ajax</td>
+<td>DWR supports 3 ways to asynchronously transfer messages from the server to the browser: <em>Comet</em>, <em>Polling</em> and <em>Piggyback</em>. Of these Comet and Polling are active (fast but require extra network traffic) and Piggyback is passive (slower but doesn't need extra network traffic). DWR automatically selects the best method transparently to the programmer.</td>
+</tr>
+
+</table>
+
+<p>&nbsp;</p>
+
+</body>
+</html>
