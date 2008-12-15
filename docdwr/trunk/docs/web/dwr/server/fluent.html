@@ -1,4 +1,5 @@
-﻿<html>
+<!DOCTYPE html>
+<html>
 <head>
   <title>Fluent Configuration</title>
   <meta name='nid' content='214'>
@@ -41,7 +42,7 @@ public void configure() {
    withSignature()
        .addLine("import java.util.List;")
        .addLine("import com.example.Check;")
-       .addLine("Check.setLotteryResults(List<Integer> nos);");
+       .addLine("Check.setLotteryResults(List&lt;Integer&gt; nos);");
 }
 </pre>
 
