@@ -7,7 +7,7 @@
   <meta name='weight' content='3'>
   <meta name='filename' content='dwr/server/spring.html'>
   <meta name='alias' content='/dwr/server/spring'>
-  <link rel="stylesheet" type="text/css" href="../styles.css">
+  <link rel="stylesheet" type="text/css" href="../../styles.css">
 </head>
 <body>
 
@@ -18,8 +18,8 @@
 <p>DWR / Spring integration has changed a lot with time and not all the different configurations are always available.</p>
 
 <ol>
-  <li>Make sure you are on the latest DWR. The Spring creator has changed so it is well worth checking that you have the latest <a href="../download.html">download</a>.</li>
-  <li>Make sure you are happy with everything on the <a href="../getting-started.html">getting started</a> page.</li>
+  <li>Make sure you are on the latest DWR. The Spring creator has changed so it is well worth checking that you have the latest <a href="../../download.html">download</a>.</li>
+  <li>Make sure you are happy with everything on the <a href="../../introduction/getting-started.html">getting started</a> page.</li>
   <li>Make sure your Spring beans work properly outside of DWR (unit test).</li>  <li>Select the configuration style based on your Spring version (see below).</li>
   <li>Configure DWR to work with Spring (see below).</li>
   <li>Look at the demo pages: <code>http://localhost:[PORT]/[YOUR-WEBAPP]/dwr</code> to check that your spring beans appear.</li>
@@ -65,7 +65,7 @@
 
 <h3>The configuration tag</h3>
 
-<p>You must declare one <code>&lt;dwr:configuration&gt;</code> tag. This tag is mandatory even if empty. It may have nested tags (init, creator, signatures,..). These nested tags mimic the behavior of those available in <a href="dwrxml/index.html">dwr.xml</a>. Understand their functioning first and then use your IDE to translate to the correct syntax.</p>
+<p>You must declare one <code>&lt;dwr:configuration&gt;</code> tag. This tag is mandatory even if empty. It may have nested tags (init, creator, signatures,..). These nested tags mimic the behavior of those available in <a href="../dwrxml/index.html">dwr.xml</a>. Understand their functioning first and then use your IDE to translate to the correct syntax.</p>
 
 <h3>The controller tag</h3>
 
@@ -116,7 +116,7 @@ In fact, AOP proxies work fine with DWR. Just configure Spring accordingly.
 
 <h2>The future</h2>
 
-<p>New configuration options are already committed in CVS. They're available today for those who like living on the edge (<a href="../development/index.html">development</a>). The most important are the automatic mapping of URLs (<code>&lt;dwr:url-mapping /&gt;</code>)and the use of annotations to remote Spring beans (<code>&lt;dwr:annotation-config /&gt;</code>). As you can see, they make even further use of the namespace feature. They will be properly documented here with the new release. This new features require Spring 2.5 at least.</p>
+<p>New configuration options are already committed in CVS. They're available today for those who like living on the edge (<a href="../../development/index.html">development</a>). The most important are the automatic mapping of URLs (<code>&lt;dwr:url-mapping /&gt;</code>)and the use of annotations to remote Spring beans (<code>&lt;dwr:annotation-config /&gt;</code>). As you can see, they make even further use of the namespace feature. They will be properly documented here with the new release. This new features require Spring 2.5 at least.</p>
 
 <h2>DWR 1.x - dwr.xml - The Spring creator</h2>
 

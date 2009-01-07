@@ -7,7 +7,7 @@
   <meta name='weight' content='0'>
   <meta name='filename' content='dwr/server/guice.html'>
   <meta name='alias' content='/dwr/server/guice'>
-  <link rel="stylesheet" type="text/css" href="../styles.css">
+  <link rel="stylesheet" type="text/css" href="../../styles.css">
 </head>
 <body>
 
@@ -19,10 +19,10 @@
 
 <ul>
    <li> install a concrete extension of
-     <a href="../../dwr-javadoc/org/directwebremoting/guice/DwrGuiceServletContextListener.html" title="class in org.directwebremoting.guice"><code>DwrGuiceServletContextListener</code></a>
+     <a href="../../../dwr-javadoc/org/directwebremoting/guice/DwrGuiceServletContextListener.html" title="class in org.directwebremoting.guice"><code>DwrGuiceServletContextListener</code></a>
      as a <code>&lt;listener&gt;</code> in your web application's configuration
      file (<code>web.xml</code>), </li>
-   <li> install <a href="../../dwr-javadoc/org/directwebremoting/guice/DwrGuiceServlet.html" title="class in org.directwebremoting.guice"><code>DwrGuiceServlet</code></a> for all
+   <li> install <a href="../../../dwr-javadoc/org/directwebremoting/guice/DwrGuiceServlet.html" title="class in org.directwebremoting.guice"><code>DwrGuiceServlet</code></a> for all
      requests to <code>/dwr/*</code>. </li>
 
    </ul>
@@ -45,18 +45,18 @@
 </pre>
 
 <p>
-   <a href="../../dwr-javadoc/org/directwebremoting/guice/DwrGuiceServletContextListener.html" title="class in org.directwebremoting.guice"><code>DwrGuiceServletContextListener</code></a>
+   <a href="../../../dwr-javadoc/org/directwebremoting/guice/DwrGuiceServletContextListener.html" title="class in org.directwebremoting.guice"><code>DwrGuiceServletContextListener</code></a>
    is also an abstract Guice module; it extends
-   <a href="../../dwr-javadoc/org/directwebremoting/guice/AbstractDwrModule.html" title="class in org.directwebremoting.guice"><code>AbstractDwrModule</code></a>,
+   <a href="../../../dwr-javadoc/org/directwebremoting/guice/AbstractDwrModule.html" title="class in org.directwebremoting.guice"><code>AbstractDwrModule</code></a>,
    which in turn extends Guice's <code>AbstractModule</code>.
    Your listener class must define
-   <a href="../../dwr-javadoc/org/directwebremoting/guice/AbstractDwrModule.html#configure%28%29.html"><code>configure</code></a>;
+   <a href="../../../dwr-javadoc/org/directwebremoting/guice/AbstractDwrModule.html#configure%28%29.html"><code>configure</code></a>;
    this is where you do your Guice binding.
    You can also put binding code in a separate class or classes with
    <code>AbstractModule.install</code>.
  </p>
  <p>
-   Use <a href="../../dwr-javadoc/org/directwebremoting/guice/GuiceCreator.html" title="class in org.directwebremoting.guice"><code>GuiceCreator</code></a>
+   Use <a href="../../../dwr-javadoc/org/directwebremoting/guice/GuiceCreator.html" title="class in org.directwebremoting.guice"><code>GuiceCreator</code></a>
 
    when annotating classes with <code>RemoteProxy</code>. When you use a
    <code>GuiceCreator</code> to create your remoted objects, it gets an
@@ -64,9 +64,9 @@
  </p>
  <p>
    For bind-time control over how JavaScript names map to Java targets, use the
-   <a href="../../dwr-javadoc/org/directwebremoting/guice/AbstractDwrModule.html#bindRemoted%28java.lang.Class%29.html"><code>bindRemoted</code></a>
+   <a href="../../../dwr-javadoc/org/directwebremoting/guice/AbstractDwrModule.html#bindRemoted%28java.lang.Class%29.html"><code>bindRemoted</code></a>
    or
-   <a href="../../dwr-javadoc/org/directwebremoting/guice/AbstractDwrModule.html#bindRemotedAs%28java.lang.String,%20java.lang.Class%29.html"><code>bindRemotedAs</code></a>
+   <a href="../../../dwr-javadoc/org/directwebremoting/guice/AbstractDwrModule.html#bindRemotedAs%28java.lang.String,%20java.lang.Class%29.html"><code>bindRemotedAs</code></a>
 
    methods. The target of the script can be an abstract class or interface
    bound in the normal Guice way to a concrete class, instance, or provider.
@@ -79,9 +79,9 @@
  </p>
  <p>
    You can bind a type or type pattern string to a custom converter with
-   <a href="../../dwr-javadoc/org/directwebremoting/guice/AbstractDwrModule.html#bindConversion%28java.lang.Class%29.html"><code>bindConversion</code></a>,
+   <a href="../../../dwr-javadoc/org/directwebremoting/guice/AbstractDwrModule.html#bindConversion%28java.lang.Class%29.html"><code>bindConversion</code></a>,
    and you can put Ajax filters on scripts with
-   <a href="../../dwr-javadoc/org/directwebremoting/guice/AbstractDwrModule.html#bindFilter%28java.lang.String%29.html"><code>bindFilter</code></a>.
+   <a href="../../../dwr-javadoc/org/directwebremoting/guice/AbstractDwrModule.html#bindFilter%28java.lang.String%29.html"><code>bindFilter</code></a>.
    Note, however, that you can achieve the same effect (and more flexibly) using Guice's
    <code>bindInterceptors</code> method.
  </p>
@@ -91,7 +91,7 @@
    <code>bind(Configurator.class).toInstance(yourConfigurator)</code>,
    which then overrides any <code>dwr.xml</code> configuration.
    You'll probably want to use a
-   <a href="../../dwr-javadoc/org/directwebremoting/fluent/FluentConfigurator.html" title="class in org.directwebremoting.fluent"><code>FluentConfigurator</code></a>
+   <a href="../../../dwr-javadoc/org/directwebremoting/fluent/FluentConfigurator.html" title="class in org.directwebremoting.fluent"><code>FluentConfigurator</code></a>
    for this purpose.
  </p>
  <p>
@@ -99,21 +99,21 @@
 
    directives in <code>web.xml</code>, but usually there is no need to. Most DWR
    settings can be set with
-   <a href="../../dwr-javadoc/org/directwebremoting/guice/AbstractDwrModule.html#bindParameter%28org.directwebremoting.guice.ParamName%29.html"><code>bindParameter</code></a>.
-   The <a href="../../dwr-javadoc/org/directwebremoting/guice/ParamName.html" title="enum in org.directwebremoting.guice"><code>ParamName</code></a>
+   <a href="../../../dwr-javadoc/org/directwebremoting/guice/AbstractDwrModule.html#bindParameter%28org.directwebremoting.guice.ParamName%29.html"><code>bindParameter</code></a>.
+   The <a href="../../../dwr-javadoc/org/directwebremoting/guice/ParamName.html" title="enum in org.directwebremoting.guice"><code>ParamName</code></a>
    enum type lists the available parameters.
  </p>
  <p>
    To be able to use the DWR scopes for all your injected objects, not just
    DWR-remoted objects, your binding code should call
-   <a href="../../dwr-javadoc/org/directwebremoting/guice/AbstractDwrModule.html#bindDwrScopes%28%29.html"><code>bindDwrScopes</code></a>
+   <a href="../../../dwr-javadoc/org/directwebremoting/guice/AbstractDwrModule.html#bindDwrScopes%28%29.html"><code>bindDwrScopes</code></a>
 
    at some point.
  </p>
  <p>
    For creating your own scopes where the instance injected depends on some
    run-time value, create a concrete extension of
-   <a href="../../dwr-javadoc/org/directwebremoting/guice/AbstractContextScope.html" title="class in org.directwebremoting.guice"><code>AbstractContextScope</code></a>.
+   <a href="../../../dwr-javadoc/org/directwebremoting/guice/AbstractContextScope.html" title="class in org.directwebremoting.guice"><code>AbstractContextScope</code></a>.
  </p>
  <p>
    This example illustrates two ways to define remoted objects,
@@ -190,11 +190,11 @@ public final class MyServletContextListener extends DwrGuiceServletContextListen
    <code>GuiceFilter</code> to use the DWR scopes, but if you do, you have to be
    careful to install the DWR scopes without creating conflicting bindings
    for request, response, and session. Calling
-   <a href="../../dwr-javadoc/org/directwebremoting/guice/AbstractDwrModule.html#bindDwrScopes%28boolean%29.html"><code>bindDwrScopes(false)</code></a>
+   <a href="../../../dwr-javadoc/org/directwebremoting/guice/AbstractDwrModule.html#bindDwrScopes%28boolean%29.html"><code>bindDwrScopes(false)</code></a>
    accomplishes this.
  </p>
 
-<p>Further information on using DWR and Guice together is available in the <a href="../../dwr-javadoc/org/directwebremoting/guice/package-summary.html">Guice JavaDoc</a>, or from Tim's blog:</p>
+<p>Further information on using DWR and Guice together is available in the <a href="../../../dwr-javadoc/org/directwebremoting/guice/package-summary.html">Guice JavaDoc</a>, or from Tim's blog:</p>
 
 <ul>
 <li><a href='http://tembrel.blogspot.com/2007/09/injecting-method-interceptors-in-guice.html'>Injecting method interceptors</a></li>
