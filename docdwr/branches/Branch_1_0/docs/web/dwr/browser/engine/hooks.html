@@ -1,0 +1,25 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <title>Remoting Hooks</title>
+  <meta name='nid' content='86'>
+  <meta name='parent' content='53'>
+  <meta name='weight' content='0'>
+  <meta name='filename' content='dwr/browser/engine/hooks.html'>
+  <meta name='alias' content='/dwr/browser/engine/hooks'>
+  <link rel="stylesheet" type="text/css" href="../../styles.css">
+</head>
+<body>
+
+<h1>Remoting Hooks</h1>
+
+<p>See <code>dwr.engine.setPreHook(function)</code> and <code>dwr.engine.setPostHook(function)</code>.</p>
+
+<p>If you wish to be alerted before DWR actually remotes a call you can set a pre-hook function. This will be called with no parameters. This hook is useful if you wish to grey out certain components to prevent them being used again until the call returns.</p>
+
+<p>Post execute hooks will usually be set in conjunction with pre-execute hooks and will generally undo any changes made by the pre-hook.</p>
+
+<p>For an example of pre and post hooks, see the <code>dwr.util.useLoadingMessage()</code> function.</p>
+
+</body>
+</html>

@@ -1,0 +1,54 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <title>Polling Actions</title>
+  <meta name='nid' content='213'>
+  <meta name='parent' content='207'>
+  <meta name='weight' content='0'>
+  <meta name='filename' content='dwr/development/pollactions.html'>
+  <meta name='alias' content='/dwr/development/pollactions'>
+  <link rel="stylesheet" type="text/css" href="../../styles.css">
+</head>
+<body>
+
+<h2>Warning: Developer Pages</h2>
+
+<p>This page is part of a set of pages aimed at DWR developers. If this isn't you, then you probably want the <a href="../../documentation.html">documentation index</a>.</p>
+
+<h1>Polling Actions in recent releases of DWR</h1>
+
+<p>With Grizzy, Jetty and Servlet spec containers the process normally starts off with DwrServlet (org.directwebremoting.servlet.DwrServlet) which simply passes the request to the configured UrlProcessor (org.directwebremoting.servlet.UrlProcessor). This allows other start points (e.g. the Spring based DwrController / DwrSpringServlet or Rife's DWR integration) to pass control to the same place simply.</p>
+
+<p>UrlProcessor is just a list of Handlers (org.directwebremoting.extend.Handler) each of which is essentially a Servlet. It's done this way so that the user only has to configure DwrServlet (although it's possible to reconfigure the Handlers internally)</p>
+
+<p>In the case of a reverse ajax, the request maps to a PollHandler (org.directwebremoting.dwrp.PollHandler) or specifically an HtmlPollHandler or a PlainPollHandler depending on if the request came from a source that expects HTML (i.e iframe or htmlfile) or simple JavaScript (i.e. XHR). The real work for both is done by PollHandler.handle. The following notes may help, however PollHandler.handle is well documented.</p>
+
+<p>A key interface for any special integration with a new container is the Sleeper interface (org.directwebremoting.extend.Sleeper). This enables DWR to send a thread to sleep and to wake it up again. PollHandler will get its Sleeper from the implementation of ContainerAbstraction (org.directwebremoting.extend.ContainerAbstraction). In theory the only integration needed between DWR and some new async capable container is to pass requests to the UrlProcessor and to have an implementation of ContainerAbstraction.</p>
+
+<p>There are also a set of Alarms (org.directwebremoting.extend.Alarm). The PollHandler configures a set of Alarms, and configures them to awake the Sleeper.</p>
+
+
+<h1>Polling Actions in early releases of DWR 2.0</h1>
+
+<p>The following things happen when DWR sends out a reverse ajax poll:</p>
+
+<ul>
+<li>The request is parsed: From this we learn the batch id, script session id, page url and if the client can do partial responses. In the case of Jetty these may be stored in the request because this may be the result of a continuation being re-started.</li>
+
+<li>We check for errors like reverse ajax being disabled, or GET being used when disabled.</li>
+
+<li>We get the connection time info</li>
+
+<li>We check for other waiting threads from the same browser (by looking for similar http session ids, so this is not foolproof) and kick them on their way (see notifyThreadsFromSameBrowser())</li>
+
+<li>We find out if we can go into a pre-stream wait state (that is waiting before we've started to write to the browser, which can avoid http-chunked mode). This state happens when nothing is waiting to go out and when we are going to stay connected for a while. If we are going to do a pre-stream wait, we create a NotifyOnlyScriptConduit (or grab it from the request for Jetty) and do the wait. On Jetty this will be an ajax continuation. If we are interrupted, we might need to set canWaitMore = false to indicate that we should just bail out now.</li>
+
+<li>We work out if there is more waiting to be done, or are we just going to write the script and go.</li>
+
+<li>If we are waiting more, then do so. Otherwise write the scripts and continue. Either way we will need a ScriptConduit (either base or plain depending on XHR of HTML mode).</li>
+
+<li>We write and go.</li>
+</ul>
+
+</body>
+</html>

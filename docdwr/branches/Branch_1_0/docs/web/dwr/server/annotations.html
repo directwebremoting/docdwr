@@ -1,0 +1,91 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <title>Annotations</title>
+  <meta name='nid' content='121'>
+  <meta name='parent' content='28'>
+  <meta name='weight' content='-6'>
+  <meta name='filename' content='dwr/server/annotations.html'>
+  <meta name='alias' content='/dwr/server/annotations'>
+  <link rel="stylesheet" type="text/css" href="../styles.css">
+</head>
+<body>
+
+<h1>DWR Annotations</h1>
+
+<p>DWR annotations can be used as a replacement as well as in conjunction with <code>dwr.xml</code>.</p>
+
+<p>Annotation support was written by Maik Schreiber.</p>
+
+<h3>Setup</h3>
+
+<p>To use DWR with annotations you need to specify a different DWR controller servlet in your <code>web.xml</code>:</p>
+
+<pre>
+&lt;servlet&gt;
+  &lt;description&gt;DWR controller servlet&lt;/description&gt;
+  &lt;servlet-name&gt;DWR controller servlet&lt;/servlet-name&gt;
+  &lt;servlet-class&gt;org.directwebremoting.servlet.DwrServlet&lt;/servlet-class&gt;
+  &lt;init-param&gt;
+    &lt;param-name&gt;classes&lt;/param-name&gt;
+    &lt;param-value&gt;
+      com.example.RemoteFunctions,
+      com.example.RemoteBean
+    &lt;/param-value&gt;
+  &lt;/init-param&gt;
+&lt;/servlet&gt;
+</pre>
+
+<p>The <code>classes</code> servlet parameter must provide a comma-separated list of the fully-qualified class names of all annotated classes to be used with DWR.</p>
+
+<p>The syntax for inner classes is to use '$' notation (as used by Class.forName()) rather than '.' notation (as used by import statements). For example, use <code>java.util.Map$Entry</code> and not <code>java.util.Map.Entry</code>.</p>
+ 
+<h3>Remote Class Access</h3>
+
+<p>To make a simple class available for remote access, use the <code>@Create</code> and <code>@RemoteMethod</code> annotations:</p>
+
+<pre>
+@RemoteProxy
+public class RemoteFunctions {
+    @RemoteMethod
+    public int calculateFoo() {
+       return 42;
+    }
+}
+</pre>
+ 
+<p>Any method not annotated with <code>@RemoteMethod</code> will not be available for remote access.</p>
+ 
+<p>To use a scripting name different from the class name, use the <code>name</code> attribute of <code>@RemoteProxy</code>:</p>
+ 
+<pre>
+@RemoteProxy(name="Functions")
+public class RemoteFunctions {
+}
+</pre>
+
+<h3>Object Conversion</h3>
+
+<p>To make simple bean classes available for remote access, use the <code>@DataTransferObject</code> and <code>@RemoteProperty</code> annotations:</p>
+ 
+<pre>
+@DataTransferObject
+public class Foo {
+    @RemoteProperty
+    private int foo;
+
+    public int getFoo() {
+        return foo;
+    }
+
+    @RemoteProperty
+    public int getBar() {
+        return foo * 42;
+    }
+}
+</pre>
+ 
+<p>To use more sophisticated converters see the <code>converter</code> attribute of the <code>@DataTransferObject</code> annotation.</p>
+
+</body>
+</html>

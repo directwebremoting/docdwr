@@ -1,0 +1,35 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <title>Beehive Integration</title>
+  <meta name='nid' content='116'>
+  <meta name='parent' content='3'>
+  <meta name='weight' content='8'>
+  <meta name='filename' content='dwr/server/pageflow.html'>
+  <meta name='alias' content='/dwr/server/pageflow'>
+  <link rel="stylesheet" type="text/css" href="../../styles.css">
+</head>
+<body>
+
+<h1>Pageflow - Beehive / Weblogic Integration</h1>
+
+<p>DWR contains a creator that will work with PageFlow objects from Weblogic or Beeehive.</p>
+
+<h2>The 'pageflow' Creator</h2>
+
+<p>As of DWR 1.1 an experimental PageFlowCreator is included with the normal DWR download. You can use this from dwr.xml as follows:</p>
+
+<pre>
+&lt;allow&gt;
+  ...
+  &lt;create creator="pageflow" javascript="ScriptName"/&gt;
+  ...
+&lt;/allow&gt;
+</pre>
+
+<p>This will allow you to make calls into your PageFlow from DWR.</p>
+
+<p>This JSF integration was written by Kevin Conaway.</p>
+
+</body>
+</html>
