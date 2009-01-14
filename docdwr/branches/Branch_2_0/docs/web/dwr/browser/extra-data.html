@@ -1,0 +1,144 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <title>Passing extra data to callbacks</title>
+  <meta name='nid' content='99'>
+  <meta name='parent' content='28'>
+  <meta name='weight' content='1'>
+  <meta name='filename' content='dwr/browser/extradata.html'>
+  <meta name='alias' content='/dwr/browser/extradata'>
+  <link rel="stylesheet" type="text/css" href="../styles.css">
+</head>
+<body>
+
+<h1>Passing Extra Data to Callbacks</h1>
+
+<p>It's common to need to pass extra information to a callback method, but since all callback methods have only one parameter (the return code from the remote method) this can be tricky.</p>
+
+<p>The 3.0 release of DWR <a href="#extraData3">addresses this problem</a> with the addition of several optional attributes on the call meta-data object: arg, callbackArg, and exceptionArg. Check the <a href="../download.html">download</a> section for details on the release of 3.0.</p>
+
+<p><a href="#extraData">For all DWR releases prior to 3.0</a> the solution is to use a Javascript <a href="http://jibbering.com/faq/faq_notes/closures.html">closure</a>.</p>
+
+<h2><a name="extraData3"></a>DWR 3.0 and later</h2>
+<p>DWR 3.0 allows for an argument to be specified and passed to handlers -- eliminating the need for JavaScript closures.  This argument can apply to the callbackHandler the exceptionHandler, or both.  In order to take advantage of this feature you must use a call meta-data object (Call meta-data is explained in the <a href="../introduction/scripting-dwr.html">scripting introduction</a>).
+
+<pre>
+var dataFromBrowser = ...;
+
+var callMetaData = { 
+  callback:callbackFunction, 
+  arg: dataFromBrowser // specify an argument to pass to the callback and exceptionHandler
+};
+
+Remote.method(params, callMetaData);
+
+function callbackFunction(dataFromServer, arg1) {
+  // you will now have access to dataFromBrowser as arg1
+}
+</pre>
+
+Rules: 
+<ol>
+  <li>arg - If specified will be used as a default argument to pass to the callback and will apply to both callback handlers and exception handlers.</li>
+ <li>callbackArg - If specified will apply to callback handlers and will override arg.</li>
+ <li>exceptionArg - If specified will apply to exception handlers and will override arg.</li>
+</ol>
+<pre>
+var dataFromBrowser = ...;
+var dataFromBrowser2 = ...;
+
+var callMetaData = { 
+  callback:callbackFunction, 
+  arg: dataFromBrowser, // specify an argument to pass to the exeptionHandler
+  callbackArg: dataFromBrowser2, // overrides args will be passed to the callback
+  exceptionHandler: exceptionHandlerFunction
+};
+
+Remote.method(params, callMetaData);
+
+function callbackFunction(dataFromServer, arg1) {
+  // you will now have access to dataFromBrowser2 as arg1
+  // callbackArg overrides arg
+}
+
+function exceptionHandlerFunction(exceptionMessage, exception, arg1) {
+  // you will now have access to dataFromBrowser1 as arg1
+  // arg also applies to exceptionHandlers
+}
+</pre>
+</p>
+<h3><a name="scope"></a>A word about scope</h3>
+<p>The 3.0 release also addresses scope issues within callback and exception handlers. We have added several optional attributes on the call meta-data object: scope, callbackScope, and exceptionScope.</p>
+
+<pre>
+(function() {
+    someObject = {};
+    someObject.privateVar = "Private variable from the main object."; 
+
+    someObject.callbackFunction = function(dataFromServer) {
+      alert(this.privateVar);
+      // The preceding line will alert the value of privateVar.  
+      // The key here is the use of 'this'.  The scope is not 
+      // lost because it is specified in the call-meta data object
+      // and used to execute the callback function.
+    }   
+})();
+
+var callMetaData = { 
+  callback:someObject.callbackFunction, 
+  scope: someObject 
+};
+
+Remote.method(params, callMetaData);
+</pre>
+
+Rules: 
+<ol>
+  <li>scope - If specified will be used as the default scope and will apply to both callback handlers and exception handlers.</li>
+ <li>callbackScope - If specified will apply to callback handlers and will override scope.</li>
+ <li>exceptionScope - If specified will apply to exception handlers and will override scope.</li>
+</ol>
+<p>Note: The default scope is window.</p>
+
+<h2><a name="extraData"></a>Before DWR 3.0 - JavaScript Closures</h2>
+<p>A JavaScript <a href="http://jibbering.com/faq/faq_notes/closures.html" target="new">closure</a> is required to pass extra data to a callback or exception handler prior to the 3.0 release.  For example, your callback method needs to look something like this:</p>
+
+<pre>
+function callbackFunc(dataFromServer, dataFromBrowser) {
+  // do something with dataFromServer and dataFromBrowser ...
+}
+</pre>
+
+<p>Then you can arrange for this method to be called as follows:</p>
+
+<pre>
+var dataFromBrowser = ...;
+
+// define an erasure function to store a reference to
+// dataFromBrowser and to call dataFromServer
+var callbackProxy = function(dataFromServer) {
+  callbackFunc(dataFromServer, dataFromBrowser);
+};
+
+var callMetaData = { callback:callbackProxy };
+
+Remote.method(params, callMetaData);
+</pre>
+
+<p>(Call meta-data is explained in the <a href="../introduction/scripting-dwr.html">scripting introduction</a>)</p>
+
+<p>In other words the function that you pass as the callback is not the real callback - it's just a closure that acts as a proxy, to pass the data on having added in the client side data.</p>
+
+<p>You could write this more succinctly as:</p>
+
+<pre>
+var dataFromBrowser = ...;
+Remote.method(params, {
+  callback:function(dataFromServer) {
+    callbackFunc(dataFromServer, dataFromBrowser);
+  }
+});
+</pre>
+
+</body>
+</html>

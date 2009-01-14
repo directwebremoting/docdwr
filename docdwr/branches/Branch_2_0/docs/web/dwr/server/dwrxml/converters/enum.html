@@ -1,0 +1,52 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <title>Enum Converter</title>
+  <meta name='nid' content='119'>
+  <meta name='parent' content='71'>
+  <meta name='weight' content='0'>
+  <meta name='filename' content='dwr/server/dwrxml/converters/enum.html'>
+  <meta name='alias' content='/dwr/server/dwrxml/converters/enum'>
+  <link rel="stylesheet" type="text/css" href="../../../styles.css">
+</head>
+<body>
+
+<h1>Enum Converter</h1>
+
+<p>The Enum Converter is not enabled by default. It converts Java5 Enums into JavaScript strings and back again. This converter is not enabled by default because DWR makes sure that is has permission before it touches any of your code.</p>
+
+<p>The enum converter has been available since DWR version 1.1.</p>
+
+<p>You can enable the enum converter for a single class using the following:</p>
+
+<pre>
+&lt;convert converter="enum" match="your.full.package.EnumName"/&gt;
+</pre>
+
+<h2>Setting up Javascript variables</h2>
+
+<p>A quick example may help. Suppose you have the following Java code:</p>
+
+<pre>
+public class Remoted {
+  public void setStatus(Status p) {
+    // ...
+  }
+}
+
+enum Status {
+  PASS,
+  FAIL,
+}
+</pre>
+
+<p>If <code>Remoted</code> was configured as a Creator, and <code>Status</code> is convertable using the EnumConverter, then you can call the Java code from Javascript as follows:</p>
+
+<pre>
+Remoted.setStatus("PASS");
+</pre>
+
+<p>If no match is found in the given enum, then an exception will be thrown.</p>
+
+</body>
+</html>

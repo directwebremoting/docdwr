@@ -1,0 +1,63 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <title>DWR 2.0 M3 - New and Noteworthy</title>
+  <meta name='nid' content='124'>
+  <meta name='parent' content='0'>
+  <meta name='weight' content='0'>
+  <meta name='filename' content='dwr/changelog/dwr20m3.html'>
+  <meta name='alias' content='/dwr/changelog/dwr20m3'>
+  <link rel="stylesheet" type="text/css" href="../styles.css">
+</head>
+<body>
+
+<h1>DWR version 2.0 milestone 3 is released.</h1>
+
+<p>The DWR 2 story so far ...</p>
+
+<p><a href="dwr20m1.html">Milestone 1 delivered</a> Reverse Ajax, <a href="dwr20m2.html">milestone 2 included</a> Annotations and a Java API for writing Javascript.</p>
+
+<p>Milestone 3 includes Accessibility support, Spring namespace support, deeper Webwork integration, and more demos.</p>
+
+<h2>Accessibility</h2>
+
+<p>This is an experimental new feature. The problem is that to a fully sighted person a page is random access. To someone using a screen reader, a page is sequential access, so if we change some text behind the current read point, the user with a screen reader will not notice.</p>
+
+<p>DWR Util now publishes change events whenever it changes a section of a page, and there is a pluggable notification system to raise alerts of the change.</p>
+
+<p>Currently there are 2 'HighlightHandler's.</p>
+<ul>
+<li>dwr.util.focusHighlightHandler should work with Firefox 1.5 and Windows Eyes 5.5. It simply calls element.focus(), which should have the desired effect.</li>
+<li>dwr.util.yellowFadeHighlightHandler is useful for partially sighted people or when you just want to be fancy. It's function should be obvious from the name.</li>
+</ul>
+
+<p>So to try it out call:</p>
+
+<pre>
+dwr.util.setHighlightHandler(dwr.util.yellowFadeHighlightHandler);
+</pre>
+
+<p>And then use <code>dwr.util.setValue()</code>, <code>dwr.util.setValues()</code>, <code>dwr.util.addRows()</code> or <code>dwr.util.addOptions()</code>.</p>
+
+<p>You can also specify a highlight handler at the point of invocation:</p>
+
+<pre>
+dwr.util.setValue("id", "value", {
+  highlightHandler:dwr.util.yellowFadeHighlightHandler
+});
+</pre>
+
+<p>If you wish to invoke the highter manually, you can do that with the DWRUtil.highlight function as follows:</p>
+
+<pre>dwr.util.highlight("id");</pre>
+
+<p>Or</p>
+
+<pre>
+DWRUtil.highlight("id", {
+  highlightHandler:DWRUtil.yellowFadeHighlightHandler
+});
+</pre>
+
+</body>
+</html>

@@ -1,0 +1,171 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <title>Error Handling</title>
+  <meta name='nid' content='91'>
+  <meta name='parent' content='28'>
+  <meta name='weight' content='1'>
+  <meta name='filename' content='dwr/other/errors.html'>
+  <meta name='alias' content='/dwr/other/errors'>
+  <link rel="stylesheet" type="text/css" href="../styles.css">
+</head>
+<body>
+
+<h1>Error and Exception Handling</h1>
+
+<p>See notes at the bottom of this page for usage notes in version 1.x, although since 1.x is no longer supported, <a href="../download.html">an upgrade</a> is strongly recommended.</p>
+
+<p>First some definitions:</p>
+
+<ul>
+<li>An <strong>errorHandler</strong> is used when something breaks, and we are sure of what's gone wrong. For example - if someone stops the app-server then DWR raises an error to say that it's got an HTTP error.</li>
+
+<li>A <strong>warningHandler</strong> is used when something has broken, but we're not 100% sure that this isn't normal. For example, it is possible with page transitions on Firefox to get an XHR callback after the XHR object has been killed. So XHR throwing an exception might be bad, or it might not depending on the circumstances. By default there is no warning handler, because unless things get hairy, you don't need to know about warnings. However sometimes it might be useful for debugging purposes.</li>
+
+<li>An <strong>exceptionHandler</strong> can be used to catch exceptions thrown by app-server code. If no exception handlers exist, the error handler is used. Exception handlers are new in 2.0. See below for more.</li>
+
+<li>There is also a <strong>textHtmlHandler</strong> that allows you to manage what happens when a DWR request receives a response that isn't Javascript. This generally means that a server session has timed out, so it is usual in a textHtmlHandler to redirect to a login screen. The textHtmlHandler handler is new in 2.0.</li>
+</ul>
+
+<p>You set a global error handler like this:</p>
+
+<pre>
+dwr.engine.setErrorHandler(handler);
+</pre>
+
+<p>You can also specify call or batch level error or warning handlers. For example, in the call meta-data:</p>
+
+<pre>
+Remote.method(params, {
+  callback:function(data) { ... },
+  errorHandler:function(errorString, exception) { ... }
+});
+</pre>
+
+or, in batch meta-data:
+
+<pre>
+dwr.engine.beginBatch();
+
+Remote.method(params, function(data) { ... });
+// Other remote calls
+
+dwr.engine.endBatch({
+  errorHandler:function(errorString, exception) { ... }
+});
+</pre>
+
+<h2>Exceptions</h2>
+
+<p>DWR can marshall exceptions, and they will become errors in JavaScript land (they can't be thrown since this will probably be happening asynchronously).</p>
+
+<p>For example, if we remote the following Java class:</p>
+
+<pre>
+public class Remote {
+  public String getData() {
+    throw new NullPointerException("message");
+  }
+}
+</pre>
+
+<p>Then in Javascript we will see the following:</p>
+
+<pre>
+function errh(msg) {
+  alert(msg);
+}
+
+dwr.engine.setErrorHandler(errh);
+
+Remote.getData(function(data) { alert(data); });
+</pre>
+
+<p>The result will be an alert dialog from the <code>errh()</code> error handler.</p>
+
+<p>Exceptions are subject to the usual marshaling rules - that is nothing is converted without express permission. However, there is one deviation from this rule. If there is no marshaller in place for an exception, then a default MinimalistExceptionConverter is used. The MinimalistExceptionConverter tells the client that something has gone wrong (which the client could guess anyway, since the call did not work) but for security reasons, it does not say what broke - so exception types are converted to a java.lang.Throwable.</p>
+
+<p>When there is no exception converter specified for an exception, the exception object passed to the client looks like this:</p>
+
+<pre>
+{
+  javaClassName:'java.lang.Throwable',
+  message:'Error'
+}
+</pre>
+
+<p>You can enable a more verbose exception handler with the following in dwr.xml:</p>
+
+<pre>
+&lt;convert match="java.lang.Exception" converter="exception"/&gt;
+</pre>
+
+<p>By default, this will attempt to convert everything that is part of the exception, so the converted exception might look like this:</p>
+
+<pre>
+{
+  javaClassName:'org.xml.sax.SAXParseException',
+  lineNumber:42,
+  publicId:'somePublicId',
+  message:'Missing &gt;'
+}
+</pre>
+
+<p>Clearly, permission will be needed to convert nested properties, which includes the stack trace. By default, there is no permission to convert StackTrace elements. It is a good idea to either expose only the information that you wish to expose (better for a live environment):</p>
+
+<pre>
+&lt;convert match="java.lang.Exception" converter="exception"&gt;
+  &lt;param name='include' value='message,lineNumber'/&gt;
+&lt;/convert&gt;
+</pre>
+
+<p>Or allow stack traces too, (which can be useful in development):</p>
+
+<pre>
+&lt;convert match="java.lang.StackTraceElement" converter="bean"/&gt;
+</pre>
+
+<p>Aside from the fact that this is obviously insecure, it can also be quite verbose, so it might be best to use this technique only when the browser and web-server are close together in network terms.</p>
+
+<h2>Coping with server session expiry</h2>
+
+<p>The primary purpose of <strong>textHtmlHandler</strong> is to allow you to cope with the server expiring your session and sending a login page in response to a DWR request without letting DWR handle the response at all.</p>
+
+<p>The standard usage goes something like this:</p>
+
+<pre>
+dwr.engine.setTextHtmlHandler(function() {
+  window.alert("Your session has expired, please login again." );
+  document.location = '/mycontext/login';
+});
+</pre>
+
+<p>From DWR version 2.0.3 it is possible to show the login page using a pop-up div, keeping the user on the current page. The textHtmlHandler function is passed a parameter which contains information about the failure. The data passed in the parameter is:</p>
+
+<ul>
+<li>status: HTTP response code</li>
+<li>responseText: The contents of the error page</li>
+<li>contentType: The MIME type of the reply</li>
+</ul>
+
+<p>Example usage might be something like this:</p>
+
+<pre>
+dwr.engine.setTextHtmlHandler(function(pageData) {
+  // display pageData.responseText in a Lightbox
+});
+</pre>
+
+<p>A fully working example would need to post the login from inside an iframe to allow the user to remain on the same page.</p>
+
+
+<h2>Notes for older versions</h2>
+
+<p>Prior to DWR 2.0 you had to use the old format for registering handlers. (This still works with version 2.0 however it is deprecated).</p>
+
+<pre>
+DWREngine.setErrorHandler(handler);
+</pre>
+
+</body>
+</html>

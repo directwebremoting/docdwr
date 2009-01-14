@@ -1,0 +1,54 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <title>Fluent Configuration</title>
+  <meta name='nid' content='214'>
+  <meta name='parent' content='28'>
+  <meta name='weight' content='-5'>
+  <meta name='filename' content='dwr/server/fluent.html'>
+  <meta name='alias' content='/dwr/server/fluent'>
+  <link rel="stylesheet" type="text/css" href="../styles.css">
+</head>
+<body>
+
+<h1>Fluent Configuration</h1>
+
+<p>The FluentConfigurator uses a the Fluent Interface style as <a href="http://www.martinfowler.com/bliki/FluentInterface.html">described by Martin Fowler</a>.</p>
+
+<p>To wire up the configuration programmatically rather than having to use <code>dwr.xml</code>, you'll need to:</p>
+
+<ul>
+<li>Create a concrete implementation of <code>org.directwebremoting.fluent.FluentConfigurator</code> which implements the <code>configure()</code> method.</li>
+<li>Add an init param '<code>customConfigurator</code>' to the DWR servlet in <code>web.xml</code> to point at your new class.</li>
+</ul>
+
+<p>The implementation of <code>configure()</code> will look something like this:</p>
+
+<pre>
+public void configure() {
+   withConverterType("dog", "com.yourcompany.beans.Dog");
+   withCreatorType("ejb", "com.yourcompany.dwr.creator.EJBCreator");
+   withCreator("new", "ApartmentDAO")
+       .addParam("scope", session)
+       .addParam("class", "com.yourcompany.dao.ApartmentDAO")
+       .exclude("saveApartment")
+       .withAuth("method", "role");
+   withCreator("struts", "DogDAO")
+       .addParam("clas", "com.yourcompany.dao.DogDAO")
+       .include("getDog")
+       .include("getColor");
+   withConverter("dog", "*.Dog")
+       .addParam("name", "value");
+   withSignature()
+       .addLine("import java.util.List;")
+       .addLine("import com.example.Check;")
+       .addLine("Check.setLotteryResults(List&lt;Integer&gt; nos);");
+}
+</pre>
+
+<p>For more information see the JavaDoc for FluentConfigurator</p>
+
+<p>DWR's fluent configurator was originally contributed by Aaron Johnson.</p>
+
+</body>
+</html>

@@ -1,0 +1,11 @@
+
+Document restrictions:
+
+- Multiple DWR servlets in a context is not supported pre-2.0
+- Talking from a single page to multiple DWR servlets is supported from 2.0 onwards
+  but not Reverse Ajax
+- Good support for multiple DWRs arrived in version 3.0
+
+
+Add info on debug levels
+

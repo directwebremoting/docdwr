@@ -1,0 +1,132 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <title>setValue</title>
+  <meta name='nid' content='75'>
+  <meta name='parent' content='59'>
+  <meta name='weight' content='0'>
+  <meta name='filename' content='dwr/browser/util/setvalue.html'>
+  <meta name='alias' content='/dwr/browser/util/setvalue'>
+  <link rel="stylesheet" type="text/css" href="../../styles.css">
+</head>
+<body>
+
+<script type='text/javascript' src='/M:/Users/joe/Projects/directwebremoting/docdwr/docs/web/dwr/media/util.js'> </script>
+<script type="text/javascript">
+function doSetValue()
+{
+    dwr.util.setValue($('setvalueele').value, $('setvalueval').value);
+}
+</script>
+
+<h1>dwr.util.setValue(id, value)</h1>
+
+<p><code>dwr.util.setValue(id, value [, options])</code> finds the element with the id specified in the first parameter and alters its contents to be the value in the second parameter.</p>
+
+<p>This method works for almost all HTML elements including selects (where the option with a matching value and not text is selected), input elements (including textareas) divs and spans.</p>
+
+<p>For example:</p>
+
+<!--break-->
+
+<p><code>dwr.util.setValue</code>(
+  <input id="setvalueele" onchange="dwr.util.onReturn(event, doSetValue)" value="div" size="10"/>,
+  <input id="setvalueval" onchange="dwr.util.onReturn(event, doSetValue)" value="example"/> )
+  <input type="button" value="setValue" onclick="doSetValue()"/>
+</p>
+
+<!-- START COPIED BLOCK: Source: node/75 Copies: node/76-79 -->
+
+<style>
+.small { font-size:80%; }
+.testblock { margin:10px; background-color:#fff8dd; padding:10px }
+</style>
+
+<div class="testblock">
+
+<p><b>HTML Test Elements</b></p>
+
+<div style="border:1px solid #999;" id="div">A div element with id="div".</div>
+
+<table>
+<tr>
+
+<td>Text area <span class="small">(id="textarea")</span>:</td>
+<td><textarea id="textarea"></textarea></td>
+
+<td>Selection list <span class="small">(id="select")</span>:</td>
+<td>
+  <select id="select">
+    <option selected="selected" value="value one">text one</option>
+    <option value="value two">text two</option>
+    <option value="value three">text three</option>
+  </select>
+</td>
+
+</tr>
+<tr>
+
+<td>Text input <span class="small">(id="text")</span>:</td>
+<td><input id="text" value="" /></td>
+
+<td>Password input <span class="small">(id="password")</span>:</td>
+<td><input id="password" value="password" type="password" /></td>
+
+<!--
+
+</tr>
+<tr>
+
+<td>Radio buttons <span class="small">(id="radio")</span>:</td>
+<td>
+  <input id="radio" name="radio" value="one" type="radio" checked="checked"/>one<br/>
+  <input id="radio" name="radio" value="two" type="radio"/>two
+</td>
+
+<td>Check box <span class="small">(id="checkbox")</span>:</td>
+<td><input id="checkbox" value="input checkbox" type="checkbox" />input</td>
+
+-->
+
+</tr>
+<tr>
+
+<td>Form button <span class="small">(id="formbutton")</span>:</td>
+<td><input id="formbutton" value="button" type="button"/></td>
+
+<td>Fancy button <span class="small">(id="button")</span>:</td>
+<td><button id="button">button</button></td>
+
+</tr>
+</table>
+
+</div>
+
+<!-- END COPIED BLOCK -->
+
+<h3>More Information</h3>
+
+<p>setValue() allows use of an options object which allows the <a href='escapeHtml.html'>escapeHtml:false</a> option to prevent DWR from performing output escaping. For example:</p>
+
+<pre>
+&lt;span id="x"&gt;&lt;/span&gt;
+
+dwr.util.setValue('x', "&lt;b&gt;Hi&lt;/b&gt;");
+</pre>
+
+<p>Will create a span that looks like this: <span>&lt;b&gt;Hi&lt;/b&gt;</span>. But on the other hand, this:</p>
+
+<pre>
+&lt;span id="x"&gt;&lt;/span&gt;
+
+dwr.util.setValue('x', "&lt;b&gt;Hi&lt;/b&gt;", { escapeHtml:false });
+</pre>
+
+<p>Will create a span that looks like this:<span><b>Hi</b></span></p>
+
+<h3>See Also</h3>
+
+<p>See also <code>setValue<b>s</b>()</code> and the corresponding <code>getValue[s]()</code> methods.</p>
+
+</body>
+</html>

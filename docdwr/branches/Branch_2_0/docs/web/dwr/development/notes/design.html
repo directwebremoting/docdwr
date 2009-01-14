@@ -1,0 +1,50 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <title>Design Notes</title>
+  <meta name='nid' content='9'>
+  <meta name='parent' content='207'>
+  <meta name='weight' content='0'>
+  <meta name='filename' content='dwr/development/design.html'>
+  <meta name='alias' content='/dwr/development/design'>
+  <link rel="stylesheet" type="text/css" href="../../styles.css">
+</head>
+<body>
+
+<h2>Warning: Developer Pages</h2>
+
+<p>This page is part of a set of pages aimed at DWR developers. If this isn't you, then you probably want the <a href="../../documentation.html">documentation index</a>.</p>
+
+<h1>Design Notes</h1>
+
+<p>DWR is comprised of a number of components that are designed to be as separate as possible. They are:</p>
+
+<ul>
+<li>AccessControl. What methods are remote systems allowed to access?</li>
+<li>ConverterManager. Provides DWRP <-> Java conversion. (It is likely that we will have a Marshaller interface which wraps this at some stage because ConverterManager is tied to DWRP)</li>
+<li>CreatorManager. In charge of deciding what classes to remote</li>
+<li>WebContextBuilder. DWR allows execution of arbitary methods. These methods may like some context about how they have been invoked.</li>
+<li>AjaxFilterManager. Allows filters to key into the invocation process.</li>
+<li>Processor. Actually process an inbout request</li>
+</ul>
+
+<p>These components are registered in an IoC container (which is itself abstracted via a Container interface)</p>
+
+<h1>The Startup Process</h1>
+
+<p>The first step is to initialize the IoC container. This must be the first step because it is expected that some usages of DWR (like Spring for example) will use an external IoC container, so IoC container setup may be outside the control of DWR.</p>
+
+<p>It is recognized that there are some limitations in simply leaving that to be the only part of the configuration process. In the Spring case it would require a very verbose config file since DWR needs to provide a default config that users then build upon.</p>
+
+<h1>The Converter Interface</h1>
+
+<p>The Converter implementations MUST do the push/pop of context even though it would be more of help if the framework could do it for us. This is because the MapConverter needs to push/pop for the name AND the value.</p>
+
+<p>Converters can't work by being told just the type to convert to because collection converters still need to ask because they recur down into other converters. Context is key to knowing how to convert so we need to keep a track of the type conversion context as it evolves.</p>
+
+<h1>The Creator Interface</h1>
+
+<p>Creators need both getType and newImplementation methods even though you can derive the type by creating an implementation. This is because we need to know the Method before we call newImplementation, because if the method is static we don't need a 'this'. But we need the type before we can get the method.</p>
+
+</body>
+</html>

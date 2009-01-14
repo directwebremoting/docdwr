@@ -1,0 +1,120 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <title>WebWork Integration</title>
+  <meta name='nid' content='125'>
+  <meta name='parent' content='3'>
+  <meta name='weight' content='5'>
+  <meta name='filename' content='dwr/server/webwork.html'>
+  <meta name='alias' content='/dwr/server/webwork'>
+  <link rel="stylesheet" type="text/css" href="../../styles.css">
+</head>
+<body>
+
+<h1>Introduction to WebWork action invocation through DWR</h1>
+
+<p>From WebWork 2.2.7, DWR integration is included with Webwork. You can find out more from the documentation on the <a href="http://wiki.opensymphony.com/display/WW/DWR">Webwork Wiki</a>.</p>
+
+<p>WebWork support is available in DWR from version 2.0 milestone 3 onwards.</p>
+
+<p>There are a couple of things that you must do in order to be able to use WW actions through DWR.</p>
+
+<h2>Step 1: Configure dwr.xml</h2>
+
+<p>You must include in the dwr configuration file:</p>
+
+<pre>
+&lt;create creator="none" javascript="DWRAction"&gt;
+  &lt;param name="class" value="org.directwebremoting.webwork.DWRAction"/&gt;
+  &lt;include method="execute"/&gt;
+&lt;/create&gt;
+
+&lt;convert converter="bean" match="org.directwebremoting.webwork.ActionDefinition"&gt;
+  &lt;param name="include" value="namespace,action,method,executeResult" /&gt;
+&lt;/convert&gt;
+
+&lt;convert converter="bean" match="org.directwebremoting.webwork.AjaxResult"/&gt;
+</pre>
+
+<p>In case your AJAX WebWork action invocations return action instances (and not pure text), than you must include
+converter definitions for your action objects (package level or for individual actions).</p>
+
+<pre>
+&lt;convert converter="bean" match="&lt;your_action_package&gt;.*"/&gt;
+</pre>
+
+<h2>Step 2: Import scripts in your JSP files</h2>
+
+<p>Follow the rules to enable DWR in your JSP actions. Also include the DWRActionUtil.js script (place it in your scripts web directory).</p>
+
+<h2>Usage</h2>
+
+<p>Invoking an action from JS is done using the following:</p>
+
+<pre>
+DWRActionUtil.execute(id, params, callback [, displayMessage]);
+</pre>
+
+<p>Where <code>id</code> is one of:</p>
+
+<ul>
+<li><b>actionUri</b>: the action URI to be called (WITHOUT .action). For example:
+<pre>
+DWRActionUtil.execute('/ajax/TestFM', 'myform', 'doOnTextResult');
+</pre>
+</li>
+<li><b>actionDefinitionObject</b>: an object that specifies an action from <code>xwork.xml</code>. It must specify the following fields:
+<ul>
+<li>namespace: the action namespace according to xwork.xml</li>
+<li>action: the action name according to xwork.xml</li>
+<li>executeResult: true|false (execute the result of the action, or if false return the action instance)</li>
+</ul>
+</li>
+<p>E.g.:</p>
+<pre>
+DWRActionUtil.execute({
+  namespace:'/ajax',
+  action:'TestJS',
+  executeResult:'true'
+}, 'data', doOnJSResult, "stream...");
+</pre>
+</ul>
+
+<p><code>params</code> must be one of:</p>
+
+<ul>
+<li><b>emptyParams</b>: Pass <code>{}</code> to ignore any parameters.
+<p>Example:</p>
+<pre>
+DWRActionUtil.execute('/ajax/TestFM', {}, doOnJSResult, "stream...");
+</pre>
+</li>
+<li><b>fieldId</b>: id of a field whose value will be transmitted as an action invocation parameter.
+<p>Example:</p>
+<pre>
+&lt;input id="mytext" name="mytext" value="some value" type="text"/&gt;
+
+DWRActionUtil.execute('/ajax/TestFM', 'mytext', doOnJSResult, "stream...");
+</pre>
+</li>
+<li><b>formId</b>: the id of a form. All input values will be transmitted as action invocation parameters
+<p>Note: If your action configuration in xwork.xml uses the parameters interceptor than your action will be initialized correctly with the parameters values. For more documentation, please consult WebWork available documentation.</p>
+</li>
+</ul>
+
+<p>And <code>callback</code> is either:</p>
+
+<ul>
+<li><b>callbackFunction</b>: as in DWR, the function to be invoked upon request completion.</li>
+<li><b>callbackObject</b>: as in DWR, the callback object.</li>
+</ul>
+
+<p>Finally <code>displayMessage</code> is an optional parameter which specifies a message to be displayed till request completion (see DWR documentation)</p>
+
+
+<h2>Advanced</h2>
+
+<p>You can declare a pre/post action processor by providing in web.xml through a context-wide initialization parameter (dwrActionProcessor). The processor must implement <code>org.directwebremoting.webwork.IDWRActionProcessor</code> interface. The processor will be invoked before and after the action has been invoked, so that you can prepare the initial invocation or change the result.</p>
+
+</body>
+</html>

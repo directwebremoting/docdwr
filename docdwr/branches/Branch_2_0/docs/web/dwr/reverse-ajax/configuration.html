@@ -1,0 +1,116 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <title>Configuring</title>
+  <meta name='nid' content='201'>
+  <meta name='parent' content='200'>
+  <meta name='weight' content='0'>
+  <meta name='filename' content='dwr/reverse-ajax/configuration.html'>
+  <meta name='alias' content='/dwr/reverse-ajax/configuration'>
+  <link rel="stylesheet" type="text/css" href="../styles.css">
+</head>
+<body>
+
+<h1>Configuring Reverse Ajax</h1>
+
+<p>Reverse Ajax works 2 basic modes, Active and Passive. Active Reverse Ajax can be broken down into 3 modes:</p>
+
+<ul>
+<li>Full Streaming Mode</li>
+<li>Early Closing Mode</li>
+<li>Polling Mode</li>
+</ul>
+
+<p>This page describes these modes, when they make sense, and how to configure them. This documentation is valid for DWR version 2.0 (and above). Reverse Ajax is not available for DWR 1.x.</p>
+
+<!--break-->
+
+<h2>Full Streaming Mode</h2>
+
+<p>This is the default mode when Active Reverse Ajax is turned on. It has the fastest response characteristics because it closes connections only once every 60 seconds or so to check that the browser is still active. It is configured simply by telling the server to allow Active Reverse Ajax using a WEB-INF/web.xml init-param inside your DwrServlet:</p>
+
+<pre>
+&lt;servlet&gt;
+  &lt;servlet-name&gt;dwr-invoker&lt;/servlet-name&gt;
+  &lt;servlet-class&gt;org.directwebremoting.servlet.DwrServlet&lt;/servlet-class&gt;
+  &lt;init-param&gt;
+    &lt;param-name&gt;activeReverseAjaxEnabled&lt;/param-name&gt;
+    &lt;param-value&gt;true&lt;/param-value&gt;
+  &lt;/init-param&gt;
+&lt;/servlet&gt;
+</pre>
+
+<p>You also need to request Active Reverse Ajax from a web page:</p>
+
+<pre>
+dwr.engine.setActiveReverseAjax(true);
+</pre>
+
+<p>With a large number of connections held open, it is possible to thread starve an application server. Several web servers have a special mode to allow users to drop threads. DWR makes use of this functionality in Jetty with version 2.0, from version 3.0 we expect to expand this to include GlassFish and Tomcat. DWR also attempts to protect all servers by dynamically reducing the connected time and increasing the disconnected time if the server load gets too high.</p>
+
+<p>The problem with full streaming is that it requires HTTP chunked mode which sometimes fails with network proxies, mod_jk, and other network scanners. If you try full streaming and find that messages are only getting through every 60 seconds, this could be why. DWR version 2.0.3 and before used this as the default. From version 2.0.4 the default is to use Early Closing Mode.</p>
+
+<p>To enable Full Streaming Mode in DWR from version 2.0.4 onwards, use the following init-param:</p>
+
+<pre>
+&lt;init-param&gt;
+  &lt;param-name&gt;maxWaitAfterWrite&lt;/param-name&gt;
+  &lt;param-value&gt;-1&lt;/param-value&gt;
+&lt;/init-param&gt;
+</pre>
+
+
+<h2>Early Closing Mode</h2>
+
+<p>In Early Closing Mode, DWR holds connection open as it did in Full Streaming Mode, however it only holds the connection open for 60 seconds if there is no output to the browser. Once output occurs, DWR pauses for some configurable time before closing the connection, forcing proxies to pass any messages on. To use Early Closing Mode in DWR 2.0.4 and onwards, no configuration is needed. For 2.0.3 and before, you need an init-param to configure the delay between first output and connection close.</p>
+
+<pre>
+&lt;init-param&gt;
+  &lt;param-name&gt;maxWaitAfterWrite&lt;/param-name&gt;
+  &lt;param-value&gt;500&lt;/param-value&gt;
+&lt;/init-param&gt;
+</pre>
+
+<p>In this case DWR will keep the connection open for an additional 500 milliseconds after the first output in case there is additional output, before forcing a flush by closing the connection and requesting it to be re-opened.</p>
+
+<p>The default is -1, which means keep the connection open for a maximum of 60 seconds as described in Full Streaming Mode.</p>
+
+<p>The downside of Early Closing Mode is that for applications with a high rate of output, it can cause a large hit count. This can be countered by increasing the pause by setting maxWaitAfterWrite=1000 or similar.</p>
+
+<p>In applications with a large number of connected browsers that are simultaneously sent a message they are likely to all try to reconnect at the same time. If you are affected by this type of problem, then you should consider investigating Full Streaming Mode.</p>
+
+<p>A future version of DWR might attempt to automatically detect buggy proxies.</p>
+
+
+<h2>Polling Mode</h2>
+
+<p>If it is deemed unwise to hold connections open at all then DWR can use polling mode. In addition to the activeReverseAjaxEnabled=true init-param you should specify the PollingServerLoadMonitor as follows:</p>
+
+<pre>
+&lt;init-param&gt;
+  &lt;param-name&gt;org.directwebremoting.extend.ServerLoadMonitor&lt;/param-name&gt;
+  &lt;param-value&gt;org.directwebremoting.impl.PollingServerLoadMonitor&lt;/param-value&gt;
+&lt;/init-param&gt;
+</pre>
+
+<p>In polling mode the default poll rate is every 5 seconds. This can be customized using the following:</p>
+
+<pre>
+&lt;init-param&gt;
+  &lt;param-name&gt;disconnectedTime&lt;/param-name&gt;
+  &lt;param-value&gt;60000&lt;/param-value&gt;
+&lt;/init-param&gt;
+</pre>
+
+<p>The example above will poll only once every 60 seconds (60,000 milliseconds). For many applications a response time of 60 seconds will be enough, and will allow a web server to handle a very large number of clients.</p>
+
+<p>There is a bug, fixed in DWR 2.0.2 where this parameter is badly mis-spelt. If you are using a version of DWR <b>before</b> 2.0.2 then you should use <code>timeToNextPoll</code> in place of <code>disconnectedTime</code>. The old spelling is deprecated rather than removed, however it will be removed in future releases.</p>
+
+<h2>Passive Mode</h2>
+
+<p>Passive Mode is the default if none of the options above are enabled. In passive mode, browsers do not make any extra connections to the web server. DWR queues data at the server in order to pass it on to clients. This transfer method is also known as the piggyback technique.</p>
+
+<p>Passive Mode is the least responsive, however it does not place any extra load on the web-server.</p>
+
+</body>
+</html>

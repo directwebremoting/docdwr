@@ -1,0 +1,58 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <title>JSF Integration</title>
+  <meta name='nid' content='115'>
+  <meta name='parent' content='3'>
+  <meta name='weight' content='6'>
+  <meta name='filename' content='dwr/server/jsf.html'>
+  <meta name='alias' content='/dwr/server/jsf'>
+  <link rel="stylesheet" type="text/css" href="../../styles.css">
+</head>
+<body>
+
+<h1>JSF Integration</h1>
+
+<p>DWR contains 2 extension points for JSF, a creator and a ServletFilter.</p>
+
+<h2>The 'jsf' Creator</h2>
+
+<p>As of DWR 1.1 an experimental JsfCreator is included with the normal DWR download. You can use this from dwr.xml as follows:</p>
+
+<pre>
+&lt;allow&gt;
+  ...
+  &lt;create creator="jsf" javascript="ScriptName"&gt;
+    &lt;param name="managedBeanName" value="beanName"/&gt;
+    &lt;param name="class" value="your.class"/&gt;
+  &lt;/create&gt;
+  ...
+&lt;/allow&gt;
+</pre>
+
+<p>This will allow you to make calls into your ManagedBeans from DWR.</p>
+
+<h2>The Servlet Filter</h2>
+
+<p>The DWR/Faces filter allows you to access beans from your FacesContext without being officially part of the JSF lifecycle.</p>
+
+<p>In order to use the JsfCreator, you should add the DWR/Faces filter to your web.xml file.</p>
+
+<pre>
+&lt;filter&gt;
+  &lt;filter-name&gt;DwrFacesFilter&lt;/filter-name&gt;
+  &lt;filter-class&gt;uk.ltd.getahead.dwr.servlet.FacesExtensionFilter&lt;/filter-class&gt;
+&lt;/filter&gt;
+
+&lt;filter-mapping&gt;
+  &lt;filter-name&gt;DwrFacesFilter&lt;/filter-name&gt;
+  &lt;url-pattern&gt;/dwr/*&lt;/url-pattern&gt;
+&lt;/filter-mapping&gt;
+</pre>
+
+<p>The 2 elements will need to be placed alongside other filter and filter-mapping elements in your web.xml file.</p>
+
+<p>This JSF integration was written by Pierpaolo Follia, with inspiration from <a href="http://www.thoughtsabout.net/blog/archives/000033.html">an article from thoughtsabout.net</a>.</p>
+
+</body>
+</html>
