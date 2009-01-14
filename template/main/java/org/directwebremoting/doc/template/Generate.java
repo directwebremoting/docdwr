@@ -12,6 +12,8 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.Set;
+import java.util.TreeSet;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
@@ -30,7 +32,7 @@ public class Generate
     /**
      * 
      */
-    private static class Page
+    private static class Page implements Comparable<Page>
     {
         StringBuilder header = new StringBuilder();
         StringBuilder neck = new StringBuilder();
@@ -39,25 +41,72 @@ public class Generate
 
         String path;
         String title;
+        String navTitle;
+        File source;
+        int weight = 0;
+
         List<String> aliases = new ArrayList<String>();
 
         Page parent;
-        List<Page> children = new ArrayList<Page>();
+        Set<Page> children = new TreeSet<Page>();
 
         @Override
         public String toString()
         {
-            return "Page[path=" + path + ", title='" + title + "', aliases=" + aliases + "]";
+            return "Page[path=" + path + ", title='" + navTitle + "', aliases=" + aliases + "]";
         }
 
-        public String getLink()
+        public String getLink(Page from)
         {
-            return "<a href='http://directwebremoting.org" + path + "'>" + title + "</a>";
+            return getLink(from, navTitle);
         }
 
-        public String getLink(String text)
+        public String getLink(Page from, String text)
         {
-            return "<a href='http://directwebremoting.org" + path + "'>" + text + "</a>";
+            if (this == from)
+            {
+                return "<a href='" + source.getName() + "' class='currentLink'>" + text + "</a>";
+            }
+            if (this.parent == from.parent)
+            {
+                return "<a href='" + source.getName() + "'>" + text + "</a>";
+            }
+            return "<a href='" + from.getPathToRoot() + path + "'>" + text + "</a>";
+        }
+
+        public int compareTo(Page that)
+        {
+            if (this.weight == that.weight)
+            {
+                return this.navTitle.compareTo(that.navTitle);
+            }
+            else if (this.weight > that.weight)
+            {
+                return 1;
+            }
+            else
+            {
+                return -1;
+            }
+        }
+
+        public String getPathToRoot()
+        {
+            StringBuilder builder = new StringBuilder();
+            Page current = this.parent;
+
+            while (current != null)
+            {
+                current = current.parent;
+                builder.append("../");
+            }
+
+            // if (children.size() > 0)
+            // {
+            //     builder.append("../");
+            // }
+
+            return builder.toString();
         }
     }
 
@@ -75,7 +124,7 @@ public class Generate
     {
         String root = "/Users/joe/Projects/directwebremoting/docdwr";
         Map<String, Page> pages = readInput(root + "/docs/web");
-        writeOutput(pages, root + "/target/publish");
+        writeOutput(pages, root + "/target/publish/");
         copyStatic(root + "/docs/web", root + "/target/publish", new String[] {
             "png", "gif", "jpg", "css", "pdf", "dtd", "xsd", "js"
         });
@@ -115,13 +164,13 @@ public class Generate
         {
             public void visitFile(File file)
             {
-                String path = file.getAbsolutePath();
-                path = path.substring(base.length());
+                String path = stripBase(file, base);
 
                 if (path.endsWith(".html"))
                 {
                     Page page = new Page();
                     page.path = path;
+                    page.source = file;
                     pages.put(path, page);
 
                     try
@@ -155,6 +204,10 @@ public class Generate
                                     if (titleMatcher.find())
                                     {
                                         page.title = titleMatcher.group(1);
+                                        if (page.navTitle == null)
+                                        {
+                                            page.navTitle = page.title;
+                                        }
                                     }
 
                                     Matcher metaMatcher = meta.matcher(line);
@@ -165,6 +218,14 @@ public class Generate
                                         if ("alias".equals(name))
                                         {
                                             page.aliases.add(value);
+                                        }
+                                        else if ("navTitle".equals(name))
+                                        {
+                                            page.navTitle = value;
+                                        }
+                                        else if ("weight".equals(name))
+                                        {
+                                            page.weight = Integer.parseInt(value);
                                         }
                                     }
                                 }
@@ -221,16 +282,13 @@ public class Generate
         Page root = null;
         for (Page page : pages.values())
         {
-            if (page.path.endsWith("index.html"))
-            {
-                String key = new File(page.path).getParentFile().getParent() + "/index.html";
-                page.parent = pages.get(key);
-            }
-            else
-            {
-                String key = new File(page.path).getParent() + "/index.html";
-                page.parent = pages.get(key);
-            }
+            String parentDir = page.path.endsWith("index.html") ?
+                    page.source.getParentFile().getParent() :
+                    page.source.getParent();
+
+            File parentFile = new File(parentDir, "/index.html");
+            String key = stripBase(parentFile, base);
+            page.parent = pages.get(key);
 
             if (page.parent == null)
             {
@@ -240,7 +298,7 @@ public class Generate
                 }
                 else
                 {
-                    log.error("More than 1 candidates for tree root:");
+                    log.error("More than 1 candidate for tree root:");
                     log.error("- " + root);
                     log.error("- " + page);
                 }
@@ -253,6 +311,15 @@ public class Generate
 
         pages.put(ROOT, root);
         return pages;
+    }
+
+    /**
+     * 
+     */
+    private static String stripBase(File file, String base)
+    {
+        String path = file.getAbsolutePath();
+        return path.substring(base.length() + 1);
     }
 
     /**
@@ -316,9 +383,13 @@ public class Generate
     private static String getTemplateHeaderInsert()
     {
         //return "  <script type='text/javascript' src='http://directwebremoting.org/dwr/menu.js'> </script>\n";
-        return "  <script type='text/javascript' src='file:///Users/joe/Projects/directwebremoting/docdwr/docs/web/dwr/menu.js'> </script>\n";
+        //return "  <script type='text/javascript' src='file:///Users/joe/Projects/directwebremoting/docdwr/docs/web/dwr/menu.js'> </script>\n";
+        return "";
     }
 
+    /**
+     * 
+     */
     private static final String STANDARD_HEADER = 
         "<div id='header'><a href='http://directwebremoting.org/dwr/'>Direct Web Remoting</a></div>\n" +
         "<div id=pagelinks>\n" +
@@ -350,7 +421,7 @@ public class Generate
                 breadcrumbs.insert(0, " &#x00BB; ");
             }
 
-            breadcrumbs.insert(0, history.getLink());
+            breadcrumbs.insert(0, history.getLink(page));
             history = history.parent;
         }
 
@@ -365,7 +436,7 @@ public class Generate
         StringBuilder menu = new StringBuilder();
 
         menu.append("<ul class='menu' id='nav'>\n");
-        addMenuOptions(menu, root, "Quick Nav &#x2193;");
+        addMenuOptions(menu, root, "Quick Nav&nbsp;&#x2192;");
         menu.append("</ul>\n");
 
         return menu.toString();
@@ -378,13 +449,13 @@ public class Generate
     {
         if (text == null)
         {
-            text = page.title + " &#x2193;";
+            text = page.navTitle + "&nbsp;&#x2192;";
         }
 
         boolean hasChildren = (page.children.size() > 0);
         if (hasChildren)
         {
-            menu.append("<li class='hasChildren'>" + page.getLink(text));
+            menu.append("<li class='hasChildren'>" + page.getLink(page, text));
             menu.append("<ul>\n");
             for (Page child : page.children)
             {
@@ -396,7 +467,7 @@ public class Generate
         else
         {
             menu.append("<li class='noChildren'>");
-            menu.append(page.getLink());
+            menu.append(page.getLink(page));
             menu.append("</li>\n");
         }
     }

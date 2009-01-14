@@ -22,9 +22,25 @@ using this content.
 Editing Rules
 -------------
 In order to ensure that the publishing process works properly, there are some
-rules for editing the documentation:
-- All links must be relative
-- Please keep to the same formatting style as the html around you. In general
+rules for editing the documentation. MUST means that failure to follow this rule
+will break the publishing process, possibly in hard to detect ways.
+SHOULD means that failure to follow the rule is likely to thwart future changes
+to the publishing process.
+- All links MUST be relative
+- All pages SHOULD have an HTML5 doctype: <!DOCTYPE html>
+- All pages MUST be stored with a .html file extension
+- All elements/attributes SHOULD be valid html5
+- In addition to normal html5 rules, the documents SHOULD be well-formed XML
+  (although they should not include an XML declaration <?xml version="1.0"...
+  and they do not need to be valid beyond the html5 rules)
+  This may help us process the documents using XSL or similar in the future
+- All directories MUST contain an index.html file that links to all of the
+  HTML files within that directory
+- All images/css/js should be stored in the dwr/media directory
+- Page titles SHOULD be succinct, particularly in index.html files, because they
+  are used in the breadcrumbs and menu structure
+
+- Keep to the same formatting style as the html around you. In general
   this means that most content will be formatted with a paragraph on a single
   line with open and closing tags on the same line. Paragraphs are then
   separated by a single blank line. This style means that the HTML is fairly
@@ -37,18 +53,6 @@ rules for editing the documentation:
   - Ensure that all inbound links point to the new location
   - In the header of the moved document, add a line that points to the old location
     This enables us to create an Apache config file that prevents needless 404s
-- All pages should have an HTML5 doctype: <!DOCTYPE html>
-- All pages should be stored with a .html file extension
-- All elements/attributes should be lower case and should be valid html5
-- In addition to normal html5 rules, the documents should be well-formed XML
-  (although they should not include an XML declaration <?xml version="1.0"...
-  and they do not need to be valid beyond the html5 rules)
-  This may help us process the documents using XSL or similar in the future
-- All directories must contain an index.html file that links to all of the
-  HTML files within that directory (unless the files are supposed to be hidden)
-- All images must be stored in the dwr/images directory
-- Page titles should be succinct particularly in index.html files, because they
-  are used in the breadcrumbs and menu structure
 
 
 Templating Process
