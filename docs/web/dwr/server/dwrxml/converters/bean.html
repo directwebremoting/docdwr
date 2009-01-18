@@ -25,17 +25,16 @@
 &lt;convert converter="bean" match="com.example.Person"/&gt;
 </pre>
 
-<p>To allow conversion of any class in the given package, or sub package:</p>
+<p>To allow conversion of any class in the given package:</p>
 
 <pre>
 &lt;convert converter="bean" match="com.example.*"/&gt;
 </pre>
 
-<p>The obvious extension to this is that you can blanket allow conversion of all 
-Java Beans using the following:</p>
+<p>To allow conversion of any class in the given package and all sub-packages:</p>
 
 <pre>
-&lt;convert converter="bean" match="*"/&gt;
+&lt;convert converter="bean" match="com.example.**"/&gt;
 </pre>
 
 <h2>BeanConverter and the JavaBeans Spec.</h2>
@@ -48,8 +47,8 @@ Java Beans using the following:</p>
  This means things like having properly named getters and setters where there is a 
  single parameter to the setter which matches the return type of the getter. The 
  setter should return void, the getter should not have any parameters and there is 
- no overloading of setters. Mostly this is common sense, but if does trip some people 
- up. If you can't be a Java Bean then you need the ObjectConverter.</p>
+ no overloading of setters. Mostly this is common sense, but it does trip some people 
+ up. If your class does not follow the Java Bean specification then you need the ObjectConverter.</p>
 
 <h2>Supplying parameters in calls from Javascript</h2>
 
@@ -87,7 +86,7 @@ Remoted.addToFriends(p);
 
 <p>Since restricting property conversion only makes sense for Beans (clearly primitive types don't need restrictions on conversion of their properties) this functionality is specific to BeanConverter and anything that inherits from it (like <a href="../../integration/hibernate.html">HibernateBeanConverter</a>)</p>
 
-<p>The syntax is like this:</p>
+<p>The syntax is:</p>
 
 <pre>
 &lt;convert converter="bean" match=&quot;com.example.Person"&gt;
@@ -110,7 +109,7 @@ Remoted.addToFriends(p);
 
 <p>In addition to the parameters above the 'object' converter has a force parameter that instructs DWR to use reflection modifiers to access private members of objects.</p>
 
-<p>The syntax is like this:</p>
+<p>The syntax is:</p>
 
 <pre>
 &lt;convert converter="object" match=&quot;com.example.Person"&gt;
@@ -118,13 +117,10 @@ Remoted.addToFriends(p);
 &lt;/convert&gt;
 </pre>
 
-<p>There is a bug in DWR up to version 1.1.3 where it failed to detect if a field is public properly, so you may need to use <code>force=true</code> for public members 
-in version 1.1.3 or before.</p>
-
 <h2>Mapping Java classes to JavaScript classes</h2>
 
 <p>Sometimes it is desirable to preserve the type (or sub-type) of Java objects 
-returned from server. This is possible since DWR 2.0 by having it map Java classes to 
+returned from the server. This is possible by having DWR map Java classes to 
 corresponding JavaScript classes. This is done by adding a <code>javascript</code> 
 attribute to the <code>convert</code> element, naming the desired JavaScript class name:</p>
 
@@ -191,6 +187,27 @@ Employee.prototype.constructor = Employee;
 p2 instanceof Person // true
 </pre>
 
+<h3>Javascript wildcard expansion</h3>
+
+<p>The javascript attribute of a converter will allow the * and ** wildcards. The * will map to the matched classes simple name while ** will be mapped to the fully qualified named. A few examples may help illustrate this feature:
+
+<pre>
+&lt;converter type="bean" match="model.BeanA" javascript="*" /&gt;
+</pre>
+Resulting JS identifier: BeanA
+
+<pre>
+&lt;converter type="bean" match="model.BeanA" javascript="**" /&gt;
+</pre>
+Resulting JS identifier: model.BeanA
+
+<pre>
+&lt;converter type="bean" match="model.BeanA" javascript="foo.bar.*" /&gt;
+</pre>
+Resulting JS identifier: foo.bar.BeanA
+</p>
+
+<h3>Interfaces and Abstract Classes</h3>
 <p>The class mapping feature may also be used with interfaces and abstract 
 classes. Note though that a remoted method's argument types always have to be enabled
 for conversion, even when these types are non-concrete classes, otherwise DWR will

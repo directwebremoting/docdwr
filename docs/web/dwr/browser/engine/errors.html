@@ -17,7 +17,14 @@
 
 <p>This method could be used to display error messages in an alert box or to the status bar.</p>
 
-<p>To change the error handler use <code>dwr.engine.setErrorHandler(function)</code>, and to change the warning handler use <code>dwr.engine.setWarningHandler(function)</code>.</p>
+<p>To change the global error handler use <code>dwr.engine.setErrorHandler(function)</code>, and to change the global warning handler use <code>dwr.engine.setWarningHandler(function)</code>.  Please note that the error and warning handlers can also be set on a per call basis using the call meta-data options:
+<pre>
+Remote.method(params, {
+  callback:function(data) { alert("it worked"); },
+  errorHandler:function(message) { alert("it broke"); }
+});
+</pre>
+</p>
 
 <p>For more information about handling errors and warnings, see the <a href="../../other/errors.html">error handling page</a>.</p>
 

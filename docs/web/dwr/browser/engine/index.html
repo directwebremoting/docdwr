@@ -15,7 +15,7 @@
 
 <p><code>engine.js</code> is vital to DWR since it is used to marshal calls from the dynamically generated interface JavaScript function, so it is needed wherever DWR is used.</p>
 
-<p>With DWR version 1.0 and 1.1, all functions had the prefix <code>DWREngine</code>, from version 2.0 the preferred prefix is: <code>dwr.engine</code>. The old prefix will still work, however it is deprecated. The documentation generally uses the new version.</p>
+<p>All engine.js functions have the <code>dwr.engine</code> prefix.</p>
 
 <p>In DWR version 1.0 and 3.0 engine.js was static. Version 2.0 dynamically generated engine.js making it hard to cache, although there are <a href="static.html">solutions to this problem</a>.</p>
 
@@ -90,7 +90,7 @@ dwr.engine.endBatch({
 
 <tr><td><a href="../../introduction/scripting-dwr.html">callback</a></td> <td>-</td><td>-</td><td>1.0</td><td>Executed on successful call completion with a single parameter; the returned data.</td></tr>
 
-<tr><td><a href="../../introduction/scripting-dwr.html">callbackHandler</a></td> <td>-</td><td>-</td><td>3.0</td><td>Synonymous with callback to match excpetionHandler.</td></tr>
+<tr><td><a href="../../introduction/scripting-dwr.html">callbackHandler</a></td> <td>-</td><td>-</td><td>3.0</td><td>Synonymous with callback to match exceptionHandler.</td></tr>
 
 <tr><td><a href="../../other/errors.html">exceptionHandler</a></td> <td>-</td><td>-</td><td>2.0</td><td>Executed when a remote call fails either due to a server exception or a data marshalling problem.</td></tr>
 

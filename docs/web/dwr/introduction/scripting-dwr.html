@@ -13,13 +13,13 @@
 
 <h1>Writing JavaScript with DWR</h1>
 
-<p>DWR generates Javascript code that is similar to the Java code that exported using dwr.xml.</p>
+<p>DWR generates Javascript code that is similar to the Java code that you remoted, using the &lt;create ... &gt; element, in your dwr.xml file.</p>
 
-<p>The biggest challenge in creating a remote interface to match some Java code across Ajax is the (usually) asynchronous nature of Ajax, compared to the synchronous nature of a normal Java call.</p>
+<p>The biggest challenge in creating a remote interface to match Java code across Ajax is the (usually) asynchronous nature of Ajax, compared to the synchronous nature of a normal Java call.</p>
 
 <p>DWR solves this problem by introducing a callback function that is called when the data is returned from the server.</p>
 
-<p>There are 2 recommended ways to make a call using DWR. Either using by appending a callback function to the parameter list or by appending a call meta data object.</p>
+<p>There are 2 recommended ways to make a call using DWR. Either by appending a callback function to the parameter list or by appending a call meta data object.</p>
 
 <p>It is also possible to put the callback function at the start of the parameter list, however this option is not advised because there are some issues when dealing with <a href="../server/javaapi.html">automatic http objects</a> (see "Alternative Method"). This method mostly remains for backwards compatibility.</p>
 

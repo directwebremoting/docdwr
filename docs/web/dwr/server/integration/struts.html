@@ -13,19 +13,19 @@
 
 <h1>Integrating DWR with Struts</h1>
 
-<p>DWR can fix inside almost any framework. This website is a fairly extreme demonstration of this because it uses DWR inside <a href="http://www.drupal.org/">Drupal</a> (PHP).</p>
+<p>DWR can work with almost any framework. </p>
 
 <p>There are 2 levels at which DWR will work with <a href="http://struts.apache.org">Struts</a>. The most basic level just involves using both at the same time, which is perfectly possible, but it does not allow you to share actions between DWR and Struts.</p>
 
 <!--break-->
 
-<p>DWR can call any method so there is nothing to stop you calling a Struts action from DWR, except that you don't want to do that. What would be the contents of the ActionForm? and what would DWR do with the returned ActionForward?</p>
+<p>DWR can call any method so there is nothing to stop you from calling a Struts action from DWR, except that you don't want to do that. What would be the contents of the ActionForm? and what would DWR do with the returned ActionForward?</p>
 
 <p>A good approach is to refactor the Actions you wish to call so the logic is extracted from the Action. DWR and your Action then call the same method.</p>
 
 <h2>The 'struts' Creator</h2>
 
-<p>As of DWR 1.1 a StrutsCreator is included with the normal DWR download. You can use this from dwr.xml as follows:</p>
+<p>The StrutsCreator is included with the normal DWR download. You can use this from dwr.xml as follows:</p>
 
 <pre>
 &lt;allow&gt;

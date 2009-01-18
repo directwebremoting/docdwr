@@ -29,7 +29,7 @@
 &lt;/allow&gt;
 </pre>
 
-<p>Most of these elements are optional - All you really need is to specify a creator and a JavaScript name.</p>
+<p>Most of these elements are optional - All you really need is to specify the creator and javascript attributes.</p>
 
 <p><b>The creator attribute</b> is required - it specifies which creator will be used.</p>
 
@@ -59,9 +59,9 @@
 
 <p>Should you need to write your own creator, you must register it using the <code>&lt;init&gt;</code> section.</p>
 
-<p><b>The javascript attribute</b> gives your newly created object a name in the browser. You should avoid using JavaScript reserved words.</p>
+<p><b>The javascript attribute</b> is required - it gives your newly created object a name in the browser. You should avoid using JavaScript reserved words.</p>
 
-<p><b>The scope attribute</b> is largely the same as the scope attribute as defined by the servlet spec. It allows you to specify what a bean is available to. The options are "application", session, "request", "page" and an additional scope "script". These first 4 of these values should be familiar to Servlet and JSP developers. "script" scope allows you to have something similar to an HTTP session that is tied to an ID in a page rather than in a cookie.</p>
+<p><b>The scope attribute</b> is largely the same as the scope attribute as defined by the servlet spec. It allows you to specify what a bean is available to. The options are "application", "session", "request", "page" and an additional scope "script". The first 4 of these values should be familiar to Servlet and JSP developers. "script" scope allows you to have something similar to an HTTP session that is tied to an ID in a page rather than in a cookie.</p>
 
 <p>The scope attribute is optional. It defaults to "page".</p>
 
@@ -111,12 +111,6 @@
 <h2>Other Creators</h2>
 
 <p>We have occasional requests for new creators, the most common is for an EjbCreator. The best place to discuss new creators is the <a href="../../../support.html">DWR mailing list</a>.</p>
-
-<h2>DWR and HttpSessionBindingListeners</h2>
-
-<p>One subtlety about the way the DWR 1.x stores created beans is that it re-calls the corresponding <code>setAttribute()</code> method for every request. That is, if your bean has been given session lifetime in dwr.xml, session.setAttribute(yourBean) will be invoked everytime you invoke a method on that bean. This seems innocuous enough, however, if you're attempting to use servlet events, say, by way of the HttpSessionBindingListener interface then you'll see valueBound and valueUnbound events for every call, rather than only when your bean is created and when the session expires, as you might expect.</p>
-
-<p>DWR 2 only calls <code>setAttribute()</code> when it first creates the object.</p>
 
 <br/>
 
