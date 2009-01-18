@@ -13,6 +13,8 @@
 
 <h1>Error and Exception Handling</h1>
 
+<p>See notes at the bottom of this page for usage notes in version 1.x, although since 1.x is no longer supported, <a href="../download.html">an upgrade</a> is strongly recommended.</p>
+
 <p>First some definitions:</p>
 
 <ul>
@@ -138,7 +140,7 @@ dwr.engine.setTextHtmlHandler(function() {
 });
 </pre>
 
-<p>It is possible to show the login page using a pop-up div, keeping the user on the current page. The textHtmlHandler function is passed a parameter which contains information about the failure. The data passed in the parameter is:</p>
+<p>From DWR version 2.0.3 it is possible to show the login page using a pop-up div, keeping the user on the current page. The textHtmlHandler function is passed a parameter which contains information about the failure. The data passed in the parameter is:</p>
 
 <ul>
 <li>status: HTTP response code</li>
@@ -155,6 +157,15 @@ dwr.engine.setTextHtmlHandler(function(pageData) {
 </pre>
 
 <p>A fully working example would need to post the login from inside an iframe to allow the user to remain on the same page.</p>
+
+
+<h2>Notes for older versions</h2>
+
+<p>Prior to DWR 2.0 you had to use the old format for registering handlers. (This still works with version 2.0 however it is deprecated).</p>
+
+<pre>
+DWREngine.setErrorHandler(handler);
+</pre>
 
 </body>
 </html>

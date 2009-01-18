@@ -1,7 +1,7 @@
 <!DOCTYPE html>
 <html>
 <head>
-  <title>Passing extra data to callbacks</title>
+  <title>Passing extra data to callbacks and scoping issues within the callback function</title>
   <meta name='nid' content='99'>
   <meta name='parent' content='28'>
   <meta name='weight' content='1'>
@@ -15,12 +15,12 @@
 
 <p>It's common to need to pass extra information to a callback method, but since all callback methods have only one parameter (the return code from the remote method) this can be tricky.</p>
 
-<p>The 3.0 release of DWR <a href="#extraData3">addresses this problem</a> with the addition of several optional attributes on the call meta-data object: arg, callbackArg, and exceptionArg. Check the <a href="../download.html">download</a> section for details on the release of 3.0.</p>
+<p>DWR <a href="#extraData3">addresses this problem</a> with the addition of several optional attributes on the call meta-data object: arg, callbackArg, and exceptionArg.</p>
 
-<p><a href="#extraData">For all DWR releases prior to 3.0</a> the solution is to use a Javascript <a href="http://jibbering.com/faq/faq_notes/closures.html">closure</a>.</p>
+<p><a href="#extraData">For an alternative approach</a> the solution is to use a Javascript <a href="http://jibbering.com/faq/faq_notes/closures.html">closure</a>.</p>
 
-<h2><a name="extraData3"></a>DWR 3.0 and later</h2>
-<p>DWR 3.0 allows for an argument to be specified and passed to handlers -- eliminating the need for JavaScript closures.  This argument can apply to the callbackHandler the exceptionHandler, or both.  In order to take advantage of this feature you must use a call meta-data object (Call meta-data is explained in the <a href="../introduction/scripting-dwr.html">scripting introduction</a>).
+<h2><a name="extraData3"></a>Recommended Method</h2>
+<p>DWR allows for an argument to be specified and passed to handlers -- eliminating the need for JavaScript closures.  This argument can apply to the callbackHandler the exceptionHandler, or both.  In order to take advantage of this feature you must use a call meta-data object (Call meta-data is explained in the <a href="../introduction/scripting-dwr.html">scripting introduction</a>).
 
 <pre>
 var dataFromBrowser = ...;
@@ -68,7 +68,7 @@ function exceptionHandlerFunction(exceptionMessage, exception, arg1) {
 </pre>
 </p>
 <h3><a name="scope"></a>A word about scope</h3>
-<p>The 3.0 release also addresses scope issues within callback and exception handlers. We have added several optional attributes on the call meta-data object: scope, callbackScope, and exceptionScope.</p>
+<p>DWR also addresses scope issues within callback and exception handlers. We have added several optional attributes on the call meta-data object: scope, callbackScope, and exceptionScope.</p>
 
 <pre>
 (function() {
@@ -100,7 +100,7 @@ Rules:
 </ol>
 <p>Note: The default scope is window.</p>
 
-<h2><a name="extraData"></a>Before DWR 3.0 - JavaScript Closures</h2>
+<h2><a name="extraData"></a>Alternative Approach - JavaScript Closures</h2>
 <p>A JavaScript <a href="http://jibbering.com/faq/faq_notes/closures.html" target="new">closure</a> is required to pass extra data to a callback or exception handler prior to the 3.0 release.  For example, your callback method needs to look something like this:</p>
 
 <pre>

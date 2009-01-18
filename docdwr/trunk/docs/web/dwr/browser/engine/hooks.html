@@ -12,12 +12,17 @@
 <body>
 
 <h1>Remoting Hooks</h1>
-
-<p>See <code>dwr.engine.setPreHook(function)</code> and <code>dwr.engine.setPostHook(function)</code>.</p>
-
 <p>If you wish to be alerted before DWR actually remotes a call you can set a pre-hook function. This will be called with no parameters. This hook is useful if you wish to grey out certain components to prevent them being used again until the call returns.</p>
-
 <p>Post execute hooks will usually be set in conjunction with pre-execute hooks and will generally undo any changes made by the pre-hook.</p>
+<p>To set a preHook or postHook function globally see <code>dwr.engine.setPreHook(function)</code> and <code>dwr.engine.setPostHook(function)</code>.</p>
+<p>You can also set a preHook or postHook function on a per-call basis using the call meta-data options:
+<pre>
+Remote.method(params, {
+  callback:function(data) { alert("it worked"); },
+  preHook:function() { alert("Calling remote method."); },
+  postHook:function() { alert("Remote call complete."); }
+});
+</pre>
 
 <p>For an example of pre and post hooks, see the <code>dwr.util.useLoadingMessage()</code> function.</p>
 

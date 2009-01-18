@@ -13,7 +13,7 @@
 
 <h1>The Filters</h1>
 
-<p>Filters are a way to take some action either before, or after a server call, or to prevent the call from happening at all. Filters have been a part of DWR side version 2.0</p>
+<p>Filters are a way to take some action either before, or after a server call, or to prevent the call from happening at all.</p>
 
 <p>Filters are defined using the <code>filter</code> element in a dwr.xml file, using the <code><a href="/M:/Users/joe/Projects/directwebremoting/docdwr/docs/web/dwr-javadoc/org/directwebremoting/annotations/Filter.html">@Filter</a></code> annotation, or using the <code>dwr:filter</code> element in a spring namespace configuration.</p>
 
@@ -82,7 +82,7 @@ public class NoopFilter {
 <li>Fault simulation for testing.</li>
 </ul>
 
-<p>DWR 2.0 contains one built-in filter for simulating Internet latency while developing on a local machine. It is configured like this:</p>
+<p>DWR 3.x contains one built-in filter for simulating Internet latency while developing on a local machine. It is configured like this:</p>
 
 <pre>
 &lt;filter class="org.directwebremoting.filter.ExtraLatencyAjaxFilter"&gt;

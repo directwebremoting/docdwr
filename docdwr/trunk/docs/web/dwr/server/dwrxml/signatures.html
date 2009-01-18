@@ -13,7 +13,7 @@
 
 <h1>Signatures in dwr.xml</h1>
 
-<p>The signatures section is to enable resolution of the types stored in Collections. For example in the following example DWR has no way to know that it should cast the incoming data to be a list of numbers.</p>
+<p>The signatures section is used to enable resolution of the types stored in Collections. For example in the following example DWR has no way to know that it should cast the incoming data to be a list of numbers.</p>
 
 <pre>
 public class Check
@@ -115,7 +115,7 @@ public List&lt;Date&gt; method(String p);
 
 <p>Sometimes DWR will be remoting classes that are wrapped in dynamic proxies. This causes a problem because DWR will be looking up the wrong type, and not find a match.</p>
 
-<p>From DWR version 2 you can specify the Javascript version of the class name in place of the full Java name. This allows you to specify a Creator that we should attach the signature to rather than a class.</p>
+<p>DWR allows you to specify the Javascript version of the class name in place of the full Java name. This allows you to specify a Creator that we should attach the signature to rather than a class.</p>
 
 </body>
 </html>

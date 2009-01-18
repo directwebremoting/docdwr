@@ -13,7 +13,7 @@
 
 <h1>Reference to DWR entries in WEB-INF/web.xml</h1>
 
-<p>The minimum possible additions to your web.xml, are simply those to declare the DWR servlet without which none of this would work. So the least you can get away with looks something like this:</p>
+<p>The minimum possible additions to your web.xml, are simply those to declare the DWR servlet and the appropriate servlet mapping.  So the least you can get away with looks something like this:</p>
 
 <!--break-->
 
@@ -28,9 +28,7 @@
 &lt;/servlet-mapping&gt;
 </pre>
 
-<p>In DWR 2.x the DwrServlet is called org.directwebremoting.servlet.DwrServlet although uk.ltd.getahead.dwr.DWRServlet still works. In DWR 1.x you have to use uk.ltd.getahead.dwr.DWRServlet.</p>
-
-<p>In addition to this there are several extra servlet parameters that are somewhere between important and vaguely useful. In DWR 3.0 all logging is done through the commons-logging API. Important log levels are documented in the <a href="logging.html">logging section</a> along with historical logging information.</p>
+<p>In addition to this there are several extra servlet parameters that are somewhere between important and vaguely useful. In DWR 3.0 all logging is done through the commons-logging API. Important log levels are documented in the <a href="logging.html">logging section</a>.</p>
 
 <h2>Configuring DWR</h2>
 
@@ -47,7 +45,7 @@
 &lt;/servlet&gt;
 </pre>
 
-<p>DWR supports more init-params than those documented here, however un-documented init-params maybe withdrawn without deprecation in future releases.</p>
+<p>DWR supports more init-params than those documented here, however un-documented init-params may be withdrawn without deprecation in future releases.</p>
 
 <table class="documentation">
 

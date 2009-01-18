@@ -13,12 +13,15 @@
 
 <h2>Getting Started with DWR</h2>
 
-<p>There are 2 ways to get started with DWR, the easy way is to <a href="../download.html">download</a> the WAR file and have a look around, however this does not help you see how easily DWR integrates with your current web application, so the following 3 simple steps are recommended:</p>
+<p>There are 2 ways to get started with DWR, the easy way is to <a href="../download.html">download</a> the WAR file and have a look around, however this does not help you see how easily DWR integrates with your current web application, so the following 5 simple steps are recommended:</p>
 
 <h4>1. Install the DWR JAR file</h4>
-<p><a href="../download.html">Download</a> the dwr.jar file. Place it in the <code>WEB-INF/lib</code> directory of your webapp. You'll probably have a set of jar files in there already. From version 2.0, DWR also requires <a href="http://commons.apache.org/logging/">commons-logging</a>.</p>
+<p><a href="../download.html">Download</a> the dwr.jar file. Place it in the <code>WEB-INF/lib</code> directory of your webapp. You'll probably have a set of jar files in there already.</p>
 
-<h4>2. Edit the config files</h4>
+<h4>2. Install the Commons Logging JAR file</h4>
+<p>DWR has one dependency on  <a href="http://commons.apache.org/logging/" target="new">Commons Logging</a>. <a href="http://commons.apache.org/logging/" target="new">Download</a> the commons-logging.jar and place it in the <code>WEB-INF/lib</code> directory of your webapp.</p>
+
+<h4>3. Add the DWR servlet definition and mapping to your application's web.xml</h4>
 <p>The following lines need to be added to <code>WEB-INF/web.xml</code>. The <code>&lt;servlet&gt;</code> section needs to go with the other <code>&lt;servlet&gt;</code> sections, and likewise with the <code>&lt;servlet-mapping&gt;</code> section.</p>
 
 <pre>
@@ -38,14 +41,14 @@
 &lt;/servlet-mapping&gt;
 </pre>
 
-<p>If you are using DWR 1.x then the servlet-class line should contain the following: <code>uk.ltd.getahead.dwr.DWRServlet</code>. The 1.x version will still work with 2.x, but the new one is preferred.</p>
-
-<p>Then create a dwr.xml file that lives in WEB-INF alongside web.xml. A simple way to start is with something like this:</p>
+<h4>4. Create the DWR configuration file (dwr.xml)</h4>
+<p>Create a new file in the WEB-INF (alongside web.xml) directory named dwr.xml.</p>
+<p>A simple way to start is with something like this:</p>
 
 <pre>
 &lt;!DOCTYPE dwr PUBLIC
-    "-//GetAhead Limited//DTD Direct Web Remoting 2.0//EN"
-    "<a href="../dwr20.dtd">http://getahead.org/dwr/dwr20.dtd</a>"&gt;
+    "-//GetAhead Limited//DTD Direct Web Remoting 3.0//EN"
+    "<a href="../dwr30.dtd">http://getahead.org/dwr/dwr30.dtd</a>"&gt;
 
 &lt;dwr&gt;
   &lt;allow&gt;
@@ -59,25 +62,23 @@
 &lt;/dwr&gt;
 </pre>
 
-<p>Obviously, if you are using version 1.x the opening line will have 1.0 in place of 2.0 and 10 in place of 20.</p>
-
 <p>The DWR config file defines what classes DWR can create and remote for use by Javascript. In the example above we are defining 2 classes that are remoted and giving the classes names in Javascript.</p>
 
-<p>The <code>new</code> creator that we used above uses the public no-args constructor that all JavaBeans must have. It is also worth remembering that DWR has a few restrictions:</p>
+<p>The <a href="../server/dwrxml/creators/new.html">new creator</a> that we used above uses the public no-args constructor that all JavaBeans must have. It is also worth remembering that DWR has one restriction:</p>
 
 <ul>
 
-<li>Avoid reserved JavaScript words; Methods named after reserved words are automatically excluded. Most JavaScript reserved words are also Java reserved words, so you won't be having a method called "try()" anyway. However the most common gotcha is "delete()", which has special meaning from JavaScript but not Java.</li>
-
-<li>Overloaded methods can be involved in a bit of a lottery as to which gets called, so avoid overloaded methods.</li>
+<li>Avoid reserved JavaScript words; Methods named after reserved words are automatically excluded. Most JavaScript reserved words are also Java reserved words, so you won't be having a method called "try()" anyway. However the most common gotcha is "delete()", which has special meaning in JavaScript but not Java.</li>
 
 </ul>
 
-<h4>3. Go to the following URL</h4>
+<p><a href="../server/dwrxml/index.html">Visit the dwr.xml documentation</a> for a detailed description of the dwr.xml file, creators and converters.</p>
 
+<h4>5. Take DWR for a test drive!</h4>
+<p>Go to the following URL:</p>
 <code>http://localhost:8080/<i>[YOUR-WEBAPP]</i>/dwr/</code>
 
-<p>You should see a page showing you the classes that you've selected in step 2. Having followed a link you should see an index of all the methods all ready for calling. These pages are dynamically generated examples of what you can do using DWR.</p>
+<p>You should see a page showing you the classes that you've selected in step 4. Having followed a link you should see an index of all the methods ready for calling. These pages are dynamically generated examples of what you can do using DWR.</p>
 
 <p>Kick the tyres and have a look around.</p>
 
