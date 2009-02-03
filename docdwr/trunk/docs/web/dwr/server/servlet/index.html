@@ -270,7 +270,7 @@ We increase the poll time to compensate and reduce the load.
 </td>
 <tr>
 <td>Notes:</td>
-<td>From version 3.0, DWR automatically compresses output scripts in live mode (see the 'debug' init-param) and leaves them uncompressed in debug mode. The 'scriptCompressed' init-param is NOT required. DWR will use ShrinkSafe or the YUI compressor automatically if they are found in the classpath, otherwise a simpler built-in compressor will be used.
+<td><a name="scriptCompression"></a>From version 3.0, DWR automatically compresses output scripts in live mode (see the 'debug' init-param) and leaves them uncompressed in debug mode. The 'scriptCompressed' init-param is NOT required. DWR will use ShrinkSafe or the YUI compressor automatically if they are found in the classpath, otherwise a simpler built-in compressor will be used.
 <br />Prior to version 3 only the simpler compression was avaiable, and it required the 'scriptCompressed' init-param to be set to 'true'. There is an associated and officially undocumented parameter: compressionLevel which allows you to configure the types of compression that are attempted. See the source for org.directwebremoting.util.JavascriptUtil for more details.</td>
 </tr>
 

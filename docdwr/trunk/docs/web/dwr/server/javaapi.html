@@ -13,7 +13,7 @@
 
 <h1>DWR Java API</h1>
 
-<p>DWR has a deliberately small Java API. Usually, as a web application developer you will only need to depend on <code>WebContext</code> / <code>WebContextFactory</code> if you are using reverse ajax, you may in addition need <code>ServerContext</code> / <code>ServerContextFactory</code>. These classes are located in the <code>org.directwebremoting</code> package. (In DWR 1.0 the package names all started with <code>uk.ltd.getahead.dwr</code>).</p>
+<p>DWR has a deliberately small Java API. Usually, as a web application developer you will only need to depend on <code>WebContext</code> / <code>WebContextFactory</code> if you are using reverse ajax, you may in addition need <code>ServerContext</code> / <code>ServerContextFactory</code>. These classes are located in the <code>org.directwebremoting</code> package.</p>
 
 <p><code>WebContext</code> and <code>ServerContext</code> are your connection to other parts of DWR and the general servlet API. <code>WebContext</code> is used when you are in a DWR thread. It uses a ThreadLocal variable to connect you to the running container. <code>ServerContext</code> can be used outside of a DWR thread, but as a result you will need to pass it a ServletContext so it knows where DWR is running.</p>
 
