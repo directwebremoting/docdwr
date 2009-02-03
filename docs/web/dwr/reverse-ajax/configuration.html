@@ -59,6 +59,15 @@ dwr.engine.setActiveReverseAjax(true);
 &lt;/init-param&gt;
 </pre>
 
+<p>DWR has special support for the Comet features in Jetty and Tomcat. The Jetty support is automatic, no special configuration is needed. For Tomcat you need to regester a special version of the DwrServlet as follows:</p>
+
+<pre>
+&lt;servlet&gt;
+  &lt;servlet-name&gt;dwr-invoker&lt;/servlet-name&gt;
+  &lt;servlet-class&gt;org.directwebremoting.server.tomcat.DwrCometProcessor&lt;/servlet-class&gt;
+  ...
+&lt;/servlet&gt;
+</pre>
 
 <h2>Early Closing Mode</h2>
 
