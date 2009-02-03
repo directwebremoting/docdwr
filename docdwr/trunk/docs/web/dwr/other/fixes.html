@@ -49,18 +49,6 @@ javax.xml.transform.TransformerFactoryConfigurationError:
 <p>This can happen if dwr.jar is being used from an APP-INF directory (i.e. <code>APP_INF/lib</code>). Under these circumstances DWR will still appear to function, the debug pages will be visible for example, however it will have trouble finding your classes.</p>
 
 <p>The solution is to place dwr.jar into your <code>WEB-INF/lib</code> directory.</p>
-
-<h1>Support for DWR without cookies</h1>
-
-<p>The servlet spec supports using URL re-writing to support HttpSessions when cookies are turned off. DWR 2.x supports this with the URLs it creates. DWR 1.x however does not. You can alter DWR 1.x to support cookies with the following procedure:</p>
-
-<ul>
-<li>Extract engine.js from dwr.jar and save it to the filesystem as a jsp file.</li>
-<li>Inside the "<code>DWREngine._sendData = function(batch)</code>" method, add one line: <code>statsInfo += ";jsessionid=" + &lt;%="'"+session.getId()+"'"%&gt;</code></li>
-</ul>
-
-<p>This hack allows DWR 1.x to support url-rewriting. DWR 2+ supports this by default.</p>
-
 <h1>DWR and Multiple IEs on one machine</h1>
 
 <p>Microsoft <a href="http://blogs.msdn.com/cwilso/archive/2006/02/01/522281.aspx">discourage people</a> from using multiple versions of IE on a single machine, even though there are solutions like <a href="http://tredosoft.com/Multiple_IE?page=4">Tredosof Multiple IE</a>. The issue is that you never really have a full installation of the non-system browser. Cookie support is one area where multiple versions of IE breaks, which can cause problems with DWR's cross-domain security.</p>
@@ -79,7 +67,7 @@ javax.xml.transform.TransformerFactoryConfigurationError:
 
 <h1>Annotations and Websphere</h1>
 
-<p>Websphere is rather late to support Java5 and some versions of Websphere react strangely when Java5 code is found. DWR 1.x contains no Java5 specific code so there is no issue there. DWR 2.x contains optional Java5 support. The vast majority of the JAR file was compiled with JDK 1.3 however the Annotations support was compiled with JDK 1.5. Normally a 1.4 JVM will throw an exception that DWR can catch using a normal try/catch mechanism, however for some reason the IBM 1.4 JVM seems to throw a magic uncatchable exception!. The following console message maybe found with Websphere / DWR 2.x.</p>
+<p>Websphere is rather late to support Java5 and some versions of Websphere react strangely when Java5 code is found. DWR 2.x contains optional Java5 support. The vast majority of the JAR file was compiled with JDK 1.3 however the Annotations support was compiled with JDK 1.5. Normally a 1.4 JVM will throw an exception that DWR can catch using a normal try/catch mechanism, however for some reason the IBM 1.4 JVM seems to throw a magic uncatchable exception!. The following console message maybe found with Websphere / DWR 2.x.</p>
 
 <pre>TRAS0014I: The following exception was logged
 java.lang.LinkageError: LinkageError while defining class:
