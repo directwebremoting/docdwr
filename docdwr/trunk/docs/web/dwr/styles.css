@@ -68,6 +68,7 @@ a.currentLink { color:#F99; }
 
 #pagelinks { background:#447; position:absolute; top:50px; left:0; width:100%; height:24px; font-weight:normal; font-size:90%; padding:2px 0px; color:#888; }
 #pagelinks a { color:#ccc; border:0; }
+#pagelinks a.currentLink { color:#ddd; border:0; }
 
 .navlinks { color:#aaa; float:right; padding-right:20px; }
 .navlinks form { display:inline; }
