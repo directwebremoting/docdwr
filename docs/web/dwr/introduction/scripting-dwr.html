@@ -93,11 +93,9 @@ Remote.method({ timeout:3 }, { errorHandler:somefunc });
 
 <ul>
 
-<li>If there is a function first or last then this is the callback function, there is no call meta-data object and the other parameters are the Java args.</li>
+<li>If there is a function last then this is the callback function, there is no call meta-data object and the other parameters are the Java args.</li>
 
 <li>Otherwise, if the last param is an object with a callback member that is a function then this is call meta-data the other params are Java args.</li>
-
-<li>Otherwise, if the first parameter is null we assume that there is no callback function and the remaining params are Java args. HOWEVER we check to see that the last param is not null and give a warning if it is.</li>
 
 <li>Finally if the last param is null, then there is no callback function.</li>
 
@@ -105,7 +103,7 @@ Remote.method({ timeout:3 }, { errorHandler:somefunc });
 
 </ul>
 
-<h2>Creating Javascript objects to match Java objects</h2>
+<h2><a name="JStoMatchJava"></a>Creating Javascript objects to match Java objects</h2>
 
 <p>Suppose you have an exposed Java method like this:</p>
 
