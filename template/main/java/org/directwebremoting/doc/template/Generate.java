@@ -67,10 +67,12 @@ public class Generate
             {
                 return "<a href='" + source.getName() + "' class='currentLink'>" + text + "</a>";
             }
+
             if (this.parent == from.parent)
             {
                 return "<a href='" + source.getName() + "'>" + text + "</a>";
             }
+
             return "<a href='" + from.getPathToRoot() + path + "'>" + text + "</a>";
         }
 
@@ -146,7 +148,7 @@ public class Generate
             out.print(page.neck);
             out.print(getTemplatePreBodyInsert(page));
             out.print(page.body);
-            out.print(getTemplatePostBodyInsert(pages.get(ROOT)));
+            out.print(getTemplatePostBodyInsert(page, pages.get(ROOT)));
             out.print(page.close);
             out.close();
         }
@@ -431,12 +433,12 @@ public class Generate
     /**
      * 
      */
-    private static String getTemplatePostBodyInsert(Page root)
+    private static String getTemplatePostBodyInsert(Page base, Page root)
     {
         StringBuilder menu = new StringBuilder();
 
         menu.append("<ul class='menu' id='nav'>\n");
-        addMenuOptions(menu, root, "Quick Nav&nbsp;&#x2192;");
+        addMenuOptions(menu, base, root, "Quick Nav&nbsp;&#x2192;");
         menu.append("</ul>\n");
 
         return menu.toString();
@@ -445,7 +447,7 @@ public class Generate
     /**
      * 
      */
-    private static void addMenuOptions(StringBuilder menu, Page page, String text)
+    private static void addMenuOptions(StringBuilder menu, Page base, Page page, String text)
     {
         if (text == null)
         {
@@ -455,11 +457,16 @@ public class Generate
         boolean hasChildren = (page.children.size() > 0);
         if (hasChildren)
         {
-            menu.append("<li class='hasChildren'>" + page.getLink(page, text));
+            menu.append("<li class='hasChildren'>" + page.getLink(base, text));
             menu.append("<ul>\n");
+
+            menu.append("<li class='noChildren'>");
+            menu.append(page.getLink(base, "Index"));
+            menu.append("</li>\n");
+
             for (Page child : page.children)
             {
-                addMenuOptions(menu, child, null);
+                addMenuOptions(menu, base, child, null);
             }
             menu.append("</ul>\n");            
             menu.append("</li>\n");
@@ -467,7 +474,7 @@ public class Generate
         else
         {
             menu.append("<li class='noChildren'>");
-            menu.append(page.getLink(page));
+            menu.append(page.getLink(base));
             menu.append("</li>\n");
         }
     }
