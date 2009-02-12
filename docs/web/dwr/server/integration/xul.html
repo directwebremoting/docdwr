@@ -1,0 +1,54 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <title>XUL Integration</title>
+  <meta name='nid' content='115'>
+  <meta name='parent' content='3'>
+  <meta name='weight' content='9'>
+  <meta name='filename' content='dwr/server/xul.html'>
+  <meta name='alias' content='/dwr/server/xul'>
+  <meta name='navTitle' content='XUL'>
+  <link rel="stylesheet" type="text/css" href="../../media/styles.css">
+</head>
+<body>
+<pre>
+<h1>Using DWR from XUL applications</h1>
+
+<p>DWR is usable from XUL applications except that DWR can't find cookies in the standard way because document.cookie is not available to XUL applications.</p>
+
+<p>You can allow use of DWR from XUL by making the following change to engine.js. It's not an official part of DWR because we don't regularly test with XUL applications.</p>
+
+<p>The easy way to make this change is simply to load the following script after engine.js</p>
+
+/** @private What is our session id? */
+dwr.engine._getJSessionId = function() {
+  if (typeof document.cookie == 'undefined') { // not in a classic html so guessing xul
+    netscape.security.PrivilegeManager.enablePrivilege('UniversalXPConnect');
+    var cookieManager = Components.classes["@mozilla.org/cookiemanager;1"].getService(Components.interfaces.nsICookieManager2);
+    var iter = cookieManager.enumerator;
+    while (iter.hasMoreElements()) {
+      var cookie = iter.getNext();
+      if (cookie instanceof Components.interfaces.nsICookie) {
+        if (cookie.name == dwr.engine._sessionCookieName)
+          return cookie.value;
+      }
+    }
+  }
+  else {
+    var cookies = document.cookie.split(';');
+    for (var i = 0; i < cookies.length; i++) {
+      var cookie = cookies[i];
+      while (cookie.charAt(0) == ' ')
+        cookie = cookie.substring(1, cookie.length);
+      if (cookie.indexOf(dwr.engine._sessionCookieName + "=") == 0) {
+        return cookie.substring(dwr.engine._sessionCookieName.length + 1, cookie.length);
+        }
+      }
+  }
+  return "";
+}
+</pre>
+
+<p>We're grateful to S.Pérès-Labourdette for this submission to the DWR mailing list.</p>
+</body>
+</html>
