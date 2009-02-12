@@ -13,7 +13,12 @@
 
 <h1>The Converters</h1>
 
-<p>A converter marshalls data between the client and the server.</p>
+<p>Converters are an integral part of DWR and are responsible for marshaling data between the client and the server.  You must specify a converter for:
+<ol>
+  <li>The Java return type of Java methods you have exposed to DWR.  In order to return a JavaScript object that can be used by the browser DWR needs to know how to marshal the Java return type into a JavaScript object.</li>
+  <li>The Java parameter type of all parameters of Java methods you have exposed to DWR.  In order to properly call the Java method DWR needs to know how to marshal the JavaScript object being passed from the browser into the appropriate Java object.</li>
+</ol>
+</p>
 
 <p>A number of converters deserve sections of their own:</p>
 
