@@ -13,15 +13,14 @@ a.nolink { text-decoration:none; border-bottom:0 none; }
 a:hover { border-bottom:1px solid; }
 a:link { color:#1b67c9; }
 a:visited { color:#335080; }
+a[name] { text-decoration:none; border-bottom:0 none; }
 
-h1 { font-weight:normal; color:#000; }
+h1, h2, h3, h4, h5 { font-weight:normal; color:#000; }
 h1 { font-size:120%; }
 h2 { font-size:110%; }
-h2 { font-weight:bold; color:#000; }
 h3 { font-size:105%; }
-h3 { font-weight:bold; color:#000; }
-h4 { font-weight:bold; color:#000; }
-th { font-weight:normal; color:#000; }
+h4 { font-size:100%; }
+th { font-size:100%; }
 
 tt, pre { font-family:'Courier New',monospace; white-space:pre-wrap; line-height:1; color:#336; font-size:90%; }
 
