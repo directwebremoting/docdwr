@@ -7,6 +7,7 @@ import java.io.FileOutputStream;
 import java.io.FileReader;
 import java.io.FileWriter;
 import java.io.IOException;
+import java.io.PrintStream;
 import java.io.PrintWriter;
 import java.util.ArrayList;
 import java.util.List;
@@ -75,13 +76,6 @@ public class Generate
                 return "<a href='" + source.getName() + "' class='currentLink'>" + text + "</a>";
             }
 
-            /*
-            if (this.parent == from.parent)
-            {
-                return "<a href='" + source.getName() + "'>" + text + "</a>";
-            }
-            */
-
             return "<a href='" + from.getPathToRoot() + path + "'>" + text + "</a>";
         }
 
@@ -136,23 +130,37 @@ public class Generate
         String root = "/Users/joe/Projects/directwebremoting/docdwr";
         Map<String, Page> pages = readInput(root + "/docs/web");
 
-        /*
-        for (Map.Entry<String, Generate.Page> entry : pages.entrySet())
-        {
-            System.out.println(entry.getValue());
-        }
-        */
-
-        writeOutput(pages, root + "/target/publish/");
+        writeHtmlOutput(pages, root + "/target/publish/");
         copyStatic(root + "/docs/web", root + "/target/publish", new String[] {
             "png", "gif", "jpg", "css", "pdf", "dtd", "xsd", "js"
         });
+
+        writeApacheConfOutput(pages, root + "/target/dwr.conf");
     }
 
     /**
      *
      */
-    private static void writeOutput(Map<String, Page> pages, String base) throws IOException
+    private static void writeApacheConfOutput(Map<String, Page> pages, String base)
+    {
+        PrintStream out = System.out;
+        for (Page page : pages.values())
+        {
+            for (String alias : page.aliases)
+            {
+                out.print("Redirect ");
+                out.print(alias);
+                out.print(" /");
+                out.print(page.path);
+                out.println();
+            }
+        }
+    }
+
+    /**
+     *
+     */
+    private static void writeHtmlOutput(Map<String, Page> pages, String base) throws IOException
     {
         for (Page page : pages.values())
         {
@@ -480,7 +488,8 @@ public class Generate
     /**
      * &#x2192; is right arrow, &#x2193; is down arrow
      */
-    private static final String ARROW = "&nbsp;&#x2193;";
+    //private static final String ARROW = "&nbsp;&#x2193;";
+    private static final String ARROW = "&nbsp;...";
 
     /**
      *
