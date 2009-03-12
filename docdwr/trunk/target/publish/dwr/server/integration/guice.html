@@ -1,0 +1,388 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <title>Guice Integration</title>
+  <meta name='alias' content='/dwr/server/guice'>
+  <meta name='navTitle' content='Guice'>
+  <link rel="stylesheet" type="text/css" href="../../media/styles.css">
+  <script type='text/javascript' src='../../../dwr/media/dojo.js'> </script>
+  <script type='text/javascript' src='../../../dwr/media/menu.js'> </script>
+</head>
+<body>
+<div id='header'><a href='http://directwebremoting.org/dwr/'>Direct Web Remoting</a></div>
+<div id=pagelinks>
+<div class='navlinks'>[ 
+<a href='/dwr' title='Easy Ajax for Java'>DWR</a> | 
+<a href='/blog/joe' title='Joe&#039;s Blog about DWR and Ajax'>Blog</a>
+ ]
+<form method='GET' action='http://www.google.com/search' id='search-form'>
+<span id='search'>
+<input class='form-text' type='text' id='search-box' name='as_q' size='20' maxlength='255'>
+<input type='hidden' name='as_sitesearch' value='directwebremoting.org'/>
+<input class='form-submit' type='submit' value='Google'/>
+</span>
+</form>
+</div>
+<div id='breadcrumbs'><a href='../../../dwr/index.html'>DWR - Easy Ajax for JAVA</a> &#x00BB; <a href='../../../dwr/server/index.html'>Server Side</a> &#x00BB; <a href='../../../dwr/server/integration/index.html'>Integrating with ...</a> &#x00BB; <a href='guice.html' class='currentLink'>Guice</a></div></div>
+
+<h1>DWR and Guice</h1>
+
+<p>DWR provides support for <a href="http://code.google.com/p/google-guice/">Guice</a> dependency injection in DWR-based web applications. This documentation assumes you already understand Guice concepts. The DWR-Guice integration is maintained by Tim Peierls.</p>
+
+<p>To use this support minimally,</p>
+
+<ul>
+   <li> install a concrete extension of
+     <a href="../../../dwr-javadoc/org/directwebremoting/guice/DwrGuiceServletContextListener.html" title="class in org.directwebremoting.guice"><code>DwrGuiceServletContextListener</code></a>
+     as a <code>&lt;listener&gt;</code> in your web application's configuration
+     file (<code>web.xml</code>), </li>
+   <li> install <a href="../../../dwr-javadoc/org/directwebremoting/guice/DwrGuiceServlet.html" title="class in org.directwebremoting.guice"><code>DwrGuiceServlet</code></a> for all
+     requests to <code>/dwr/*</code>. </li>
+
+   </ul>
+   For example:
+ 
+<pre>
+&lt;listener&gt;
+  &lt;listener-class&gt;org.myorg.myproj.MyServletContextListener&lt;/listener-class&gt;
+&lt;/listener&gt;
+
+&lt;servlet&gt;
+  &lt;servlet-name&gt;dwr-invoker&lt;/servlet-name&gt;
+  &lt;servlet-class&gt;org.directwebremoting.guice.DwrGuiceServlet&lt;/servlet-class&gt;
+&lt;/servlet&gt;
+
+&lt;servlet-mapping&gt;
+  &lt;servlet-name&gt;dwr-invoker&lt;/servlet-name&gt;
+  &lt;url-pattern&gt;/dwr/*&lt;/url-pattern&gt;
+&lt;/servlet-mapping&gt;
+</pre>
+
+<p>
+   <a href="../../../dwr-javadoc/org/directwebremoting/guice/DwrGuiceServletContextListener.html" title="class in org.directwebremoting.guice"><code>DwrGuiceServletContextListener</code></a>
+   is also an abstract Guice module; it extends
+   <a href="../../../dwr-javadoc/org/directwebremoting/guice/AbstractDwrModule.html" title="class in org.directwebremoting.guice"><code>AbstractDwrModule</code></a>,
+   which in turn extends Guice's <code>AbstractModule</code>.
+   Your listener class must define
+   <a href="../../../dwr-javadoc/org/directwebremoting/guice/AbstractDwrModule.html#configure%28%29.html"><code>configure</code></a>;
+   this is where you do your Guice binding.
+   You can also put binding code in a separate class or classes with
+   <code>AbstractModule.install</code>.
+ </p>
+ <p>
+   Use <a href="../../../dwr-javadoc/org/directwebremoting/guice/GuiceCreator.html" title="class in org.directwebremoting.guice"><code>GuiceCreator</code></a>
+
+   when annotating classes with <code>RemoteProxy</code>. When you use a
+   <code>GuiceCreator</code> to create your remoted objects, it gets an
+   instance from a Guice injector using your bindings.
+ </p>
+ <p>
+   For bind-time control over how JavaScript names map to Java targets, use the
+   <a href="../../../dwr-javadoc/org/directwebremoting/guice/AbstractDwrModule.html#bindRemoted%28java.lang.Class%29.html"><code>bindRemoted</code></a>
+   or
+   <a href="../../../dwr-javadoc/org/directwebremoting/guice/AbstractDwrModule.html#bindRemotedAs%28java.lang.String,%20java.lang.Class%29.html"><code>bindRemotedAs</code></a>
+
+   methods. The target of the script can be an abstract class or interface
+   bound in the normal Guice way to a concrete class, instance, or provider.
+   In that case only the methods defined on the abstract class or
+   interface are accessible, even if the implementing class has other public
+   methods. You can supply different bindings for different script names, including
+   using the same interface with different implementations for different script names,
+   or different interfaces for different script names mapping to the same implementation
+   type (assuming it implements both interfaces).
+ </p>
+ <p>
+   You can bind a type or type pattern string to a custom converter with
+   <a href="../../../dwr-javadoc/org/directwebremoting/guice/AbstractDwrModule.html#bindConversion%28java.lang.Class%29.html"><code>bindConversion</code></a>,
+   and you can put Ajax filters on scripts with
+   <a href="../../../dwr-javadoc/org/directwebremoting/guice/AbstractDwrModule.html#bindFilter%28java.lang.String%29.html"><code>bindFilter</code></a>.
+   Note, however, that you can achieve the same effect (and more flexibly) using Guice's
+   <code>bindInterceptors</code> method.
+ </p>
+ <p>
+
+   You can install your own DWR configurator using
+   <code>bind(Configurator.class).toInstance(yourConfigurator)</code>,
+   which then overrides any <code>dwr.xml</code> configuration.
+   You'll probably want to use a
+   <a href="../../../dwr-javadoc/org/directwebremoting/fluent/FluentConfigurator.html" title="class in org.directwebremoting.fluent"><code>FluentConfigurator</code></a>
+   for this purpose.
+ </p>
+ <p>
+   You can still configure DWR's settings normally via <code>&lt;init-param&gt;</code>
+
+   directives in <code>web.xml</code>, but usually there is no need to. Most DWR
+   settings can be set with
+   <a href="../../../dwr-javadoc/org/directwebremoting/guice/AbstractDwrModule.html#bindParameter%28org.directwebremoting.guice.ParamName%29.html"><code>bindParameter</code></a>.
+   The <a href="../../../dwr-javadoc/org/directwebremoting/guice/ParamName.html" title="enum in org.directwebremoting.guice"><code>ParamName</code></a>
+   enum type lists the available parameters.
+ </p>
+ <p>
+   To be able to use the DWR scopes for all your injected objects, not just
+   DWR-remoted objects, your binding code should call
+   <a href="../../../dwr-javadoc/org/directwebremoting/guice/AbstractDwrModule.html#bindDwrScopes%28%29.html"><code>bindDwrScopes</code></a>
+
+   at some point.
+ </p>
+ <p>
+   For creating your own scopes where the instance injected depends on some
+   run-time value, create a concrete extension of
+   <a href="../../../dwr-javadoc/org/directwebremoting/guice/AbstractContextScope.html" title="class in org.directwebremoting.guice"><code>AbstractContextScope</code></a>.
+ </p>
+ <p>
+   This example illustrates two ways to define remoted objects,
+   calling <code>bindRemotedAs</code> and annotating with <code>@RemoteProxy</code>;
+   two ways to define conversions, using <code>bindConversion</code>
+
+   and using a custom configurator; how to register annotated classes
+   at bind-time; how to bind a script name to an <code>AjaxFilter</code>; and
+   how to set a DWR parameter (debug, in this case) at bind-time.
+   It does not use an <code>&lt;init-param&gt;</code> directive, and it doesn't have
+   a <code>dwr.xml</code>.
+ </p>
+
+<pre>
+public final class MyServletContextListener extends DwrGuiceServletContextListener
+{
+    protected void configure()
+    {
+        bindRemotedAs("Hello", HelloService.class)
+            .to(HelloServiceImpl.class)
+            .in(DwrScopes.APPLICATION);
+
+        bindFilter("Hello")
+            .to(TraceFilter.class);
+
+        bind(MessageService.class)
+            .to(MessageServiceImpl.class)
+            .in(DwrScopes.SCRIPT);
+
+        bindAnnotatedClasses(
+            DomainService.class,   // @RemoteProxy(creator=GuiceCreator.class)/@RemoteMethod
+            HelloRecordImpl.class  // @DataTransferObject/@RemoteProperty
+        );
+
+        // When converting HelloRecord, use existing converter for HelloRecordImpl.
+        bindConversion(HelloRecord.class, HelloRecordImpl.class);
+
+        bindConversion(DateTime.class)
+            .toInstance(DateTimeConverter.get("yyyy-MM-dd hh:mm a"));
+
+        bind(Configurator.class).toInstance(new FluentConfigurator()
+        {
+            public void configure() {
+                String localTime = "localTime";
+                withConverterType(localTime, DateTimeConverter.class.getName());
+                withConverter(localTime, LocalTime.class.getName())
+                    .addParam("format", "yyyy-MM-dd");
+            }
+        });
+
+        bindParameter(DEBUG).to(true);
+
+        bindDwrScopes();
+    }
+}
+</pre>
+
+ <p>
+   Note that because application scope is larger than script session scope,
+   <code>HelloServiceImpl</code> has an injected constructor (not shown here)
+   that takes a <code>Provider&lt;MessageService&gt;</code> rather than a plain
+   <code>MessageService</code>.
+ </p>
+
+ <p>
+   There are four classes with names that start with "Internal". These classes
+   have to be public with a parameterless constructor so the non-Guicy DWR
+   machinery can create them. They are not meant to be used directly.
+ </p>
+ <p>
+   The classes that handle DWR scopes are modeled on the classes in the
+   <code>com.google.inject.servlet</code> package, but are independent of them.
+   You do <em>not</em> need to install the Guice <code>ServletModule</code> and
+   <code>GuiceFilter</code> to use the DWR scopes, but if you do, you have to be
+   careful to install the DWR scopes without creating conflicting bindings
+   for request, response, and session. Calling
+   <a href="../../../dwr-javadoc/org/directwebremoting/guice/AbstractDwrModule.html#bindDwrScopes%28boolean%29.html"><code>bindDwrScopes(false)</code></a>
+   accomplishes this.
+ </p>
+
+<p>Further information on using DWR and Guice together is available in the <a href="../../../dwr-javadoc/org/directwebremoting/guice/package-summary.html">Guice JavaDoc</a>, or from Tim's blog:</p>
+
+<ul>
+<li><a href='http://tembrel.blogspot.com/2007/09/injecting-method-interceptors-in-guice.html'>Injecting method interceptors</a></li>
+
+<li><a href='http://tembrel.blogspot.com/2007/09/replacing-ajaxfilter-with.html'>Replacing AjaxFilters</a></li>
+
+<li><a href='http://tembrel.blogspot.com/2007/09/matcher-and-methodinterceptor-for-dwr.html'>Matcher and MethodInterecptor for DWR</a></li>
+</ul>
+
+<ul class='menu' id='nav'>
+<li class='noChildren'><a href='../../../dwr/index.html'>Home</a></li>
+<li class='noChildren'><a href='../../../dwr/download.html'>Download</a></li>
+<li class='hasChildren'><a href='../../../dwr/browser/index.html'>Client Side&nbsp;...</a><ul>
+<li class='noChildren'><a href='../../../dwr/browser/index.html'>Index</a></li>
+<li class='noChildren'><a href='../../../dwr/browser/tibco.html'>DWR and TIBCO</a></li>
+<li class='hasChildren'><a href='../../../dwr/browser/engine/index.html'>engine.js&nbsp;...</a><ul>
+<li class='noChildren'><a href='../../../dwr/browser/engine/index.html'>Index</a></li>
+<li class='noChildren'><a href='../../../dwr/browser/engine/static.html'>Caching engine.js</a></li>
+<li class='noChildren'><a href='../../../dwr/browser/engine/batch.html'>Call Batching</a></li>
+<li class='noChildren'><a href='../../../dwr/browser/engine/ordering.html'>Call Ordering</a></li>
+<li class='noChildren'><a href='../../../dwr/browser/engine/errors.html'>Errors and Timeouts</a></li>
+<li class='noChildren'><a href='../../../dwr/browser/engine/hooks.html'>Remoting Hooks</a></li>
+<li class='noChildren'><a href='../../../dwr/browser/engine/options.html'>Remoting Options</a></li>
+</ul>
+</li>
+<li class='noChildren'><a href='../../../dwr/browser/gi.html'>gi.js</a></li>
+<li class='hasChildren'><a href='../../../dwr/browser/util/index.html'>util.js&nbsp;...</a><ul>
+<li class='noChildren'><a href='../../../dwr/browser/util/index.html'>Index</a></li>
+<li class='noChildren'><a href='../../../dwr/browser/util/lists.html'>List Manipulation</a></li>
+<li class='noChildren'><a href='../../../dwr/browser/util/$.html'>$()</a></li>
+<li class='noChildren'><a href='../../../dwr/browser/util/tables.html'>Table Manipulation</a></li>
+<li class='noChildren'><a href='../../../dwr/browser/util/addOptions.html'>addOptions</a></li>
+<li class='noChildren'><a href='../../../dwr/browser/util/addRows.html'>addRows</a></li>
+<li class='noChildren'><a href='../../../dwr/browser/util/byId.html'>byId()</a></li>
+<li class='noChildren'><a href='../../../dwr/browser/util/escapeHtml.html'>escapeHtml</a></li>
+<li class='noChildren'><a href='../../../dwr/browser/util/getText.html'>getText</a></li>
+<li class='noChildren'><a href='../../../dwr/browser/util/getValue.html'>getValue</a></li>
+<li class='noChildren'><a href='../../../dwr/browser/util/getValues.html'>getValues</a></li>
+<li class='noChildren'><a href='../../../dwr/browser/util/onReturn.html'>onReturn</a></li>
+<li class='noChildren'><a href='../../../dwr/browser/util/removeAllOptions.html'>removeAllOptions</a></li>
+<li class='noChildren'><a href='../../../dwr/browser/util/removeAllRows.html'>removeAllRows</a></li>
+<li class='noChildren'><a href='../../../dwr/browser/util/selectRange.html'>selectRange</a></li>
+<li class='noChildren'><a href='../../../dwr/browser/util/setValue.html'>setValue</a></li>
+<li class='noChildren'><a href='../../../dwr/browser/util/setValues.html'>setValues</a></li>
+<li class='noChildren'><a href='../../../dwr/browser/util/toDescriptiveString.html'>toDescriptiveString</a></li>
+<li class='noChildren'><a href='../../../dwr/browser/util/useLoadingMessage.html'>useLoadingMessage</a></li>
+</ul>
+</li>
+<li class='noChildren'><a href='../../../dwr/browser/extra-data.html'>Callbacks and Scoping</a></li>
+<li class='noChildren'><a href='../../../dwr/browser/other.html'>Submission box</a></li>
+<li class='noChildren'><a href='../../../dwr/browser/support.html'>Browser Support</a></li>
+</ul>
+</li>
+<li class='hasChildren'><a href='../../../dwr/reverse-ajax/index.html'>Reverse Ajax&nbsp;...</a><ul>
+<li class='noChildren'><a href='../../../dwr/reverse-ajax/index.html'>Index</a></li>
+<li class='noChildren'><a href='../../../dwr/reverse-ajax/getting-started.html'>Getting Started</a></li>
+<li class='noChildren'><a href='../../../dwr/reverse-ajax/configuration.html'>Configuring</a></li>
+<li class='noChildren'><a href='../../../dwr/reverse-ajax/threads.html'>Non-Web Threads</a></li>
+</ul>
+</li>
+<li class='hasChildren'><a href='../../../dwr/development/index.html'>Development&nbsp;...</a><ul>
+<li class='noChildren'><a href='../../../dwr/development/index.html'>Index</a></li>
+<li class='hasChildren'><a href='../../../dwr/development/contributor/index.html'>Contributors&nbsp;...</a><ul>
+<li class='noChildren'><a href='../../../dwr/development/contributor/index.html'>Index</a></li>
+<li class='noChildren'><a href='../../../dwr/development/contributor/contract.html'>The Maintainer Contract</a></li>
+</ul>
+</li>
+<li class='hasChildren'><a href='../../../dwr/development/notes/index.html'>Developers Notes&nbsp;...</a><ul>
+<li class='noChildren'><a href='../../../dwr/development/notes/index.html'>Index</a></li>
+<li class='noChildren'><a href='../../../dwr/development/notes/batch-data.html'>DWREngine data </a></li>
+<li class='noChildren'><a href='../../../dwr/development/notes/design.html'>Design Notes</a></li>
+<li class='noChildren'><a href='../../../dwr/development/notes/engine.html'>Engine.js Notes</a></li>
+<li class='noChildren'><a href='../../../dwr/development/notes/poll-actions.html'>Polling Actions</a></li>
+</ul>
+</li>
+<li class='noChildren'><a href='../../../dwr/development/ccla.html'>CLA for Corporations</a></li>
+<li class='noChildren'><a href='../../../dwr/development/icla.html'>CLA for Individuals</a></li>
+</ul>
+</li>
+<li class='hasChildren'><a href='../../../dwr/other/index.html'>Other Topics&nbsp;...</a><ul>
+<li class='noChildren'><a href='../../../dwr/other/index.html'>Index</a></li>
+<li class='noChildren'><a href='../../../dwr/other/fixes.html'>Common Problems</a></li>
+<li class='hasChildren'><a href='../../../dwr/other/changelog/index.html'>Change Log&nbsp;...</a><ul>
+<li class='noChildren'><a href='../../../dwr/other/changelog/index.html'>Index</a></li>
+<li class='noChildren'><a href='../../../dwr/other/changelog/dwr20.html'>New in v2.0</a></li>
+<li class='noChildren'><a href='../../../dwr/other/changelog/dwr20m2.html'>New in v2.0m2</a></li>
+<li class='noChildren'><a href='../../../dwr/other/changelog/dwr20m1.html'>New in v2.0m1</a></li>
+<li class='noChildren'><a href='../../../dwr/other/changelog/dwr11.html'>New in v1.1</a></li>
+<li class='noChildren'><a href='../../../dwr/other/changelog/dwr20m3.html'>New in v2.0m3</a></li>
+<li class='noChildren'><a href='../../../dwr/other/changelog/dwr30.html'>New in v3.0</a></li>
+</ul>
+</li>
+<li class='noChildren'><a href='../../../dwr/other/glossary.html'>Glossary</a></li>
+<li class='noChildren'><a href='../../../dwr/other/elsewhere.html'>Tutorials Elsewhere</a></li>
+<li class='hasChildren'><a href='../../../dwr/other/upgrading/index.html'>Upgrading DWR&nbsp;...</a><ul>
+<li class='noChildren'><a href='../../../dwr/other/upgrading/index.html'>Index</a></li>
+<li class='noChildren'><a href='../../../dwr/other/upgrading/dwr20.html'>Upgrading to Version 2.0</a></li>
+<li class='noChildren'><a href='../../../dwr/other/upgrading/dwr30.html'>Upgrading to Version 3.0</a></li>
+</ul>
+</li>
+<li class='noChildren'><a href='../../../dwr/other/errors.html'>Error Handling</a></li>
+<li class='noChildren'><a href='../../../dwr/other/related.html'>Related Projects</a></li>
+</ul>
+</li>
+<li class='hasChildren'><a href='../../../dwr/introduction/index.html'>Overview&nbsp;...</a><ul>
+<li class='noChildren'><a href='../../../dwr/introduction/index.html'>Index</a></li>
+<li class='noChildren'><a href='../../../dwr/introduction/getting-started.html'>Getting Started</a></li>
+<li class='noChildren'><a href='../../../dwr/introduction/scripting-dwr.html'>Scripting DWR</a></li>
+<li class='noChildren'><a href='../../../dwr/introduction/tutorials.html'>Tutorials and Examples</a></li>
+<li class='noChildren'><a href='../../../dwr/introduction/live.html'>Who is using DWR</a></li>
+<li class='noChildren'><a href='../../../dwr/introduction/hints.html'>Hints and Tips</a></li>
+</ul>
+</li>
+<li class='hasChildren'><a href='../../../dwr/security/index.html'>Security&nbsp;...</a><ul>
+<li class='noChildren'><a href='../../../dwr/security/index.html'>Index</a></li>
+<li class='noChildren'><a href='../../../dwr/security/script-tag-protection.html'>JavaScript Security</a></li>
+<li class='noChildren'><a href='../../../dwr/security/allowGetForSafariButMakeForgeryEasier.html'>Safari, GET and CSRF</a></li>
+</ul>
+</li>
+<li class='hasChildren'><a href='../../../dwr/server/index.html'>Server Side&nbsp;...</a><ul>
+<li class='noChildren'><a href='../../../dwr/server/index.html'>Index</a></li>
+<li class='noChildren'><a href='../../../dwr/server/fluent.html'>Fluent Configuration</a></li>
+<li class='noChildren'><a href='../../../dwr/server/annotations.html'>Annotations</a></li>
+<li class='hasChildren'><a href='../../../dwr/server/integration/index.html'>Integrating with ...&nbsp;...</a><ul>
+<li class='noChildren'><a href='../../../dwr/server/integration/index.html'>Index</a></li>
+<li class='noChildren'><a href='../../../dwr/server/integration/jaxer.html'>Aptana Jaxer</a></li>
+<li class='noChildren'><a href='guice.html' class='currentLink'>Guice</a></li>
+<li class='noChildren'><a href='../../../dwr/server/integration/hibernate.html'>Hibernate</a></li>
+<li class='noChildren'><a href='../../../dwr/server/integration/spring.html'>Spring</a></li>
+<li class='noChildren'><a href='../../../dwr/server/integration/struts.html'>Struts</a></li>
+<li class='noChildren'><a href='../../../dwr/server/integration/webwork.html'>Webwork</a></li>
+<li class='noChildren'><a href='../../../dwr/server/integration/jsf.html'>JSF</a></li>
+<li class='noChildren'><a href='../../../dwr/server/integration/pageflow.html'>Pageflow / Beehive</a></li>
+<li class='noChildren'><a href='../../../dwr/server/integration/xul.html'>XUL</a></li>
+</ul>
+</li>
+<li class='noChildren'><a href='../../../dwr/server/environment.html'>Supported Environments</a></li>
+<li class='hasChildren'><a href='../../../dwr/server/servlet/index.html'>WEB-INF Reference&nbsp;...</a><ul>
+<li class='noChildren'><a href='../../../dwr/server/servlet/index.html'>Index</a></li>
+<li class='noChildren'><a href='../../../dwr/server/servlet/logging.html'>Logging</a></li>
+<li class='noChildren'><a href='../../../dwr/server/servlet/multiconfig.html'>Multiple dwr.xml files</a></li>
+<li class='noChildren'><a href='../../../dwr/server/servlet/plugin.html'>Plug-ins</a></li>
+<li class='noChildren'><a href='../../../dwr/server/servlet/test.html'>Test Mode</a></li>
+</ul>
+</li>
+<li class='hasChildren'><a href='../../../dwr/server/dwrxml/index.html'>dwr.xml&nbsp;...</a><ul>
+<li class='noChildren'><a href='../../../dwr/server/dwrxml/index.html'>Index</a></li>
+<li class='hasChildren'><a href='../../../dwr/server/dwrxml/converters/index.html'>Converters&nbsp;...</a><ul>
+<li class='noChildren'><a href='../../../dwr/server/dwrxml/converters/index.html'>Index</a></li>
+<li class='noChildren'><a href='../../../dwr/server/dwrxml/converters/array.html'>Arrays</a></li>
+<li class='noChildren'><a href='../../../dwr/server/dwrxml/converters/bean.html'>Beans / Objects</a></li>
+<li class='noChildren'><a href='../../../dwr/server/dwrxml/converters/collection.html'>Collections</a></li>
+<li class='noChildren'><a href='../../../dwr/server/dwrxml/converters/dom.html'>DOM Objects</a></li>
+<li class='noChildren'><a href='../../../dwr/server/dwrxml/converters/enum.html'>Enum</a></li>
+<li class='noChildren'><a href='../../../dwr/server/dwrxml/converters/file.html'>Images and Binary Files</a></li>
+</ul>
+</li>
+<li class='hasChildren'><a href='../../../dwr/server/dwrxml/creators/index.html'>Creators&nbsp;...</a><ul>
+<li class='noChildren'><a href='../../../dwr/server/dwrxml/creators/index.html'>Index</a></li>
+<li class='noChildren'><a href='../../../dwr/server/dwrxml/creators/new.html'>'New' Creator</a></li>
+<li class='noChildren'><a href='../../../dwr/server/dwrxml/creators/scripted.html'>'Scripted' Creator</a></li>
+</ul>
+</li>
+<li class='noChildren'><a href='../../../dwr/server/dwrxml/filters.html'>Filters</a></li>
+<li class='noChildren'><a href='../../../dwr/server/dwrxml/signatures.html'>Signatures</a></li>
+</ul>
+</li>
+<li class='noChildren'><a href='../../../dwr/server/generic.html'>Reading from other URLs</a></li>
+<li class='noChildren'><a href='../../../dwr/server/javaapi.html'>Accessing Servlet Objects</a></li>
+</ul>
+</li>
+<li class='noChildren'><a href='../../../dwr/support.html'>Support</a></li>
+<li class='noChildren'><a href='../../../dwr/languages.html'>Non-English Docs</a></li>
+<li class='noChildren'><a href='../../../dwr/documentation.html'>Doc Index</a></li>
+</ul>
+</body>
+</html>

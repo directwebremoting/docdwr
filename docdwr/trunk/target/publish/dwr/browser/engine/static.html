@@ -1,0 +1,247 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <title>Caching engine.js</title>
+  <meta name='alias' content='/dwr/browser/engine/static'>
+  <link rel="stylesheet" type="text/css" href="../../media/styles.css">
+  <script type='text/javascript' src='../../../dwr/media/dojo.js'> </script>
+  <script type='text/javascript' src='../../../dwr/media/menu.js'> </script>
+</head>
+<body>
+<div id='header'><a href='http://directwebremoting.org/dwr/'>Direct Web Remoting</a></div>
+<div id=pagelinks>
+<div class='navlinks'>[ 
+<a href='/dwr' title='Easy Ajax for Java'>DWR</a> | 
+<a href='/blog/joe' title='Joe&#039;s Blog about DWR and Ajax'>Blog</a>
+ ]
+<form method='GET' action='http://www.google.com/search' id='search-form'>
+<span id='search'>
+<input class='form-text' type='text' id='search-box' name='as_q' size='20' maxlength='255'>
+<input type='hidden' name='as_sitesearch' value='directwebremoting.org'/>
+<input class='form-submit' type='submit' value='Google'/>
+</span>
+</form>
+</div>
+<div id='breadcrumbs'><a href='../../../dwr/index.html'>DWR - Easy Ajax for JAVA</a> &#x00BB; <a href='../../../dwr/browser/index.html'>Client Side</a> &#x00BB; <a href='../../../dwr/browser/engine/index.html'>engine.js</a> &#x00BB; <a href='static.html' class='currentLink'>Caching engine.js</a></div></div>
+
+<h1>Caching engine.js</h1>
+
+<p>With the exception of engine.js in DWR 2.0, all the script files that DWR produces are static. They can be safely extracted, combined, compressed and cached.</p>
+
+<p>With DWR 1.0 this was a manual process. DWR 3.0 will handle compression and caching automatically.</p>
+
+<p>If you are using DWR 2.0 in a bandwidth sensitive environment, you might benefit from using a static version of engine.js</p>
+
+<p>DWR version 1.x did not support Reverse Ajax, so engine.js was static by default. DWR 3.0 will automatically fetch the dynamic data, so engine.js can be static once more. Previews of release are available either from the DWR download pages at java.net or from CVS.</p>
+
+<p>If you are using 2.0, there are 2 routes you can take to caching engine.js. One if you need Reverse Ajax, and one if you don't.</p>
+
+<p>It's also worth checking out <a href="https://jawr.dev.java.net/">JAWR</a> which includes <a href="https://jawr.dev.java.net/integration/dwr.html">DWR integration</a>. JAWR is a packaging and compressing library for serving JavaScript and CSS.</p>
+
+<h2>Caching engine.js in v2.0 without Reverse Ajax</h2>
+
+<p>The following steps will break ScriptSessions and Reverse Ajax, but are a simple way to cache engine.js.</p>
+
+<ul>
+<li>Deploy DWR and get it working properly using the normal dynamic engine.js</li>
+
+<li>Download engine.js. The URL will be something like <code>http://localhost:8080/[YOUR-WEB-APP]/dwr/engine.js</code>. This should be saved into your web directory.</li>
+
+<li>Link to the static version of engine.js from your web pages in place of the dynamic one.</li>
+</ul>
+
+<h2>Caching engine.js in v2.0 with Reverse Ajax</h2>
+
+<p>The procedure here is slightly more involved. You need to split engine.js into 2 pieces, one small dynamic, the other larger, static.</p>
+
+<ul>
+<li>Download an engine.js and store in your web directory, as before.</li>
+
+<li>Edit it to remove lines 226 to 242 (which should include the following definitions: dwr.engine._origScriptSessionId, dwr.engine._sessionCookieName, dwr.engine._allowGetForSafariButMakeForgeryEasier, dwr.engine._scriptTagProtection, dwr.engine._defaultPath, dwr.engine._pollWithXhr)</li>
+
+<li>Unpack dwr.jar and alter engine.js from org/directwebremoting/engine.js to contain <strong>only</strong> the lines removed from the static version.</li>
+</ul>
+
+<p>The engine.js in dwr.jar should now look something like this:</p>
+
+<pre>
+dwr.engine._origScriptSessionId = "${scriptSessionId}";
+dwr.engine._sessionCookieName = "${sessionCookieName}";
+dwr.engine._allowGetForSafariButMakeForgeryEasier = "${allowGetForSafariButMakeForgeryEasier}";
+dwr.engine._scriptTagProtection = "${scriptTagProtection}";
+dwr.engine._defaultPath = "${defaultPath}";
+dwr.engine._pollWithXhr = "${pollWithXhr}";
+</pre>
+
+<p>The rest of engine.js can then be combined with other scripts, and compressed, as for the non reverse-ajax version.</p>
+
+<p>This is much harder than we would like it to be. During the development of version 2.0 we realized that the correct solution was trickier than we had time for during the 2.0 time-frame. So we chose a solution that would work without breaking changes across versions 1, 2 and 3, but that still allowed advanced users to customize their 2.0 builds.</p>
+
+<ul class='menu' id='nav'>
+<li class='noChildren'><a href='../../../dwr/index.html'>Home</a></li>
+<li class='noChildren'><a href='../../../dwr/download.html'>Download</a></li>
+<li class='hasChildren'><a href='../../../dwr/browser/index.html'>Client Side&nbsp;...</a><ul>
+<li class='noChildren'><a href='../../../dwr/browser/index.html'>Index</a></li>
+<li class='noChildren'><a href='../../../dwr/browser/tibco.html'>DWR and TIBCO</a></li>
+<li class='hasChildren'><a href='../../../dwr/browser/engine/index.html'>engine.js&nbsp;...</a><ul>
+<li class='noChildren'><a href='../../../dwr/browser/engine/index.html'>Index</a></li>
+<li class='noChildren'><a href='static.html' class='currentLink'>Caching engine.js</a></li>
+<li class='noChildren'><a href='../../../dwr/browser/engine/batch.html'>Call Batching</a></li>
+<li class='noChildren'><a href='../../../dwr/browser/engine/ordering.html'>Call Ordering</a></li>
+<li class='noChildren'><a href='../../../dwr/browser/engine/errors.html'>Errors and Timeouts</a></li>
+<li class='noChildren'><a href='../../../dwr/browser/engine/hooks.html'>Remoting Hooks</a></li>
+<li class='noChildren'><a href='../../../dwr/browser/engine/options.html'>Remoting Options</a></li>
+</ul>
+</li>
+<li class='noChildren'><a href='../../../dwr/browser/gi.html'>gi.js</a></li>
+<li class='hasChildren'><a href='../../../dwr/browser/util/index.html'>util.js&nbsp;...</a><ul>
+<li class='noChildren'><a href='../../../dwr/browser/util/index.html'>Index</a></li>
+<li class='noChildren'><a href='../../../dwr/browser/util/lists.html'>List Manipulation</a></li>
+<li class='noChildren'><a href='../../../dwr/browser/util/$.html'>$()</a></li>
+<li class='noChildren'><a href='../../../dwr/browser/util/tables.html'>Table Manipulation</a></li>
+<li class='noChildren'><a href='../../../dwr/browser/util/addOptions.html'>addOptions</a></li>
+<li class='noChildren'><a href='../../../dwr/browser/util/addRows.html'>addRows</a></li>
+<li class='noChildren'><a href='../../../dwr/browser/util/byId.html'>byId()</a></li>
+<li class='noChildren'><a href='../../../dwr/browser/util/escapeHtml.html'>escapeHtml</a></li>
+<li class='noChildren'><a href='../../../dwr/browser/util/getText.html'>getText</a></li>
+<li class='noChildren'><a href='../../../dwr/browser/util/getValue.html'>getValue</a></li>
+<li class='noChildren'><a href='../../../dwr/browser/util/getValues.html'>getValues</a></li>
+<li class='noChildren'><a href='../../../dwr/browser/util/onReturn.html'>onReturn</a></li>
+<li class='noChildren'><a href='../../../dwr/browser/util/removeAllOptions.html'>removeAllOptions</a></li>
+<li class='noChildren'><a href='../../../dwr/browser/util/removeAllRows.html'>removeAllRows</a></li>
+<li class='noChildren'><a href='../../../dwr/browser/util/selectRange.html'>selectRange</a></li>
+<li class='noChildren'><a href='../../../dwr/browser/util/setValue.html'>setValue</a></li>
+<li class='noChildren'><a href='../../../dwr/browser/util/setValues.html'>setValues</a></li>
+<li class='noChildren'><a href='../../../dwr/browser/util/toDescriptiveString.html'>toDescriptiveString</a></li>
+<li class='noChildren'><a href='../../../dwr/browser/util/useLoadingMessage.html'>useLoadingMessage</a></li>
+</ul>
+</li>
+<li class='noChildren'><a href='../../../dwr/browser/extra-data.html'>Callbacks and Scoping</a></li>
+<li class='noChildren'><a href='../../../dwr/browser/other.html'>Submission box</a></li>
+<li class='noChildren'><a href='../../../dwr/browser/support.html'>Browser Support</a></li>
+</ul>
+</li>
+<li class='hasChildren'><a href='../../../dwr/reverse-ajax/index.html'>Reverse Ajax&nbsp;...</a><ul>
+<li class='noChildren'><a href='../../../dwr/reverse-ajax/index.html'>Index</a></li>
+<li class='noChildren'><a href='../../../dwr/reverse-ajax/getting-started.html'>Getting Started</a></li>
+<li class='noChildren'><a href='../../../dwr/reverse-ajax/configuration.html'>Configuring</a></li>
+<li class='noChildren'><a href='../../../dwr/reverse-ajax/threads.html'>Non-Web Threads</a></li>
+</ul>
+</li>
+<li class='hasChildren'><a href='../../../dwr/development/index.html'>Development&nbsp;...</a><ul>
+<li class='noChildren'><a href='../../../dwr/development/index.html'>Index</a></li>
+<li class='hasChildren'><a href='../../../dwr/development/contributor/index.html'>Contributors&nbsp;...</a><ul>
+<li class='noChildren'><a href='../../../dwr/development/contributor/index.html'>Index</a></li>
+<li class='noChildren'><a href='../../../dwr/development/contributor/contract.html'>The Maintainer Contract</a></li>
+</ul>
+</li>
+<li class='hasChildren'><a href='../../../dwr/development/notes/index.html'>Developers Notes&nbsp;...</a><ul>
+<li class='noChildren'><a href='../../../dwr/development/notes/index.html'>Index</a></li>
+<li class='noChildren'><a href='../../../dwr/development/notes/batch-data.html'>DWREngine data </a></li>
+<li class='noChildren'><a href='../../../dwr/development/notes/design.html'>Design Notes</a></li>
+<li class='noChildren'><a href='../../../dwr/development/notes/engine.html'>Engine.js Notes</a></li>
+<li class='noChildren'><a href='../../../dwr/development/notes/poll-actions.html'>Polling Actions</a></li>
+</ul>
+</li>
+<li class='noChildren'><a href='../../../dwr/development/ccla.html'>CLA for Corporations</a></li>
+<li class='noChildren'><a href='../../../dwr/development/icla.html'>CLA for Individuals</a></li>
+</ul>
+</li>
+<li class='hasChildren'><a href='../../../dwr/other/index.html'>Other Topics&nbsp;...</a><ul>
+<li class='noChildren'><a href='../../../dwr/other/index.html'>Index</a></li>
+<li class='noChildren'><a href='../../../dwr/other/fixes.html'>Common Problems</a></li>
+<li class='hasChildren'><a href='../../../dwr/other/changelog/index.html'>Change Log&nbsp;...</a><ul>
+<li class='noChildren'><a href='../../../dwr/other/changelog/index.html'>Index</a></li>
+<li class='noChildren'><a href='../../../dwr/other/changelog/dwr20.html'>New in v2.0</a></li>
+<li class='noChildren'><a href='../../../dwr/other/changelog/dwr20m2.html'>New in v2.0m2</a></li>
+<li class='noChildren'><a href='../../../dwr/other/changelog/dwr20m1.html'>New in v2.0m1</a></li>
+<li class='noChildren'><a href='../../../dwr/other/changelog/dwr11.html'>New in v1.1</a></li>
+<li class='noChildren'><a href='../../../dwr/other/changelog/dwr20m3.html'>New in v2.0m3</a></li>
+<li class='noChildren'><a href='../../../dwr/other/changelog/dwr30.html'>New in v3.0</a></li>
+</ul>
+</li>
+<li class='noChildren'><a href='../../../dwr/other/glossary.html'>Glossary</a></li>
+<li class='noChildren'><a href='../../../dwr/other/elsewhere.html'>Tutorials Elsewhere</a></li>
+<li class='hasChildren'><a href='../../../dwr/other/upgrading/index.html'>Upgrading DWR&nbsp;...</a><ul>
+<li class='noChildren'><a href='../../../dwr/other/upgrading/index.html'>Index</a></li>
+<li class='noChildren'><a href='../../../dwr/other/upgrading/dwr20.html'>Upgrading to Version 2.0</a></li>
+<li class='noChildren'><a href='../../../dwr/other/upgrading/dwr30.html'>Upgrading to Version 3.0</a></li>
+</ul>
+</li>
+<li class='noChildren'><a href='../../../dwr/other/errors.html'>Error Handling</a></li>
+<li class='noChildren'><a href='../../../dwr/other/related.html'>Related Projects</a></li>
+</ul>
+</li>
+<li class='hasChildren'><a href='../../../dwr/introduction/index.html'>Overview&nbsp;...</a><ul>
+<li class='noChildren'><a href='../../../dwr/introduction/index.html'>Index</a></li>
+<li class='noChildren'><a href='../../../dwr/introduction/getting-started.html'>Getting Started</a></li>
+<li class='noChildren'><a href='../../../dwr/introduction/scripting-dwr.html'>Scripting DWR</a></li>
+<li class='noChildren'><a href='../../../dwr/introduction/tutorials.html'>Tutorials and Examples</a></li>
+<li class='noChildren'><a href='../../../dwr/introduction/live.html'>Who is using DWR</a></li>
+<li class='noChildren'><a href='../../../dwr/introduction/hints.html'>Hints and Tips</a></li>
+</ul>
+</li>
+<li class='hasChildren'><a href='../../../dwr/security/index.html'>Security&nbsp;...</a><ul>
+<li class='noChildren'><a href='../../../dwr/security/index.html'>Index</a></li>
+<li class='noChildren'><a href='../../../dwr/security/script-tag-protection.html'>JavaScript Security</a></li>
+<li class='noChildren'><a href='../../../dwr/security/allowGetForSafariButMakeForgeryEasier.html'>Safari, GET and CSRF</a></li>
+</ul>
+</li>
+<li class='hasChildren'><a href='../../../dwr/server/index.html'>Server Side&nbsp;...</a><ul>
+<li class='noChildren'><a href='../../../dwr/server/index.html'>Index</a></li>
+<li class='noChildren'><a href='../../../dwr/server/fluent.html'>Fluent Configuration</a></li>
+<li class='noChildren'><a href='../../../dwr/server/annotations.html'>Annotations</a></li>
+<li class='hasChildren'><a href='../../../dwr/server/integration/index.html'>Integrating with ...&nbsp;...</a><ul>
+<li class='noChildren'><a href='../../../dwr/server/integration/index.html'>Index</a></li>
+<li class='noChildren'><a href='../../../dwr/server/integration/jaxer.html'>Aptana Jaxer</a></li>
+<li class='noChildren'><a href='../../../dwr/server/integration/guice.html'>Guice</a></li>
+<li class='noChildren'><a href='../../../dwr/server/integration/hibernate.html'>Hibernate</a></li>
+<li class='noChildren'><a href='../../../dwr/server/integration/spring.html'>Spring</a></li>
+<li class='noChildren'><a href='../../../dwr/server/integration/struts.html'>Struts</a></li>
+<li class='noChildren'><a href='../../../dwr/server/integration/webwork.html'>Webwork</a></li>
+<li class='noChildren'><a href='../../../dwr/server/integration/jsf.html'>JSF</a></li>
+<li class='noChildren'><a href='../../../dwr/server/integration/pageflow.html'>Pageflow / Beehive</a></li>
+<li class='noChildren'><a href='../../../dwr/server/integration/xul.html'>XUL</a></li>
+</ul>
+</li>
+<li class='noChildren'><a href='../../../dwr/server/environment.html'>Supported Environments</a></li>
+<li class='hasChildren'><a href='../../../dwr/server/servlet/index.html'>WEB-INF Reference&nbsp;...</a><ul>
+<li class='noChildren'><a href='../../../dwr/server/servlet/index.html'>Index</a></li>
+<li class='noChildren'><a href='../../../dwr/server/servlet/logging.html'>Logging</a></li>
+<li class='noChildren'><a href='../../../dwr/server/servlet/multiconfig.html'>Multiple dwr.xml files</a></li>
+<li class='noChildren'><a href='../../../dwr/server/servlet/plugin.html'>Plug-ins</a></li>
+<li class='noChildren'><a href='../../../dwr/server/servlet/test.html'>Test Mode</a></li>
+</ul>
+</li>
+<li class='hasChildren'><a href='../../../dwr/server/dwrxml/index.html'>dwr.xml&nbsp;...</a><ul>
+<li class='noChildren'><a href='../../../dwr/server/dwrxml/index.html'>Index</a></li>
+<li class='hasChildren'><a href='../../../dwr/server/dwrxml/converters/index.html'>Converters&nbsp;...</a><ul>
+<li class='noChildren'><a href='../../../dwr/server/dwrxml/converters/index.html'>Index</a></li>
+<li class='noChildren'><a href='../../../dwr/server/dwrxml/converters/array.html'>Arrays</a></li>
+<li class='noChildren'><a href='../../../dwr/server/dwrxml/converters/bean.html'>Beans / Objects</a></li>
+<li class='noChildren'><a href='../../../dwr/server/dwrxml/converters/collection.html'>Collections</a></li>
+<li class='noChildren'><a href='../../../dwr/server/dwrxml/converters/dom.html'>DOM Objects</a></li>
+<li class='noChildren'><a href='../../../dwr/server/dwrxml/converters/enum.html'>Enum</a></li>
+<li class='noChildren'><a href='../../../dwr/server/dwrxml/converters/file.html'>Images and Binary Files</a></li>
+</ul>
+</li>
+<li class='hasChildren'><a href='../../../dwr/server/dwrxml/creators/index.html'>Creators&nbsp;...</a><ul>
+<li class='noChildren'><a href='../../../dwr/server/dwrxml/creators/index.html'>Index</a></li>
+<li class='noChildren'><a href='../../../dwr/server/dwrxml/creators/new.html'>'New' Creator</a></li>
+<li class='noChildren'><a href='../../../dwr/server/dwrxml/creators/scripted.html'>'Scripted' Creator</a></li>
+</ul>
+</li>
+<li class='noChildren'><a href='../../../dwr/server/dwrxml/filters.html'>Filters</a></li>
+<li class='noChildren'><a href='../../../dwr/server/dwrxml/signatures.html'>Signatures</a></li>
+</ul>
+</li>
+<li class='noChildren'><a href='../../../dwr/server/generic.html'>Reading from other URLs</a></li>
+<li class='noChildren'><a href='../../../dwr/server/javaapi.html'>Accessing Servlet Objects</a></li>
+</ul>
+</li>
+<li class='noChildren'><a href='../../../dwr/support.html'>Support</a></li>
+<li class='noChildren'><a href='../../../dwr/languages.html'>Non-English Docs</a></li>
+<li class='noChildren'><a href='../../../dwr/documentation.html'>Doc Index</a></li>
+</ul>
+</body>
+</html>
