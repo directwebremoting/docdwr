@@ -49,6 +49,15 @@ to the publishing process.
   2 space characters and no tabs
 - Please keep the HTML very simple
   For the most part p/h1/h2/h3/a/strong/pre/code are all the tags you should need
+- We have defined 3 extra meta elements:
+  - <meta name='alias' content='/path/to/old/content'>
+    This allows us to generate apache.conf files that reduce 404s. This line
+    is in effect a 'COME_FROM'. And you thought GOTO was evil ....
+  - <meta name='weight' content='-5'>
+    Heavier items (bigger numbers) sink down menus. The default is 0
+  - <meta name='navTitle' content='Short Desc'>
+    The side navigation needs to be compact when the actual page title may be
+    better being more expressive. This allows us to override the official title
 - If you want to move a page from one location to another, please:
   - Ensure that all inbound links point to the new location
   - In the header of the moved document, add a line that points to the old location
