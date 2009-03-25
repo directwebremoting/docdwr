@@ -348,7 +348,15 @@ public class Generate
     private static String stripBase(File file, String base)
     {
         String path = file.getAbsolutePath();
-        return path.substring(base.length() + 1);
+        return replaceWindowsFileSepWithUnix(path.substring(base.length() + 1));
+    }
+
+    /**
+     * Private utility to get things to work on Windows.
+     * @return
+     */
+    private static String replaceWindowsFileSepWithUnix(String path) {
+        return path.replace('\\', '/');
     }
 
     /**
