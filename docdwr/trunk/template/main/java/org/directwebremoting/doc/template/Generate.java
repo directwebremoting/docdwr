@@ -127,7 +127,11 @@ public class Generate
      */
     public static void main(String[] args) throws IOException
     {
-        String root = "/Users/joe/Projects/directwebremoting/docdwr";
+        if (args.length == 0) {
+            System.out.println("The root path to the documentation on your file system is a required program argument. I.E. /Users/joe/Projects/directwebremoting/docdwr");
+            System.exit(0);
+        }
+        String root = args[0];
         Map<String, Page> pages = readInput(root + "/docs/web");
 
         writeHtmlOutput(pages, root + "/target/publish/");
