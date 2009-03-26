@@ -123,7 +123,9 @@ public class Generate
     }
 
     /**
-     *
+     * The root path to the documentation is a required argument:
+     *   I.E - C:\dev\workspaces\openSource\docdwr on Windows.
+     *       - /dev/workspaces/openSource/docdwr on *ix.
      */
     public static void main(String[] args) throws IOException
     {
