@@ -319,6 +319,22 @@ We increase the poll time to compensate and reduce the load.
 </tr>
 
 <tr>
+<th colspan="2">normalizeIncludesSessionID</th>
+</td>
+<tr>
+<td>Version:</td>
+<td>3.0 RC2</td>
+</td>
+<tr>
+<td>Default:</td>
+<td>false</td>
+</td>
+<tr>
+<td>Notes:</td>
+<td>(See notes above on welcomeFiles) Normally Reverse Ajax considers pages with differing session id's (if appended to the query string - ';jsessionid') to be the same page. Setting normalizeIncludesSessionID to true will make Reverse Ajax take the appended session id into account.</td>
+</tr>
+
+<tr>
 <th colspan="2">overridePath</th>
 </td>
 <tr>
