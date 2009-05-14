@@ -99,9 +99,9 @@ WebContextFactory.get().getScriptSession().setAttribute("key", value);
 
 <p>Refactoring is often a feature in the eyes of developers because the code feels cleaner, but it can just cause backwards compatibility issues for users. We've done some refactoring for DWR 2.0, but here is what users get out of it: We now use the org.directwebremoting.* package rather than the more obscure uk.ltd.getahead.dwr.*, but we've left stubs behind for backwards compatibility. Please shout if we've missed anything out. We've also tried to make DWR more embeddable, and it should now be possible to create alternative wire protocols like SOAP or JSON-RPC if desired.</p>
 
-<h2>Call Meta-data</h2>
+<h2>Call Option Object</h2>
 
-<p>You can now pass request attributes from DWR using call meta-data like this:</p>
+<p>You can now pass request attributes from DWR using call option object like this:</p>
 
 <pre>
 Remote.getData(42, {

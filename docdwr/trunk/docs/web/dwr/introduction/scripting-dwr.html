@@ -53,9 +53,9 @@ Remote.getData(42, handleGetData);
 Remote.getData(42, function(str) { alert(str); });
 </pre>
 
-<h2>Call Meta-Data Objects</h2>
+<h2>Call Option Objects</h2>
 
-<p>The alternative syntax is to make use of a call meta-data object that specifies the callback function and (optionally) other options. The example above would become:</p>
+<p>The alternative syntax is to make use of a call option object that specifies the callback function and (optionally) other options. The example above would become:</p>
 
 <pre>
 Remote.getData(42, {
@@ -85,13 +85,13 @@ Remote.getData(42, {
 Remote.method({ timeout:3 }, { errorHandler:somefunc });
 </pre>
 
-<p>One of the 2 parameters is a bean parameter and the other is a call meta-data object but we have no way of telling which. In a cross-browser world we have to assume that null == undefined. So currently, the rules are:</p>
+<p>One of the 2 parameters is a bean parameter and the other is a call option object but we have no way of telling which. In a cross-browser world we have to assume that null == undefined. So currently, the rules are:</p>
 
 <ul>
 
-<li>If there is a function last then this is the callback function, there is no call meta-data object and the other parameters are the Java args.</li>
+<li>If there is a function last then this is the callback function, there is no call option object and the other parameters are the Java args.</li>
 
-<li>Otherwise, if the last param is an object with a callback member that is a function then this is call meta-data the other params are Java args.</li>
+<li>Otherwise, if the last param is an object with a callback member that is a function then this is the call option object and the other params are Java args.</li>
 
 <li>Finally if the last param is null, then there is no callback function.</li>
 
