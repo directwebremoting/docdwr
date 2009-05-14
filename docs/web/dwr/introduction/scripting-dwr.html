@@ -40,10 +40,6 @@ public class Remote {
     src="<i>[WEBAPP]</i>/dwr/engine.js"&gt; &lt;/script&gt;
 ...
 
-function handleGetData(str) {
-  alert(str);
-}
-
 Remote.getData(42, {
   callback:function(str) { 
     alert(str); 
@@ -72,6 +68,10 @@ Remote.getData(42, {
 <p>An alternative approach is to simply append a callback function to your parameter list:</p>
 
 <pre>
+function handleGetData(str) {
+  alert(str);
+}
+
 Remote.getData(42, handleGetData);
 </pre>
 
