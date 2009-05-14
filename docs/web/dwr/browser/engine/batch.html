@@ -11,7 +11,7 @@
 
 <p>You can group several remote calls together using a batch. This saves on round trips to the server so there is much less latency involved.</p>
 
-<p>A batch is started with <code>DWREngine.beginBatch()</code> and ended with <code>DWREngine.endBatch()</code>. When <code>endBatch()</code> is called, we are finished grouping a set of remote calls together, so DWR executes them in a single round trip to the server.</p>
+<p>A batch is started with <code>dwr.engine.beginBatch()</code> and ended with <code>dwr.engine.endBatch()</code>. When <code>endBatch()</code> is called, we are finished grouping a set of remote calls together, so DWR executes them in a single round trip to the server.</p>
 
 <p>DWR takes care of ensuring that all the callbacks are called so you can turn batching on and off transparently. Just don't forget to call <code>endBatch()</code> or all your remote calls will be queued for ever.</p>
 
