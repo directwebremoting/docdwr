@@ -9,7 +9,7 @@
 
 <h1>The 'static' Creator</h1>
 
-<p>The static creator is declared by default by DWR as follows: <code>&lt;creator id="static" class="org.directwebremoting.create.StaticCreator"/&gt;</code> You don't need to add this line to your dwr.xml because it is already in the DWR's internal dwr.xml file.</p>
+<p>The static creator is declared by default by DWR as follows: <code>&lt;creator id="static" class="org.directwebremoting.create.StaticCreator"/&gt;</code> You don't need to add this line to your dwr.xml because it is already in DWR's internal dwr.xml file.</p>
 
 <p>This creator will retrieve an instance of a class using the getInstance() method (by default) or a user specified method.</p>
 
@@ -24,7 +24,7 @@
 &lt;/allow&gt;
 </pre>
 
-<p>This remotes <code>my.package.Singleton</code> to Javascript and gives it the name <code>Blah</code> so in Javascript when you call <code>Blah.toString(reply)</code> an instance of my.package.Singleton will be retrieved using the getInstance method, then the toString() method will be called, and the data returned to the javascript reply function.</p>
+<p>This remotes <code>my.package.Singleton</code> to Javascript and gives it the name <code>Blah</code> so in Javascript when you call <code>Blah.toString(reply)</code> an instance of my.package.Singleton will be retrieved using the getInstance method. Then the toString() method will be called, and the data returned to the javascript reply function.</p>
 <p>Please note that the creator, and javascript attributes are required as well as the param element which indicates which class DWR should retrieve.</p>
 
 <p>The static creator has an optional parameter that will allow you to specify the name of the method that will retrieve an instance of the class (once again getInstance is used by default).  Here is an example of this usage:
