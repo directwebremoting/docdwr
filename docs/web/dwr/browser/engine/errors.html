@@ -14,7 +14,7 @@
 
 <p>This method could be used to display error messages in an alert box or to the status bar.</p>
 
-<p>To change the global error handler use <code>dwr.engine.setErrorHandler(function)</code>, and to change the global warning handler use <code>dwr.engine.setWarningHandler(function)</code>.  Please note that the error and warning handlers can also be set on a per call basis using the call meta-data options:
+<p>To change the global error handler use <code>dwr.engine.setErrorHandler(function)</code>, and to change the global warning handler use <code>dwr.engine.setWarningHandler(function)</code>.  Please note that the error and warning handlers can also be set on a per call basis using the call option object:
 <pre>
 Remote.method(params, {
   callback:function(data) { alert("it worked"); },
@@ -27,7 +27,7 @@ Remote.method(params, {
 
 <h2>Setting Timeouts</h2>
 
-<p>dwr.engine.setTimeout() and the call and batch level call meta-data options allow you to set a timeout values. The global dwr.engine.setTimeout() function does it for all DWR calls. A value of 0 (the default) turns call timeouts off.</p>
+<p>dwr.engine.setTimeout() and the call and batch level call option object allow you to set timeout values. The global dwr.engine.setTimeout() function does it for all DWR calls. A value of 0 (the default) turns call timeouts off.</p>
 
 <p>The units passed to setTimeout() are milli-seconds. If a call timeout happens, the the appropriate error handler is called.</p>
 
