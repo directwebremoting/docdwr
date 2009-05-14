@@ -37,6 +37,8 @@
 
 <li><b><a href="new.html">new</a></b>: Which uses the Java 'new' operator.</li>
 
+<li><b><a href="static.html">static</a></b>: Which uses the 'getInstance()' (by default) to obtain an instance of the class.</li>
+
 <li><b><a href="#none">none</a></b>: This does not create objects. See below for why. (v1.1+)</li>
 
 <li><b><a href="scripted.html">scripted</a></b>: Uses a scripting language like BeanShell or Groovy via BSF.</li>
@@ -102,7 +104,8 @@
 
 <h2>Using Singletons</h2>
 
-<p>The best way to handle singletons is to create an instance of the object using BeanShell and BSF. See the section on the <a href="scripted.html">'Scripted' Creator</a> for more details.</p>
+<p>The <a href="static.html">static</a> creator is the recommended approach for using Singletons.
+<p>An alernative approach is to create an instance of the object using BeanShell and BSF. See the section on the <a href="scripted.html">'Scripted' Creator</a> for more details.</p>
 
 <h2>Other Creators</h2>
 
