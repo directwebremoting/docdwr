@@ -63,23 +63,23 @@ dwr.engine.endBatch({
 <table class="documentation">
 <tr><th>Option</th><th>Global</th><th>Batch</th><th>Call</th><th>Summary</th></tr>
 
-<tr><td><a href="options.html">async</a></td> <td>1.1</td><td>1.1</td><td>1.1</td><td>Set to <code>false</code> for asynchronous behaviour (not recommended)</td></tr>
+<tr><td><a href="options.html">async</a></td> <td>1.1</td><td>1.1</td><td>1.1</td><td>Set to <code>false</code> for asynchronous behaviour (not recommended).</td></tr>
 
 <tr><td>headers</td> <td>2.0</td><td>2.0</td><td>2.0</td><td>Extra headers to add to XHR calls.</td></tr>
 
-<tr><td>parameters</td> <td>2.0</td><td>2.0</td><td>2.0</td><td>Meta-data that is made available through <code>request.getAttribute(attrName)</code></td></tr>
+<tr><td>parameters</td> <td>2.0</td><td>2.0</td><td>2.0</td><td>Meta-data that is made available through <code>request.getAttribute(attrName).</code></td></tr>
 
-<tr><td><a href="errors.html">timeout</a></td> <td>1.0</td><td>1.1</td><td>1.1</td><td>Cancel request after X ms</td></tr>
+<tr><td><a href="errors.html">timeout</a></td> <td>1.0</td><td>1.1</td><td>1.1</td><td>Cancel request after X ms.</td></tr>
 
 <tr><th colspan="5">Handlers</th></tr>
 
-<tr><td><a href="errors.html">errorHandler</a></td> <td>1.0</td><td>1.1</td><td>1.1</td><td>Action when something is broken. In 1.x this included server-side exceptions. From 2.0, server side exceptions use 'exceptionHandler'</td></tr>
+<tr><td><a href="errors.html">errorHandler</a></td> <td>1.0</td><td>1.1</td><td>1.1</td><td>Action when something is broken. In 1.x this included server-side exceptions. From 2.0, server side exceptions use 'exceptionHandler'.</td></tr>
 
-<tr><td><a href="errors.html">warningHandler</a></td> <td>1.0</td><td>2.0</td><td>2.0</td><td>Action when something breaks which can be triggered by browser bugs, so by default this is set to null (turned off)</td></tr>
+<tr><td><a href="errors.html">warningHandler</a></td> <td>1.0</td><td>2.0</td><td>2.0</td><td>Action when something breaks which can be triggered by browser bugs, so by default this is set to null (turned off).</td></tr>
 
-<tr><td><a href="../../other/errors.html">textHtmlHandler</a></td> <td>2.0</td><td>2.0</td><td>2.0</td><td>Action when an unexpected text/html page is received (usually indicates session timeout)</td></tr>
+<tr><td><a href="../../other/errors.html">textHtmlHandler</a></td> <td>2.0</td><td>2.0</td><td>2.0</td><td>Action when an unexpected text/html page is received (usually indicates session timeout).</td></tr>
 
-<tr><th colspan="5">Call Handlers <span class="note">(Registered for individual calls not all calls in a batch)</span></th></tr>
+<tr><th colspan="5">Call Handlers <span class="note">(Registered for individual calls not all calls in a batch).</span></th></tr>
 
 <tr><td><a href="../../introduction/scripting-dwr.html">callback</a></td> <td>-</td><td>-</td><td>1.0</td><td>Executed on successful call completion with a single parameter; the returned data.</td></tr>
 
@@ -100,29 +100,17 @@ dwr.engine.endBatch({
 <tr><td><a href="../extra-data.html#scope">exceptionScope</a></td> <td>-</td><td>-</td><td>3.0</td><td>The scope in which the exceptionHandler will be executed.  If specified overrides scope.</td></tr>
 
 
-<tr><th colspan="5">Hooks <span class="note">(Multiple hooks can be registered per batch)</span></th></tr>
+<tr><th colspan="5">Hooks <span class="note">(Multiple hooks can be registered per batch).</span></th></tr>
 
-<tr><td><a href="hooks.html">preHook</a></td> <td>1.0</td><td>1.1</td><td>1.1</td><td>Function called just before the remote call</td></tr>
+<tr><td><a href="hooks.html">preHook</a></td> <td>1.0</td><td>1.1</td><td>1.1</td><td>Function called just before the remote call.</td></tr>
 
-<tr><td><a href="hooks.html">postHook</a></td> <td>1.0</td><td>1.1</td><td>1.1</td><td>Function called just after the remote call</td></tr>
+<tr><td><a href="hooks.html">postHook</a></td> <td>1.0</td><td>1.1</td><td>1.1</td><td>Function called just after the remote call.</td></tr>
 
-<tr><th colspan="5">Global Options <span class="note">(Not available at a call or batch level)</span></th></tr>
+<tr><th colspan="5">Global Options <span class="note">(Not available at a call or batch level).</span></th></tr>
 
-<tr><td><a href="ordering.html">ordered</a></td> <td>1.0</td><td>-</td><td>-</td><td>Should DWR provide ordering guarantees</td></tr>
+<tr><td><a href="ordering.html">ordered</a></td> <td>1.0</td><td>-</td><td>-</td><td>true if DWR should provide ordering guarantees.  </td></tr>
 
-<tr><td>activeReverseAjax</td> <td>2.0</td><td>-</td><td>-</td><td>Should we be looking for inbound calls</td></tr>
-
-<tr><th colspan="5">Deprecated Options</th></tr>
-
-<tr><td><a href="options.html">httpMethod</a></td> <td>2.0</td><td>2.0</td><td>2.0</td><td>Selects use of GET or POST. Called 'verb' in 1.x, likely to be removed in version 3.0</td></tr>
-
-<tr><td><a href="options.html">rpcType</a></td> <td>2.0</td><td>2.0</td><td>2.0</td><td>Selects between xhr, iframe or script-tag remoting. Called 'method' in 1.x, likely to be removed in version 3.0</td></tr>
-
-<tr><td>pollType</td> <td>2.0</td><td>-</td><td>-</td><td>Selects between xhr and iframe for Reverse Ajax</td></tr>
-
-<tr><td><a href="options.html">verb</a></td> <td>1.0</td><td>1.1</td><td>1.1</td><td>Deprecated in 2.0. Use 'httpMethod' instead</td></tr>
-
-<tr><td><a href="options.html">method</a></td> <td>1.0</td><td>1.1</td><td>1.1</td><td>Deprecated in 2.0. Use 'rpcType' instead</td></tr>
+<tr><td>activeReverseAjax</td> <td>2.0</td><td>-</td><td>-</td><td>Should we be looking for inbound calls.</td></tr>
 
 </table>
 
