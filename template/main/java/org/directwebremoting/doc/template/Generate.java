@@ -7,12 +7,13 @@ import java.io.FileOutputStream;
 import java.io.FileReader;
 import java.io.FileWriter;
 import java.io.IOException;
+import java.io.PrintStream;
 import java.io.PrintWriter;
 import java.util.ArrayList;
-import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
+import java.util.TreeMap;
 import java.util.TreeSet;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
@@ -24,13 +25,13 @@ import org.directwebremoting.fsguide.Visitor;
 import org.directwebremoting.util.CopyUtils;
 
 /**
- * 
+ *
  * @author Joe Walker [joe at getahead dot ltd dot uk]
  */
 public class Generate
 {
     /**
-     * 
+     *
      */
     private static class Page implements Comparable<Page>
     {
@@ -39,10 +40,11 @@ public class Generate
         StringBuilder body = new StringBuilder();
         StringBuilder close = new StringBuilder();
 
-        String path;
+        final String path;
+        final File source;
+
         String title;
         String navTitle;
-        File source;
         int weight = 0;
 
         List<String> aliases = new ArrayList<String>();
@@ -50,27 +52,30 @@ public class Generate
         Page parent;
         Set<Page> children = new TreeSet<Page>();
 
+        public Page(String path, File source)
+        {
+            this.path = path;
+            this.source = source;
+        }
+
         @Override
         public String toString()
         {
-            return "Page[path=" + path + ", title='" + navTitle + "', aliases=" + aliases + "]";
+            return "Page[path=" + path + ", title='" + navTitle + "', pathToRoot=" + getPathToRoot() + ", parent=" + (parent == null ? "null" : parent.path) + "]";
         }
 
         public String getLink(Page from)
         {
-            return getLink(from, navTitle);
+            return getLink(from, navTitle, false);
         }
 
-        public String getLink(Page from, String text)
+        public String getLink(Page from, String text, boolean preventCurrentLink)
         {
-            if (this == from)
+            if (this == from && !preventCurrentLink)
             {
                 return "<a href='" + source.getName() + "' class='currentLink'>" + text + "</a>";
             }
-            if (this.parent == from.parent)
-            {
-                return "<a href='" + source.getName() + "'>" + text + "</a>";
-            }
+
             return "<a href='" + from.getPathToRoot() + path + "'>" + text + "</a>";
         }
 
@@ -95,16 +100,16 @@ public class Generate
             StringBuilder builder = new StringBuilder();
             Page current = this.parent;
 
+            if (path.endsWith("index.html"))
+            {
+               builder.append("../");
+            }
+
             while (current != null)
             {
                 current = current.parent;
                 builder.append("../");
             }
-
-            // if (children.size() > 0)
-            // {
-            //     builder.append("../");
-            // }
 
             return builder.toString();
         }
@@ -118,22 +123,50 @@ public class Generate
     }
 
     /**
-     * 
+     * The root path to the documentation is a required argument:
+     *   I.E - C:\dev\workspaces\openSource\docdwr on Windows.
+     *       - /dev/workspaces/openSource/docdwr on *ix.
      */
     public static void main(String[] args) throws IOException
     {
-        String root = "/Users/joe/Projects/directwebremoting/docdwr";
+        if (args.length == 0) {
+            System.out.println("The root path to the documentation on your file system is a required program argument. I.E. /Users/joe/Projects/directwebremoting/docdwr");
+            System.exit(0);
+        }
+        String root = args[0];
         Map<String, Page> pages = readInput(root + "/docs/web");
-        writeOutput(pages, root + "/target/publish/");
+
+        writeHtmlOutput(pages, root + "/target/publish/");
         copyStatic(root + "/docs/web", root + "/target/publish", new String[] {
             "png", "gif", "jpg", "css", "pdf", "dtd", "xsd", "js"
         });
+
+        writeApacheConfOutput(pages, root + "/target/dwr.conf");
     }
 
     /**
-     * 
+     *
      */
-    private static void writeOutput(Map<String, Page> pages, String base) throws IOException
+    private static void writeApacheConfOutput(Map<String, Page> pages, String base)
+    {
+        PrintStream out = System.out;
+        for (Page page : pages.values())
+        {
+            for (String alias : page.aliases)
+            {
+                out.print("Redirect ");
+                out.print(alias);
+                out.print(" /");
+                out.print(page.path);
+                out.println();
+            }
+        }
+    }
+
+    /**
+     *
+     */
+    private static void writeHtmlOutput(Map<String, Page> pages, String base) throws IOException
     {
         for (Page page : pages.values())
         {
@@ -142,22 +175,22 @@ public class Generate
 
             PrintWriter out = new PrintWriter(new FileWriter(destination));
             out.print(page.header);
-            out.print(getTemplateHeaderInsert());
+            out.print(getTemplateHeaderInsert(page));
             out.print(page.neck);
             out.print(getTemplatePreBodyInsert(page));
             out.print(page.body);
-            out.print(getTemplatePostBodyInsert(pages.get(ROOT)));
+            out.print(getTemplatePostBodyInsert(page, pages.get(ROOT)));
             out.print(page.close);
             out.close();
         }
     }
 
     /**
-     * 
+     *
      */
     private static Map<String, Page> readInput(final String base)
     {
-        final Map<String, Page> pages = new HashMap<String, Page>();
+        final Map<String, Page> pages = new TreeMap<String, Page>();
 
         FileSystemGuide guide = new FileSystemGuide(new File(base));
         guide.visit(new Visitor()
@@ -168,9 +201,7 @@ public class Generate
 
                 if (path.endsWith(".html"))
                 {
-                    Page page = new Page();
-                    page.path = path;
-                    page.source = file;
+                    Page page = new Page(path, file);
                     pages.put(path, page);
 
                     try
@@ -185,7 +216,7 @@ public class Generate
                             {
                                 break;
                             }
-                            
+
                             switch (reading)
                             {
                             case Header:
@@ -314,16 +345,24 @@ public class Generate
     }
 
     /**
-     * 
+     *
      */
     private static String stripBase(File file, String base)
     {
         String path = file.getAbsolutePath();
-        return path.substring(base.length() + 1);
+        return replaceWindowsFileSepWithUnix(path.substring(base.length() + 1));
     }
 
     /**
-     * 
+     * Private utility to get things to work on Windows.
+     * @return
+     */
+    private static String replaceWindowsFileSepWithUnix(String path) {
+        return path.replace('\\', '/');
+    }
+
+    /**
+     *
      */
     private static void copyStatic(final String source, final String dest, final String[] extensions)
     {
@@ -378,19 +417,28 @@ public class Generate
     }
 
     /**
-     * 
+     *
      */
-    private static String getTemplateHeaderInsert()
+    private static String getTemplateHeaderInsert(Page page)
     {
-        //return "  <script type='text/javascript' src='http://directwebremoting.org/dwr/menu.js'> </script>\n";
-        //return "  <script type='text/javascript' src='file:///Users/joe/Projects/directwebremoting/docdwr/docs/web/dwr/menu.js'> </script>\n";
-        return "";
+        StringBuilder builder = new StringBuilder();
+
+        builder.append("  <script type='text/javascript' src='");
+        builder.append(page.getPathToRoot());
+        builder.append("dwr/media/dojo.js");
+        builder.append("'> </script>\n");
+        builder.append("  <script type='text/javascript' src='");
+        builder.append(page.getPathToRoot());
+        builder.append("dwr/media/menu.js");
+        builder.append("'> </script>\n");
+
+        return builder.toString();
     }
 
     /**
-     * 
+     *
      */
-    private static final String STANDARD_HEADER = 
+    private static final String STANDARD_HEADER =
         "<div id='header'><a href='http://directwebremoting.org/dwr/'>Direct Web Remoting</a></div>\n" +
         "<div id=pagelinks>\n" +
           "<div class='navlinks'>[ \n" +
@@ -407,7 +455,7 @@ public class Generate
           "</div>\n";
 
     /**
-     * 
+     *
      */
     private static String getTemplatePreBodyInsert(Page page)
     {
@@ -429,45 +477,64 @@ public class Generate
     }
 
     /**
-     * 
+     *
      */
-    private static String getTemplatePostBodyInsert(Page root)
+    private static String getTemplatePostBodyInsert(Page base, Page root)
     {
         StringBuilder menu = new StringBuilder();
 
         menu.append("<ul class='menu' id='nav'>\n");
-        addMenuOptions(menu, root, "Quick Nav&nbsp;&#x2192;");
+
+        menu.append("<li class='noChildren'>");
+        menu.append(root.getLink(base, "Home", false));
+        menu.append("</li>\n");
+
+        for (Page child : root.children)
+        {
+            addMenuOptions(menu, base, child);
+        }
+
         menu.append("</ul>\n");
 
         return menu.toString();
     }
 
     /**
-     * 
+     * &#x2192; is right arrow, &#x2193; is down arrow
      */
-    private static void addMenuOptions(StringBuilder menu, Page page, String text)
-    {
-        if (text == null)
-        {
-            text = page.navTitle + "&nbsp;&#x2192;";
-        }
+    //private static final String ARROW = "&nbsp;&#x2193;";
+    private static final String ARROW = "&nbsp;...";
 
+    /**
+     *
+     */
+    private static void addMenuOptions(StringBuilder menu, Page base, Page page)
+    {
         boolean hasChildren = (page.children.size() > 0);
         if (hasChildren)
         {
-            menu.append("<li class='hasChildren'>" + page.getLink(page, text));
+            menu.append("<li class='hasChildren'>");
+            menu.append(page.getLink(base, page.navTitle + ARROW, true));
+
             menu.append("<ul>\n");
+
+            menu.append("<li class='noChildren'>");
+            menu.append(page.getLink(base, "Index", false));
+            menu.append("</li>\n");
+
             for (Page child : page.children)
             {
-                addMenuOptions(menu, child, null);
+                addMenuOptions(menu, base, child);
             }
-            menu.append("</ul>\n");            
+
+            menu.append("</ul>\n");
+
             menu.append("</li>\n");
         }
         else
         {
             menu.append("<li class='noChildren'>");
-            menu.append(page.getLink(page));
+            menu.append(page.getLink(base));
             menu.append("</li>\n");
         }
     }
