@@ -73,7 +73,7 @@ dwr.engine.endBatch({
 
 <tr><th colspan="5">Handlers</th></tr>
 
-<tr><td><a href="errors.html">errorHandler</a></td> <td>1.0</td><td>1.1</td><td>1.1</td><td>Action when something is broken. In 1.x this included server-side exceptions. From 2.0, server side exceptions use 'exceptionHandler'.</td></tr>
+<tr><td><a href="errors.html">errorHandler</a></td> <td>1.0</td><td>1.1</td><td>1.1</td><td>Action when something is broken.</td></tr>
 
 <tr><td><a href="errors.html">warningHandler</a></td> <td>1.0</td><td>2.0</td><td>2.0</td><td>Action when something breaks which can be triggered by browser bugs, so by default this is set to null (turned off).</td></tr>
 
@@ -112,6 +112,10 @@ dwr.engine.endBatch({
 
 <tr><td>activeReverseAjax</td> <td>2.0</td><td>-</td><td>-</td><td>Should we be looking for inbound calls.</td></tr>
 
+<tr><td>maxRetries</td> <td>3.0 RC2</td><td>-</td><td>-</td><td>For reverse AJAX calls.  The number of times we should re-attempt failed calls.</td></tr>
+
+<tr><td>retryIntervals</td> <td>3.0 RC2</td><td>-</td><td>-</td><td>For reverse AJAX calls.  An array specifying the default time between retries (in seconds).  Defaults to: <br>[ 2, 5, 10, 60, 300 ]<br><br>In this case the first retry will occur in 2 seconds, the second retry will occur in 5 seconds, and each retry after the 5th will occur after 300 seconds.</td></tr>
+ 
 </table>
 
 <h2>Guaranteed Responses</h2>
