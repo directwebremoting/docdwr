@@ -19,6 +19,7 @@
 &lt;allow&gt;
   ...
   &lt;create creator="script" javascript="EmailValidator"&gt;
+    &lt;param name="class" value="org.apache.commons.validator.EmailValidator"/&gt;
     &lt;param name="language" value="beanshell"/&gt;
     &lt;param name="script"&gt;
       import org.apache.commons.validator.EmailValidator;
@@ -48,6 +49,15 @@
 <td>The language that we are scripting in. This string is passed to BSF. For example 'beanshell'. (required)</td>
 
 </tr>
+
+<tr>
+
+<td>class</td>
+<td>1.0</td>
+<td>The type of object that is created.  This is required for security reasons.</td>
+
+</tr>
+
 <tr>
 
 <td>script</td>
@@ -69,13 +79,7 @@
 <td>Should the ScriptedCreator check for changes to scripts loaded using scriptPath? (optional, defaults to true)</td>
 
 </tr>
-<tr>
 
-<td>class</td>
-<td>1.0</td>
-<td>The type of object that is created (optional). If this parameter is missing the DWR works the value out by calling the creator.</td>
-
-</tr>
 </table>
 
 <h3>Issues to be aware of</h3>
