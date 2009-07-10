@@ -14,13 +14,14 @@
 <h2>Initial considerations</h2>
 
 <ol>
+  <li>DWR 3 requires Spring version 2.5 or greater.  Make sure you have the appropriate version of Spring.</li>
   <li>Make sure you are happy with everything on the <a href="../../introduction/getting-started.html">getting started</a> page.</li>
   <li>Make sure your Spring beans work properly outside of DWR (unit test).</li>  <li>Select the configuration style based on your Spring version (see below).</li>
   <li>Configure DWR to work with Spring (see below).</li>
   <li>Look at the demo pages: <code>http://localhost:[PORT]/[YOUR-WEBAPP]/dwr/index.html</code> to check that your spring beans appear.</li>
 </ol>
 
-<h2>DWR and Spring 2.x - The DWR namespace handler</h2>
+<h2>DWR and Spring - The DWR namespace handler</h2>
 
 <p>Spring 2.x includes a new feature named XML Namespace Handlers. This allows DWR and Spring MVC to remote Spring beans easily with a custom syntax.</p>
 
@@ -51,7 +52,7 @@
   xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
   <b>xmlns:dwr="http://www.directwebremoting.org/schema/spring-dwr"</b>
   xsi:schemaLocation="http://www.springframework.org/schema/beans
-    http://www.springframework.org/schema/beans/spring-beans-2.0.xsd
+    http://www.springframework.org/schema/beans/spring-beans-2.5.xsd
     <b>http://www.directwebremoting.org/schema/spring-dwr
     http://www.directwebremoting.org/schema/spring-dwr-3.0.xsd"&gt;</b>
 </pre>
@@ -60,17 +61,19 @@
 
 <h3>The configuration tag</h3>
 
-<p>You must declare one <code>&lt;dwr:configuration&gt;</code> tag. This tag is mandatory even if empty. It may have nested tags (init, creator, signatures,..). These nested tags mimic the behavior of those available in <a href="../dwrxml/index.html">dwr.xml</a>. Understand their functioning first and then use your IDE to translate to the correct syntax.</p>
+<p>You must declare one <code>&lt;dwr:configuration/&gt;</code> tag. This tag is mandatory even if empty. It may have nested tags (init, creator, signatures,..). These nested tags mimic the behavior of those available in <a href="../dwrxml/index.html">dwr.xml</a>. Understand their functioning first and then use your IDE to translate to the correct syntax.</p>
 
 <h3>The controller tag</h3>
 
-<p>Again you must declare one <code>&lt;dwr:controller id="dwrController" debug="true" /&gt;</code> tag. This tag does not allow inner tags. In Spring MVC, for each controller you have to map the URLs that it will handle. The simplest way is probably declaring a SimpleUrlHandlerMapping. DWR needs mappings for the following URLs: <code>/engine.js, /interface.js, /call/**, /interface/**</code>. Remember that a DWR Controller is just needed (and useful) in Spring MVC environments (use the servlet in other cases) and this way you get the number of other related Spring services (ie localization).</p>
+<p>Again you must declare one <code>&lt;dwr:controller id="dwrController" debug="true" /&gt;</code> tag. This tag does not allow inner tags.</p><p>In Spring MVC, for each controller you have to map the URLs that it will handle. The simplest way to do this is by using the <code>&lt;dwr:url-mapping /&gt;</code> tag.</p><p>Alternatively, you may specify your own SimpleUrlHandlerMapping. DWR needs mappings for the following URLs: <code>/engine.js, /interface.js, /call/**, /interface/**</code>. Remember that a DWR Controller is just needed (and useful) in Spring MVC environments (use the servlet in other cases) and this way you get a number of other related Spring services (i.e. localization).</p><p><b>A note about mappings!</b> It is important to note that the creation of the SimpleUrlHandlerMapping may cause your existing mappings to fail if you have not explicitly created a Handler Mapping in your Spring configuration.  By default Spring creates a BeanNameUrlHandlerMapping if you have not explicitly created a Handler Mapping.  So when the SimpleUrlHandlerMapping is created for DWR, Spring will no longer create the default BeanNameUrlHandlerMapping and existing mappings will not work.  Spring allows you to have multiple Handler Mappings, to fix this you need to create a BeanNameUrlHandlerMapping explicitly in your spring.xml (in addition to the SimpleUrlHandlerMapping).  <a href="http://static.springsource.org/spring/docs/2.5.x/reference/mvc.html#mvc-handlermapping" target="new">See the Spring documentation section 13.4.1</a> for more information. </p>
 
 <h3>The remote tag</h3>
 
-<p>Inside each bean you want to remote include a <code>&lt;dwr:remote javascript="Fred"&gt;</code> tag. There you can specify the methods that are going to be proxied and those that won't. For example:<br/><br/><code>&lt;bean id="timeConvert" class="com.mycompany.ui.util.TimeConvert"><br/>&nbsp;&nbsp;&lt;dwr:remote javascript="AjaxTimeConvert"&gt;<br/>
-&nbsp;&nbsp;&nbsp;&nbsp;&lt;dwr:include method="convert" /&gt;<br/>
-&nbsp;&nbsp;&lt;/dwr:remote&gt;<br/>&lt;/bean></code></p>
+<p>Inside each bean you want to remote include a <code>&lt;dwr:remote javascript="Fred"&gt;</code> tag. There you can specify the methods that are going to be proxied and those that won't. For example:<pre><code>&lt;bean id="timeConvert" class="com.mycompany.ui.util.TimeConvert">
+&nbsp;&nbsp;&lt;dwr:remote javascript="AjaxTimeConvert"&gt;
+&nbsp;&nbsp;&nbsp;&nbsp;&lt;dwr:include method="convert" /&gt;
+&nbsp;&nbsp;&lt;/dwr:remote&gt;
+&lt;/bean></code></pre></p>
 
 <h3>Scoped Beans</h3>
 
@@ -82,16 +85,16 @@
 </ul>
 
 <p>Here's an example:</p>
-<p><code>&lt;bean id="calc" class="...CalculatorImpl" scope=session><br/>
-&nbsp;&nbsp;&lt;dwr:remote javascript="Calculator"><br/>
-&nbsp;&nbsp;&nbsp;&nbsp;&lt;dwr:include method="add"/><br/>
-&nbsp;&nbsp;&lt;/dwr:remote><br/>
-&nbsp;&nbsp;&lt;aop:scoped-proxy proxy-target-class="false" /><br/>
-&lt;/bean></code></p>
+<p><pre><code>&lt;bean id="calc" class="...CalculatorImpl" scope=session>
+&nbsp;&nbsp;&lt;dwr:remote javascript="Calculator">
+&nbsp;&nbsp;&nbsp;&nbsp;&lt;dwr:include method="add"/>
+&nbsp;&nbsp;&lt;/dwr:remote>
+&nbsp;&nbsp;&lt;aop:scoped-proxy proxy-target-class="false" />
+&lt;/bean></code></pre></p>
 
 <h3>Aspects &amp; DWR</h3>
 
-<p>If you're receiving the dreaded <code>object is not an instance of declaring class</code> error always check these things:
+<p>If you're receiving the dreaded <code>object is not an instance of declaring class</code> error always check the following:
   <ul>
     <li>You have an interface and an implementation</li>
     <li>You have declared <code>&lt;aop:aspectj-autoproxy proxy-target-class="false" /&gt;</code>in your Spring XML</li>
@@ -100,19 +103,18 @@
 In fact, AOP proxies work fine with DWR. Just configure Spring accordingly.
 </p>
 
+<h2>Annotations</h2>
+
+<p>If you would like to use annotations to remote your Spring beans DWR provides two tags that make it easy.<ol><li><b>annotation-scan</b> - Enables DWR to scan the classpath, detect beans annotated with @RemoteProxy & @RemoteMethod and register the beans and Creator proxies for them.  This element has several available attributes: </li><ul><li>base-package - The base package to initiate scanning from - i.e. com.myApp.*.</li><li>regex - A regular expression that will be used in the classpath scanner.</li><li>scanRemoteProxy - Should DWR scan for remote proxies? Defaults to true.</li><li>scanDataTransferObject - Should DWR scan for converters?  Defaults to true.</li><li>scanGlobalFilter - Defaults to true.  Jose?</li></ul><li><b>annotation-config</b> - Enables DWR to scan the Spring context, detect beans annotated with @RemoteProxy & @RemoteMethod and register Creator proxies for them.</li></ol></p>
+
 <h3>Beyond the documentation</h3>
 
-<p>This kind of integration has been discussed in depth some times by now. Try reading:</p>
+<p>The integration of DWR and Spring has been discussed in depth many times. The posts below are currenlty outdated but most of the information and examples are still valid.</p>
 
 <ul>
   <li>Jose Noheda has <a href="http://internna.blogspot.com/2007/05/integrating-dwr-spring.html">blogged this updates</a>. Or <a href="http://internna.blogspot.com/2008/01/little-bit-more-dwr-and-spring-mvc.html">here</a>, where he also provides an example.</li>
   <li>David Marginian has written up a tutorial and <a href="http://www.butterdev.com/category/spring/">a few example applications integrating Spring and DWR that can be downloaded.</a></li>
-  <li>Bram Smeets has written up <a href="http://bram.jteam.nl/?p=2">an interesting blog as well</a></li>
 </ul>
-
-<h2>The future</h2>
-
-<p>New configuration options are already committed in CVS. They're available today for those who like living on the edge (<a href="../../development/index.html">development</a>). The most important are the automatic mapping of URLs (<code>&lt;dwr:url-mapping /&gt;</code>)and the use of annotations to remote Spring beans (<code>&lt;dwr:annotation-config /&gt;</code>). As you can see, they make even further use of the namespace feature. They will be properly documented here with the new release. This new features require Spring 2.5 at least.</p>
 
 <h2>Another option using dwr.xml and the Spring creator</h2>
 
