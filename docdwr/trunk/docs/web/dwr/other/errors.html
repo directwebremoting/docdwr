@@ -13,7 +13,7 @@
 <p>First some definitions:</p>
 
 <ul>
-<li>An <strong>errorHandler</strong> is used when something breaks, and we are sure of what's gone wrong. For example - if someone stops the app-server then DWR raises an error to say that it's got an HTTP error.</li>
+<li>An <strong>errorHandler</strong> is used when something breaks, and we are sure of what's gone wrong. For example - if someone stops the app-server then DWR raises an error to say that it's got an HTTP error, or if there is a JavaScript error in your callback function.</li>
 
 <li>A <strong>warningHandler</strong> is used when something has broken, but we're not 100% sure that this isn't normal. For example, it is possible with page transitions on Firefox to get an XHR callback after the XHR object has been killed. So XHR throwing an exception might be bad, or it might not depending on the circumstances. By default there is no warning handler, because unless things get hairy, you don't need to know about warnings. However sometimes it might be useful for debugging purposes.</li>
 
