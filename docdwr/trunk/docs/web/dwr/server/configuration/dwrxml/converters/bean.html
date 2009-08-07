@@ -1,0 +1,220 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <title>Bean and Object Converters</title>
+  <meta name='alias' content='/dwr/server/configuration/dwrxml/converters/bean'>
+  <meta name='navTitle' content='Beans / Objects'>
+  <link rel="stylesheet" type="text/css" href="../../../../media/styles.css">
+</head>
+<body>
+
+<h1>Bean and Object Converters</h1>
+
+<p>Two converters that are not enabled by default are the Bean and Object converters. They will convert Java Beans and POJOs to and from JavaScript objects. These converters are not enabled by default because DWR makes sure that is has permission before it exposes any of your classes.</p>
+
+<p>The Bean converter will expose properties on your classes based upon getters and setters. The Object converter is similar except that it works on data members directly. All classes need to be concrete and have a default constructor, though non-concrete types (interfaces and abstract classes) may be used as method arguments when using the class mapping feature described later on this page. All the examples below work using 'object' in place of 'bean' to use direct member access.</p>
+
+<p>Security note: If you are enabling conversion of a bean that has a constructor or setter that has some nasty side effects, then it would be possible for an attacker to take advantage of this side effect as the constructor and setters are executed during the DWR incoming data conversion.</p>
+
+<p>You can enable the bean converter for a single class using the following:</p>
+
+<pre>
+&lt;convert converter="bean" match="com.example.Person"/&gt;
+</pre>
+
+<p>To allow conversion of any class in the given package:</p>
+
+<pre>
+&lt;convert converter="bean" match="com.example.*"/&gt;
+</pre>
+
+<p>To allow conversion of any class in the given package and all sub-packages:</p>
+
+<pre>
+&lt;convert converter="bean" match="com.example.**"/&gt;
+</pre>
+
+<h2>BeanConverter and the JavaBeans Spec.</h2>
+
+<p>Beans converted using the BeanConverter need to follow the
+ <a href="http://java.sun.com/products/javabeans/docs/spec.html">JavaBeans spec</a> 
+ because the converter uses 
+ <a href="http://java.sun.com/j2se/1.5.0/docs/api/java/beans/Introspector.html">Introspection</a> 
+ and not <a href="http://java.sun.com/j2se/1.5.0/docs/api/java/lang/reflect/package-summary.html">Reflection</a>. 
+ This means things like having properly named getters and setters where there is a 
+ single parameter to the setter which matches the return type of the getter. The 
+ setter should return void, the getter should not have any parameters and there is 
+ no overloading of setters. Mostly this is common sense, but it does trip some people 
+ up. If your class does not follow the Java Bean specification then you need the ObjectConverter.</p>
+
+<h2>Supplying parameters in calls from Javascript</h2>
+
+<p>Apart from converting Java objects into JavaScript objects (aka maps, aka 
+associative arrays) when returning data to the browser, DWR will convert Javascript 
+objects into Java objects when making calls from the browser.</p>
+
+<p>A quick example may help. Suppose you have the following Java code:</p>
+
+<pre>
+public class Remoted {
+  public void addToFriends(Person p) {
+    // ...
+  }
+}
+
+public class Person {
+  public void setName(String name) { ... }
+  public void setAge(int age) { ... }
+  // ...
+}
+</pre>
+
+<p>If <code>Remoted</code> was configured as a Creator, and <code>Person</code> is convertable using the BeanConverter, then you can 
+make the call from JavaScript as follows:</p>
+
+<pre>
+var p = { name:"Fred", age:21 };
+Remoted.addToFriends(p);
+</pre>
+
+<h2><a name="restrictingPropertyConversion"></a>Restricting Property Conversion</h2>
+
+<p>Just as you have exclude and include for creators to instruct DWR to exclude methods, there is a similar system for converters.</p>
+
+<p>Since restricting property conversion only makes sense for Beans (clearly primitive types don't need restrictions on conversion of their properties) this functionality is specific to BeanConverter and anything that inherits from it (like <a href="../../integration/hibernate.html">HibernateBeanConverter</a>)</p>
+
+<p>The syntax is:</p>
+
+<pre>
+&lt;convert converter="bean" match=&quot;com.example.Person"&gt;
+  &lt;param name="exclude" value="property1, property2"/&gt;
+&lt;/convert&gt;
+</pre>
+
+<p>This will ensure that DWR does not call <code>Person.getProperty1()</code> and 
+<code>Person.getProperty2()</code>. Alternatively if you prefer to white-list rather than black-list you can do the following:</p>
+
+<pre>
+&lt;convert converter="bean" match=&quot;com.example.Person"&gt;
+  &lt;param name="include" value="property1, property2"/&gt;
+&lt;/convert&gt;
+</pre>
+
+<p>Good security design commonly involves white-listing rather than black-listing.</p>
+
+<h2>Private Members of Objects</h2>
+
+<p>In addition to the parameters above the 'object' converter has a force parameter that instructs DWR to use reflection modifiers to access private members of objects.</p>
+
+<p>The syntax is:</p>
+
+<pre>
+&lt;convert converter="object" match=&quot;com.example.Person"&gt;
+  &lt;param name="force" value="true"/&gt;
+&lt;/convert&gt;
+</pre>
+
+<h2><a name="mappingJavaToJavaScript"></a>Mapping Java classes to JavaScript classes</h2>
+
+<p>Sometimes it is desirable to preserve the type (or sub-type) of Java objects 
+returned from the server. This is possible by having DWR map Java classes to 
+corresponding JavaScript classes. This is done by adding a <code>javascript</code> 
+attribute to the <code>convert</code> element, naming the desired JavaScript class name:</p>
+
+<pre>
+&lt;convert converter="bean" match="com.example.Person" javascript="Person"/&gt;
+</pre>
+
+<p>Typically this feature is used with class hierarchies, so given the Person 
+class from above we could do:</p>
+
+<p>Java:</p>
+<pre>
+public class Employee extends Person {
+  public void setEmployer(Employer emp) { ... }
+  // ...
+}
+</pre>
+
+<p>dwr.xml:</p>
+<pre>
+&lt;convert converter="bean" match="com.example.Employee" javascript="Employee"/&gt;
+</pre>
+
+<p>Given the above declarations we can now make use of the feature from JavaScript:</p>
+
+<pre>
+var p = ... // get an Employee from the server
+p instanceof Employee // true
+Remoted.addToFriends(p);
+</pre>
+
+<p>The code will result in p being assigned a JavaScript object instantiated from a 
+generated JavaScript class 'Employee', thus the <code>instanceof</code> test will return the
+expected result. Also, when sending the object back to the server in the outlined
+method call, the type will be preserved so a Java Employee object will be created
+on the server side instead of a Person object, which would have been the normal
+behaviour based on addToFriends' argument type.</p>
+
+<p>It is also possible to create new instances from client code in the browser:</p>
+
+<pre>
+var p1 = new Person();
+var p2 = new Employee();
+</pre>
+
+<p>It is worth noting that DWR does not set up inheritance between generated JavaScript
+classes, so <code>instanceof</code> tests will result in:</p>
+
+<pre>
+p1 instanceof Person // true
+p1 instanceof Employee // false
+p2 instanceof Person // false (unexpected!)
+p2 instanceof Employee // true
+</pre>
+
+<p>This is solved by setting up Employee's prototype chain in JavaScript before the 
+first objects are created:</p>
+
+<pre>
+// Set up Employee to inherit from Person
+Employee.prototype = new Person();
+Employee.prototype.constructor = Employee;
+...
+p2 instanceof Person // true
+</pre>
+
+<h3>Javascript wildcard expansion</h3>
+
+<p>The javascript attribute of a converter will allow the * and ** wildcards. The * will map to the matched classes simple name while ** will be mapped to the fully qualified named. A few examples may help illustrate this feature:
+
+<pre>
+&lt;converter type="bean" match="model.BeanA" javascript="*" /&gt;
+</pre>
+Resulting JS identifier: BeanA
+
+<pre>
+&lt;converter type="bean" match="model.BeanA" javascript="**" /&gt;
+</pre>
+Resulting JS identifier: model.BeanA
+
+<pre>
+&lt;converter type="bean" match="model.BeanA" javascript="foo.bar.*" /&gt;
+</pre>
+Resulting JS identifier: foo.bar.BeanA
+</p>
+
+<h3>Interfaces and Abstract Classes</h3>
+<p>The class mapping feature may also be used with interfaces and abstract 
+classes. Note though that a remoted method's argument types always have to be enabled
+for conversion, even when these types are non-concrete classes, otherwise DWR will
+not allow the data to pass through.</p>
+
+<p>The generated JavaScript classes are classic JavaScript prototype definitions
+that are included in every generated interface file. Thus, you do not have to
+include any additional files to benefit from the JavaScript classes but you may
+want to limit the number of classes you enable for class mapping as their definitions
+may be downloaded multiple times (once for each interface file).</p>
+
+</body>
+</html>
