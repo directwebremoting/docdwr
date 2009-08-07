@@ -2,7 +2,7 @@
 <html>
 <head>
   <title>Writing JavaScript with DWR</title>
-  <meta name='weight' content='-13'>
+  <meta name='weight' content='4'>
   <meta name='alias' content='/dwr/browser/intro'>
   <meta name='navTitle' content='Scripting DWR'>
   <link rel="stylesheet" type="text/css" href="../media/styles.css">
@@ -117,26 +117,6 @@ Remote.setPerson(p);
 <p>Any fields missing from the Javascript representation will be left unset in the Java version.</p>
 
 <p>Since the setter returned 'void' we did not need to use a callback and could just leave it out. If you want to be notified of the completion of a server-side method that returns void then you can include a callback method. Obviously DWR will not pass any data to it.</p>
-<h2>Finding the callback method</h2>
 
-<p>There are some instances when it might not be tricky to distinguish between the various callback placement options. (Remember that Javascript does not support overloaded functions). For example:</p>
-
-<pre>
-Remote.method({ timeout:3 }, { errorHandler:somefunc });
-</pre>
-
-<p>One of the 2 parameters is a bean parameter and the other is a call options object but we have no way of telling which. In a cross-browser world we have to assume that null == undefined. So currently, the rules are:</p>
-
-<ul>
-
-<li>If there is a function last then this is the callback function, there is no call options object and the other parameters are the Java args.</li>
-
-<li>Otherwise, if the last param is an object with a callback member that is a function then this is the call options object and the other params are Java args.</li>
-
-<li>Finally if the last param is null, then there is no callback function.</li>
-
-<li>Otherwise, this is a badly formatted request - signal an error.</li>
-
-</ul>
 </body>
 </html>
