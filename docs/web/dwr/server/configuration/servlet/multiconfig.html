@@ -1,0 +1,92 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <title>Multiple dwr.xml files</title>
+  <meta name='alias' content='/dwr/server/servlet/multiconfig'>
+  <link rel="stylesheet" type="text/css" href="../../../media/styles.css">
+</head>
+<body>
+
+<h3>Multiple dwr.xml files and Java EE security</h3>
+
+<p>Generally speaking you will only need one dwr.xml file and that will be in the default position: <code>WEB-INF/dwr.xml</code>. So you can leave this parameter out.</p>
+
+<p>There are 3 reasons why you might wish to specify a different position for dwr.xml:</p>
+
+<!--break-->
+
+<ul>
+
+<li>You wish to keep dwr.xml with the files that it gives access to.  In which case the section might have a param-value something like <code>&lt;param-value&gt;WEB-INF/classes/com/yourco/dwr/dwr.xml&lt;/param-value&gt;</code>.</li>
+
+<li>You may have a large number of remoted classes and wish to keep the definitions in separate files. In this case you will have the section above repeated several times each with a different <code>param-name</code> that begins 'config' and each pointing at a different file. DWR will read them all in turn.</li>
+
+<li>DWR can use J2EE URL security built into the servlet spec to give different groups of users access to different functions. You simply define more than one dwr servlet by repeating the stanza at the top of the page with different names, urls and permissions.</li>
+
+</ul>
+
+<p>If you do wish to use it then the syntax is as follows:</p>
+
+<pre>
+&lt;init-param&gt;
+  &lt;param-name&gt;config*****&lt;/param-name&gt;
+  &lt;param-value&gt;WEB-INF/dwr.xml&lt;/param-value&gt;
+  &lt;description&gt;What config file do we use?&lt;/description&gt;
+&lt;/init-param&gt;
+</pre>
+
+<p>Where config***** means any param-name that begins with the string 'config'. This parameter can be specified as many times as required, however the <code>param-name</code> should be different for each.</p>
+
+<p>An example configuration to use J2EE servlet security is as follows:</p>
+
+<pre>
+&lt;servlet&gt;
+  &lt;servlet-name&gt;dwr-user-invoker&lt;/servlet-name&gt;
+  &lt;servlet-class&gt;uk.ltd.getahead.dwr.DWRServlet&lt;/servlet-class&gt;
+  &lt;init-param&gt;
+    &lt;param-name&gt;config-user&lt;/param-name&gt;
+    &lt;param-value&gt;WEB-INF/dwr-user.xml&lt;/param-value&gt;
+  &lt;/init-param&gt;
+&lt;/servlet&gt;
+&lt;servlet&gt;
+  &lt;servlet-name&gt;dwr-admin-invoker&lt;/servlet-name&gt;
+  &lt;servlet-class&gt;uk.ltd.getahead.dwr.DWRServlet&lt;/servlet-class&gt;
+  &lt;init-param&gt;
+    &lt;param-name&gt;config-admin&lt;/param-name&gt;
+    &lt;param-value&gt;WEB-INF/dwr-admin.xml&lt;/param-value&gt;
+  &lt;/init-param&gt;
+&lt;/servlet&gt;
+&lt;servlet-mapping&gt;
+  &lt;servlet-name&gt;dwr-admin-invoker&lt;/servlet-name&gt;
+  &lt;url-pattern&gt;/dwradmin/*&lt;/url-pattern&gt;
+&lt;/servlet-mapping&gt;
+&lt;servlet-mapping&gt;
+  &lt;servlet-name&gt;dwr-user-invoker&lt;/servlet-name&gt;
+  &lt;url-pattern&gt;/dwruser/*&lt;/url-pattern&gt;
+&lt;/servlet-mapping&gt;
+
+&lt;security-constraint&gt;
+  &lt;display-name&gt;dwr-admin&lt;/display-name&gt;
+  &lt;web-resource-collection&gt;
+    &lt;web-resource-name&gt;dwr-admin-collection&lt;/web-resource-name&gt;
+    &lt;url-pattern&gt;/dwradmin/*&lt;/url-pattern&gt;
+  &lt;/web-resource-collection&gt;
+  &lt;auth-constraint&gt;
+    &lt;role-name&gt;admin&lt;/role-name&gt;
+  &lt;/auth-constraint&gt;
+&lt;/security-constraint&gt;
+&lt;security-constraint&gt;
+  &lt;display-name&gt;dwr-user&lt;/display-name&gt;
+  &lt;web-resource-collection&gt;
+    &lt;web-resource-name&gt;dwr-user-collection&lt;/web-resource-name&gt;
+    &lt;url-pattern&gt;/dwruser/*&lt;/url-pattern&gt;
+  &lt;/web-resource-collection&gt;
+  &lt;auth-constraint&gt;
+    &lt;role-name&gt;user&lt;/role-name&gt;
+  &lt;/auth-constraint&gt;
+&lt;/security-constraint&gt;
+</pre>
+
+
+</body>
+</html>
