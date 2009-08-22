@@ -1,119 +1,88 @@
 <!DOCTYPE html>
-<html>
-<head>
+<html><head>
   <title>Remoting Options</title>
-  <meta name='weight' content='2'>
+
+  
+  
+  <meta name="weight" content="2">
+
+  
   <link rel="stylesheet" type="text/css" href="../media/styles.css">
-</head>
-<body>
 
-<h2>Getting Started with DWR</h2>
+</head><body>
+<h2>Remoting Options<br>
+</h2>
 
-<p>There are several ways to get started with DWR. We recommend the following:
-<ul>
-  <li><a href="../downloads/index.html">Download the dwr.war</a> file and look/study the examples.</li>
-  <li>Start integrating DWR in your application by following the 5 easy steps outlined below.</li>
-  <li>Once DWR is up and running <a href="scripting-dwr.html">learn how to write JavaScript</a> for DWR.
-</ul>
-</p>  
+DWR provides two remoting options:<br>
 
-<h4>1. Install the DWR JAR file</h4>
-<p><a href="../downloads/index.html">Download</a> the dwr.jar file. Place it in the <code>WEB-INF/lib</code> directory of your webapp. You'll probably have a set of jar files in there already.</p>
+<br>
 
-<h4>2. Install the Commons Logging JAR file</h4>
-<p>DWR has one dependency on  <a href="http://commons.apache.org/logging/" target="new">Commons Logging</a>. <a href="http://commons.apache.org/logging/" target="new">Download</a> the commons-logging.jar and place it in the <code>WEB-INF/lib</code> directory of your webapp.</p>
+1) <span style="font-weight: bold;">DWR native</span> - By default DWR
+uses a superset of JSON that we like to call JavaScript. This was
+initially done to cope with recursive data, XML objects, etc., which
+the original JSON specifications had a difficult time dealing with. In
+this remoting mode DWR's client side&nbsp; engine (engine.js) handles
+preparing and executing the call to the server.&nbsp; Most of the
+documentation on this site deals with DWR native.&nbsp; <br>
 
-<h4>3. Add the DWR servlet definition and mapping to your application's web.xml</h4>
-<p>The following lines need to be added to <code>WEB-INF/web.xml</code>. The <code>&lt;servlet&gt;</code> section needs to go with the other <code>&lt;servlet&gt;</code> sections, and likewise with the <code>&lt;servlet-mapping&gt;</code> section.</p>
+<br>
 
-<pre>
-&lt;servlet&gt;
-  &lt;servlet-name&gt;dwr-invoker&lt;/servlet-name&gt;
-  &lt;display-name&gt;DWR Servlet&lt;/display-name&gt;
-  &lt;servlet-class&gt;org.directwebremoting.servlet.DwrServlet&lt;/servlet-class&gt;
-  &lt;init-param&gt;
-     &lt;param-name&gt;debug&lt;/param-name&gt;
-     &lt;param-value&gt;true&lt;/param-value&gt;
-  &lt;/init-param&gt;
-&lt;/servlet&gt;
+2) <span style="font-weight: bold;">JSON/JSONP</span> - In DWR 3 a
+JSON/JSONP RESTian API has been added that allows users to access Java
+services exposed to DWR via an URL: <code>http://example.com/dwr/jsonp/ClassName/methodName/param1/param2</code>
+DWR will reply with a JSON structure containing the result of calling
+ClassName.methodName("param1", "param2");<br>
 
-&lt;servlet-mapping&gt;
-  &lt;servlet-name&gt;dwr-invoker&lt;/servlet-name&gt;
-  &lt;url-pattern&gt;/dwr/*&lt;/url-pattern&gt;
-&lt;/servlet-mapping&gt;
-</pre>
+<br>
 
-<h4>4. Create the DWR configuration file (dwr.xml)</h4>
-<p>Create a new file in the WEB-INF (alongside web.xml) directory named dwr.xml.</p>
-<p>A simple way to start is with something like this:</p>
+This allows for seamless integration with JavaScript toolkits (DOJO,
+ExtJs, jQuery, etc.) while eliminating the need for the developer to
+convert the return types of their exposed Java methods into JSON
+manually - DWR's server engine handles this.<br>
 
-<pre>
-&lt;!DOCTYPE dwr PUBLIC
-    "-//GetAhead Limited//DTD Direct Web Remoting 3.0//EN"
-    "<a href="../dwr30.dtd">http://getahead.org/dwr/dwr30.dtd</a>"&gt;
+<br>
 
-&lt;dwr&gt;
-  &lt;allow&gt;
-    &lt;create creator="new" javascript="JDate"&gt;
-      &lt;param name="class" value="java.util.Date"/&gt;
-    &lt;/create&gt;
-    &lt;create creator="new" javascript="Demo"&gt;
-      &lt;param name="class" value="your.java.Bean"/&gt;
-    &lt;/create&gt;
-  &lt;/allow&gt;
-&lt;/dwr&gt;
-</pre>
+<h2>Getting Started with JSON/JSONP</h2>
 
-<p>The DWR config file defines what classes DWR can create and remote for use by Javascript. In the example above we are defining 2 classes that are remoted and giving the classes names in Javascript.</p>
+In order to enable JSON/JSONP you must
+add the jsonpEnabled init-param to your DWR servlet definition in your
+web.xml.&nbsp; This parameter activates the JSON/JSONP service.
+<pre><code>   ...<br>  &lt;servlet&gt;<br>    &lt;servlet-name&gt;dwr-invoker&lt;/servlet-name&gt;<br>    &lt;display-name&gt;DWR Servlet&lt;/display-name&gt;<br>    &lt;description&gt;Direct Web Remoter Servlet&lt;/description&gt;<br>    &lt;servlet-class&gt;org.directwebremoting.servlet.DwrServlet&lt;/servlet-class&gt;<br>    &lt;init-param&gt;<br>     &lt;param-name&gt;jsonpEnabled&lt;/param-name&gt;<br>     &lt;param-value&gt;true&lt;/param-value&gt;<br>    &lt;/init-param&gt;<br>    ...	    </code></pre>
 
-<p>The <a href="../server/dwrxml/creators/new.html">new creator</a> that we used above uses the public no-args constructor that all JavaBeans must have. It is also worth remembering that DWR has one restriction:</p>
+<h2>JSON/JSONP URL construction</h2>
 
-<ul>
+The following URL illustrates an example of using JSON/JSONP remoting
+(from an example in the <a href="../downloads/index.html">dwr.war</a>):<br>
 
-<li>Avoid reserved JavaScript words; Methods named after reserved words are automatically excluded. Most JavaScript reserved words are also Java reserved words, so you won't be having a method called "try()" anyway. However the most common gotcha is "delete()", which has special meaning in JavaScript but not Java.</li>
+../../../dwr/jsonp/People/setPerson?param0=" +
+encodeURIComponent($.toJSON(person)<br>
 
-</ul>
+<ol>
 
-<p><a href="../server/dwrxml/index.html">Visit the dwr.xml documentation</a> for a detailed description of the dwr.xml file, <a href="../server/dwrxml/creators/index.html">creators</a> and <a href="../server/dwrxml/converters/index.html">converters.</a></p>
+  <li><span style="font-weight: bold;">../../../dwr/</span> - First you
+must specify the path to the DWR servlet.&nbsp; Obviously this will
+change based on where your page is located.</li>
+  <li><span style="font-weight: bold;">jsonp</span> - This tells DWR to
+use JSON/JSONP remoting.</li>
+  <li><span style="font-weight: bold;">People</span> - This is the name
+that you have configured for the Java class you have exposed to DWR.</li>
+  <li><span style="font-weight: bold;">setPerson</span> - This is the
+name of the Java method you have exposed to DWR and would like to call.</li>
+  <li><span style="font-weight: bold;">?param0</span> -&nbsp; This
+syntax is required for any parameters that need to be passed to the
+Java method, any additional parameters need to follow the following
+pattern &amp;paramindex (e.g.
+?param0=value0&amp;param1=value1&amp;param2=value2).</li>
+  <li style="font-weight: bold;">encodeURIComponent($.toJSON(person) <span style="font-weight: normal;">-</span> <span style="font-weight: normal;">This example assumes you have build a
+JavaScript object named person.&nbsp; First we need to serialize the
+person object into a JSON&nbsp; string.&nbsp; Many JavaScript toolkits
+provide a function to serve this need.&nbsp; In this case we are using
+jQuery and the <a href="http://code.google.com/p/jquery-json/" target="new">jquery-json plugin</a>.</span>&nbsp; <span style="font-weight: normal;">We
+also highly recommend making sure any parameters passed are properly
+encoded, you can do this via JavaScript's encodeURIComponent method.</span>&nbsp;<span style="font-weight: normal;"> A complete example is provided below, to see this example in action please see the dwr.war.&nbsp; </span><br>
+  </li>
+</ol>
 
-<h4>5. Take DWR for a test drive!</h4>
-<p>Go to the following URL:</p>
-<code>http://localhost:8080/<i>[YOUR-WEBAPP]</i>/dwr/</code>
+<pre>function writePerson() {<br>  var person = { id:viewed, name:null, address:null, age:null, superhero:null };<br>  dwr.util.getValues(person);<br>  $.post("../../../dwr/jsonp/People/setPerson?param0=" + encodeURIComponent($.toJSON(person)), { },<br>    fillTable, "json"); <br>}</pre>
 
-<p>You should see a page showing you the classes that you've selected in step 4. Having followed a link you should see an index of all the methods ready for calling. These pages are dynamically generated examples of what you can do using DWR.</p>
-
-<p>Kick the tyres and have a look around.</p>
-
-<h3>How to make use of this from your web application</h3>
-
-<p>We have a whole section on <a href="scripting-dwr.html">writing Javascript with DWR</a>, and there are a number of examples in the sidebar that demonstrate how to dynamically alter the text in web pages, update lists, manipulate forms and do live table editing. Each has a description of how it works.</p>
-
-<p>Another way to get started is to look at the source from the pages that you just viewed:</p>
-
-<ul>
-
-<li>Go to http://localhost:8080/<i>[YOUR-WEBAPP]</i>/dwr/ and click on you class</li>
-<li>View source and find the line that executes the method that you are interested in.</li>
-<li>Paste the text into an HTML or JSP page in your web-app.</li>
-<li>Include links to the javascript files that make the magic happen:</li>
-
-</ul>
-
-<pre>
-&lt;script src='/<i>[YOUR-WEBAPP]</i>/dwr/interface/<i>[YOUR-SCRIPT]</i>.js'&gt;&lt;/script&gt;
-&lt;script src='/<i>[YOUR-WEBAPP]</i>/dwr/engine.js'&gt;&lt;/script&gt;
-</pre>
-
-<p>You can omit the <code>/<i>[YOUR-WEBAPP]</i>/</code> section and use relative paths in your web pages if you wish.</p>
-
-<p>Next Step: Learn about <a href="scripting-dwr.html">writing Javascript that interacts with DWR</a>.</p>
-
-<h3>What if it doesn't work?</h3>
-
-<p>We have a <a href="../support/common_problems.html">page containing troubleshooting advice and common problems and their fixes</a>. This is the first place to look.</p>
-
-<p>If you are still having problems please <a href="../support/index.html">join the mailing list</a> and ask there.</p>
-
-
-</body>
-</html>
+</body></html>
