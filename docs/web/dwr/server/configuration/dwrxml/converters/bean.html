@@ -91,8 +91,10 @@ Remoted.addToFriends(p);
 &lt;/convert&gt;
 </pre>
 
+<p>Please note that exclusion/inclusions are based on the property name not the accessor method (getter/setter)</p>
+
 <p>This will ensure that DWR does not call <code>Person.getProperty1()</code> and 
-<code>Person.getProperty2()</code>. Alternatively if you prefer to white-list rather than black-list you can do the following:</p>
+<code>Person.getProperty2()</code>.  Alternatively if you prefer to white-list rather than black-list you can do the following:</p>
 
 <pre>
 &lt;convert converter="bean" match=&quot;com.example.Person"&gt;
