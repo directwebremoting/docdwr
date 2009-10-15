@@ -1,0 +1,54 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <title>addRows</title>
+  <meta name='alias' content='/dwr/browser/addRows'>
+  <link rel="stylesheet" type="text/css" href="../../media/styles.css">
+</head>
+<body>
+
+<h2>dwr.util.addRows()</h2>
+
+<h5>Syntax:</h5>
+
+<pre>dwr.util.addRows(id, array, cellfuncs, [options]);</pre>
+
+<h5>Description:</h5>
+
+<p>Adds rows to a table element specified by id. It takes it's data from an array and creates a row in the table for each entry in the array. A column is created for each function in the cellfuncs array. The cells are created by passing each array entry to each 'cellfunc' in turn. For worked examples see the <a href="tables.html">tables documentation</a>.</p>
+
+<p>As of DWR 1.1, addRows() also works with objects. If you pass in an object in place of an array we will create cells by passing object values to the cell functions.</p>
+
+<p>You could write some pseudo-code that looks something like this:</p>
+
+<pre>
+for each member in array
+  for each function in cellfuncs
+    create cell from cellfunc(array[i])
+</pre>
+
+<h5>Parameters:</h5>
+
+<ul>
+<li><b>id</b>: The id of the table element (preferably a tbody element)</li>
+
+<li><b>array</b>: Array (or object from DWR 1.1) containing one entry for each row in the updated table</li>
+
+<li><b>cellfuncs</b>: An array of functions (one per column) for extracting cell data from the passed row data</li>
+
+<li><b>options</b>: An object containing various options (see below)</li>
+</ul>
+
+<p>From DWR 1.1, the options available are:</p>
+
+<ul>
+
+<li><strong>rowCreator</strong>: a function that will create a row for you (e.g. you wish to add css to the tr). The default returns document.createElement("tr")</li>
+
+<li><strong>cellCreator</strong>: a function to create a cell, (e.g. to use a th in place of a td). The default returns document.createElement("td")</li>
+
+<li><strong>escapeHtml</strong>: Set to false to prevent DWR performing output escaping. See the <a href='escapeHtml.html'>full documentation on escapeHtml</a> for more information.<p>
+</ul>
+
+</body>
+</html>

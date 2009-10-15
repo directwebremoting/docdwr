@@ -1,0 +1,120 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <title>Getting Started</title>
+  <meta name='weight' content='4'>
+  <meta name='alias' content='/dwr/getstarted'>
+  <link rel="stylesheet" type="text/css" href="../media/styles.css">
+</head>
+<body>
+
+<h2>Getting Started with DWR</h2>
+
+<p>There are several ways to get started with DWR. We recommend the following:
+<ul>
+  <li><a href="../downloads/index.html">Download the dwr.war</a> file and look/study the examples.</li>
+  <li>Start integrating DWR in your application by following the 5 easy steps outlined below.</li>
+  <li>Once DWR is up and running <a href="scripting-dwr.html">learn how to write JavaScript</a> for DWR.
+</ul>
+</p>  
+
+<h4>1. Install the DWR JAR file</h4>
+<p><a href="../downloads/index.html">Download</a> the dwr.jar file. Place it in the <code>WEB-INF/lib</code> directory of your webapp. You'll probably have a set of jar files in there already.</p>
+
+<h4>2. Install the Commons Logging JAR file</h4>
+<p>DWR has one dependency on  <a href="http://commons.apache.org/logging/" target="new">Commons Logging</a>. <a href="http://commons.apache.org/logging/" target="new">Download</a> the commons-logging.jar and place it in the <code>WEB-INF/lib</code> directory of your webapp.</p>
+
+<h4>3. Add the DWR servlet definition and mapping to your application's web.xml</h4>
+<p>The following lines need to be added to <code>WEB-INF/web.xml</code>. The <code>&lt;servlet&gt;</code> section needs to go with the other <code>&lt;servlet&gt;</code> sections, and likewise with the <code>&lt;servlet-mapping&gt;</code> section.</p>
+
+<pre>
+&lt;servlet&gt;
+  &lt;servlet-name&gt;dwr-invoker&lt;/servlet-name&gt;
+  &lt;display-name&gt;DWR Servlet&lt;/display-name&gt;
+  &lt;servlet-class&gt;org.directwebremoting.servlet.DwrServlet&lt;/servlet-class&gt;
+  &lt;init-param&gt;
+     &lt;param-name&gt;debug&lt;/param-name&gt;
+     &lt;param-value&gt;true&lt;/param-value&gt;
+  &lt;/init-param&gt;
+&lt;/servlet&gt;
+
+&lt;servlet-mapping&gt;
+  &lt;servlet-name&gt;dwr-invoker&lt;/servlet-name&gt;
+  &lt;url-pattern&gt;/dwr/*&lt;/url-pattern&gt;
+&lt;/servlet-mapping&gt;
+</pre>
+
+<h4>4. Create the DWR configuration file (dwr.xml)</h4>
+<p>Create a new file in the WEB-INF (alongside web.xml) directory named dwr.xml.</p>
+<p>A simple way to start is with something like this:</p>
+
+<pre>
+&lt;!DOCTYPE dwr PUBLIC
+    "-//GetAhead Limited//DTD Direct Web Remoting 3.0//EN"
+    "<a href="../dwr30.dtd">http://getahead.org/dwr/dwr30.dtd</a>"&gt;
+
+&lt;dwr&gt;
+  &lt;allow&gt;
+    &lt;create creator="new" javascript="JDate"&gt;
+      &lt;param name="class" value="java.util.Date"/&gt;
+    &lt;/create&gt;
+    &lt;create creator="new" javascript="Demo"&gt;
+      &lt;param name="class" value="your.java.Bean"/&gt;
+    &lt;/create&gt;
+  &lt;/allow&gt;
+&lt;/dwr&gt;
+</pre>
+
+<p>The DWR config file defines what classes DWR can create and remote for use by Javascript. In the example above we are defining 2 classes that are remoted and giving the classes names in Javascript.</p>
+
+<p>The <a href="../server/dwrxml/creators/new.html">new creator</a> that we used above uses the public no-args constructor that all JavaBeans must have. It is also worth remembering that DWR has one restriction:</p>
+
+<ul>
+
+<li>Avoid reserved JavaScript words; Methods named after reserved words are automatically excluded. Most JavaScript reserved words are also Java reserved words, so you won't be having a method called "try()" anyway. However the most common gotcha is "delete()", which has special meaning in JavaScript but not Java.</li>
+
+</ul>
+
+<p><a href="../server/dwrxml/index.html">Visit the dwr.xml documentation</a> for a detailed description of the dwr.xml file, <a href="../server/dwrxml/creators/index.html">creators</a> and <a href="../server/dwrxml/converters/index.html">converters.</a></p>
+
+<h4>5. Take DWR for a test drive!</h4>
+<p>Go to the following URL:</p>
+<code>http://localhost:8080/<i>[YOUR-WEBAPP]</i>/dwr/</code>
+
+<p>You should see a page showing you the classes that you've selected in step 4. Having followed a link you should see an index of all the methods ready for calling. These pages are dynamically generated examples of what you can do using DWR.</p>
+
+<p>Kick the tyres and have a look around.</p>
+
+<h3>How to make use of this from your web application</h3>
+
+<p>We have a whole section on <a href="scripting-dwr.html">writing Javascript with DWR</a>, and there are a number of examples in the sidebar that demonstrate how to dynamically alter the text in web pages, update lists, manipulate forms and do live table editing. Each has a description of how it works.</p>
+
+<p>Another way to get started is to look at the source from the pages that you just viewed:</p>
+
+<ul>
+
+<li>Go to http://localhost:8080/<i>[YOUR-WEBAPP]</i>/dwr/ and click on you class</li>
+<li>View source and find the line that executes the method that you are interested in.</li>
+<li>Paste the text into an HTML or JSP page in your web-app.</li>
+<li>Include links to the javascript files that make the magic happen:</li>
+
+</ul>
+
+<pre>
+&lt;script src='/<i>[YOUR-WEBAPP]</i>/dwr/interface/<i>[YOUR-SCRIPT]</i>.js'&gt;&lt;/script&gt;
+&lt;script src='/<i>[YOUR-WEBAPP]</i>/dwr/engine.js'&gt;&lt;/script&gt;
+</pre>
+
+<p>You can omit the <code>/<i>[YOUR-WEBAPP]</i>/</code> section and use relative paths in your web pages if you wish.</p>
+
+<p>Next Step: Learn about <a href="scripting-dwr.html">writing Javascript that interacts with DWR</a>.</p>
+
+<h3>What if it doesn't work?</h3>
+
+<p>We have a <a href="../support/common_problems.html">page containing troubleshooting advice and common problems and their fixes</a>. This is the first place to look.</p>
+
+<p>If you are still having problems please <a href="../support/index.html">join the mailing list</a> and ask there.</p>
+
+
+</body>
+</html>

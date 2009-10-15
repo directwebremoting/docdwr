@@ -1,0 +1,117 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <title>getText</title>
+  <meta name='alias' content='/dwr/browser/util/gettext'>
+  <link rel="stylesheet" type="text/css" href="../../media/styles.css">
+</head>
+<body>
+
+<script type='text/javascript' src='/M:/Users/joe/Projects/directwebremoting/docdwr/docs/web/dwr/media/util.js'> </script>
+<script type="text/javascript" src="/M:/Users/joe/Projects/directwebremoting/docdwr/docs/web/dwr/media/eval.js"> </script>
+<script type="text/javascript">
+function doGetText()
+{
+    var ret = DWRUtil.getText($('gettext').value);
+    DWRUtil.setValue("gettextret", ret);
+}
+
+function doGetText2()
+{
+    var ret = DWRUtil.getValue($('gettext2').value);
+    DWRUtil.setValue("gettextret2", ret);
+}
+</script>
+
+<h1>DWRUtil.getText(id)</h1>
+
+<p><code>getText(id)</code> is similar to <code>getValue(id)</code>, except that it is designed for <code>&lt;select ...</code> lists where you need to get the displayed text rather than the value of the current option.</p>
+
+<!--break-->
+
+<p>
+<code>
+DWRUtil.getText</code>(
+<input id="gettext" value="select" size="10"/> )
+<input type="button" value="getText" onclick="doGetText()"/>
+  returns = "<span id="gettextret" class="reply"> </span>"
+  <br/>
+  And for comparison:
+  <br/>
+  <code>DWRUtil.getValue</code>(
+  <input id="gettext2" value="select" size="10"/> )
+  <input type="button" value="getValue" onclick="doGetText2()"/>
+  returns = "<span id="gettextret2" class="reply"> </span>"
+</p>
+
+<!-- START COPIED BLOCK: Source: node/75 Copies: node/76-79 -->
+
+<style>
+.small { font-size:80%; }
+.testblock { margin:10px; background-color:#fff8dd; padding:10px }
+</style>
+
+<div class="testblock">
+
+<p><b>HTML Test Elements</b></p>
+
+<div style="border:1px solid #999;" id="div">A div element with id="div".</div>
+
+<table>
+<tr>
+
+<td>Text area <span class="small">(id="textarea")</span>:</td>
+<td><textarea id="textarea"></textarea></td>
+
+<td>Selection list <span class="small">(id="select")</span>:</td>
+<td>
+  <select id="select">
+    <option selected="selected" value="value one">text one</option>
+    <option value="value two">text two</option>
+    <option value="value three">text three</option>
+  </select>
+</td>
+
+</tr>
+<tr>
+
+<td>Text input <span class="small">(id="text")</span>:</td>
+<td><input id="text" value="" /></td>
+
+<td>Password input <span class="small">(id="password")</span>:</td>
+<td><input id="password" value="password" type="password" /></td>
+
+<!--
+
+</tr>
+<tr>
+
+<td>Radio buttons <span class="small">(id="radio")</span>:</td>
+<td>
+  <input id="radio" name="radio" value="one" type="radio" checked="checked"/>one<br/>
+  <input id="radio" name="radio" value="two" type="radio"/>two
+</td>
+
+<td>Check box <span class="small">(id="checkbox")</span>:</td>
+<td><input id="checkbox" value="input checkbox" type="checkbox" />input</td>
+
+-->
+
+</tr>
+<tr>
+
+<td>Form button <span class="small">(id="formbutton")</span>:</td>
+<td><input id="formbutton" value="button" type="button" /></td>
+
+<td>Fancy button <span class="small">(id="button")</span>:</td>
+<td><button id="button">button</button></td>
+
+</tr>
+</table>
+
+</div>
+
+<!-- END COPIED BLOCK -->
+
+</body>
+</html>
