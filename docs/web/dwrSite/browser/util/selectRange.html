@@ -1,0 +1,40 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <title>selectRange</title>
+  <meta name='alias' content='/dwr/browser/util/selectrange'>
+  <link rel="stylesheet" type="text/css" href="../../media/styles.css">
+</head>
+<body>
+
+<script type='text/javascript' src='/M:/Users/joe/Projects/directwebremoting/docdwr/docs/web/dwr/media/util.js'> </script>
+
+<h1>DWRUtil.selectRange</h1>
+
+<h3>Selecting a range of text in an input box</h3>
+
+<p>You need to select text in an input box for any "Google suggest" type functions, however the selection model changes a lot between different browsers. The DWRUtil function to help here is: <code>DWRUtil.selectRange(ele, start, end)</code>.</p>
+
+<p>For example:</p>
+
+<!--break-->
+
+<script>
+function doSelectRange()
+{
+     DWRUtil.selectRange("sel-test", $("start").value, $("end").value);
+}
+</script>
+<p><code>DWRUtil.selectRange("sel-test",
+  <input id="start" type="text" value="4" size="6"/>,
+  <input id="end" type="text" value="8" size="6"/>
+)</code>
+<input type="button" onclick="doSelectRange()" value="selectRange"/>
+</p>
+
+<p>An input with <code>id="sel-test"</code>: <input id="sel-test" type="text" value="01234567890123456789"/></p>
+
+<p>Generally speaking DWR is not a generic Javascript library so it does not attempt to provide fill this need. However this is one of these really useful functions to have around if you are doing Ajax work.</p>
+
+</body>
+</html>

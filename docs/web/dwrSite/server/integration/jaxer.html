@@ -1,0 +1,84 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <title>Aptana Jaxer Integration</title>
+  <meta name='weight' content='7'>
+  <meta name='alias' content='/dwr/server/jaxer'>
+  <meta name='navTitle' content='Aptana Jaxer'>
+  <link rel="stylesheet" type="text/css" href="../../media/styles.css">
+</head>
+<body>
+
+<p class='xwarn'>Warning: Nothing links to this page</p>
+
+<h1>Aptana Jaxer and DWR Integration</h1>
+
+<p>The DWR + Jaxer integration makes Java access easy for JavaScript developers using <a href="http://www.aptana.com">Aptana Jaxer</a>, an Ajax server which embeds the Mozilla browser engine to provide server-side JavaScript, DOM, CSS, plus features typical of app servers for other languages.</p>
+ 
+<h3>Ease of Use</h3>
+
+<p>What's in it for DWR and Java users? You can see this as a way to cleanly separate a presentation layer written in Ajax (at both the client and the  server) from a back-end business logic layer written in Java such that the Java layer is not directly exposed to the Internet.</p>
+
+<p>What's in it for Jaxer users?  You can now tap Java objects directly from their server-side JavaScript code.  DWR handles the type conversions and marshalling while letting the developer use the same Java object names and APIs, except of course from JavaScript.</p>
+
+<p>Of course you can also use (Jaxer + DWR) and DWR in parallel to do the above, plus connect to DWR's reverse Ajax capabilities directly from the browser.</p>
+
+<h3>Security</h3>
+
+<p>Much of the complexity of DWR configuration is to restrict what classes the Internet can access. When DWR is fronted by Jaxer, we don't need to expose DWR to the Internet. Effectively the client becomes trusted, so we can remove some of the configuration steps. There is for example no need for a dwr.xml file any more - The exported classes can be configured directly by the script. Clearly it's important that your DWR server is not accessible from the Internet and is properly fire-walled.</p>
+
+<h3>Synchronous Communication</h3>
+
+<p>Synchronous communication over the Internet is generally regarded as a bad idea because it freezes the client while the server is responding. In the single-threaded JavaScript environment, this can be a significant glitch in user interface. Inside a corporate LAN, latencies are significantly reduced, and with Jaxer the UI is not visible while the rendering is happening.</p>
+
+
+<h2>About the Downloads</h2>
+
+<p>There are 4 files available from the <a href="https://dwr.dev.java.net/servlets/ProjectDocumentList?folderID=9253">download area</a>. 2 for use in an existing setup, and 2 as a demo to get started.</p>
+
+<p>Files to add to an existing project:</p>
+<ul>
+<li><strong>jaxer-dwr.jar</strong>: This is the jar file that users will put into their WEB-INF/lib directory on the Java server.</li>
+
+<li><strong>web.xml</strong>: This is an example of the changes needed to WEB-INF/web.xml (also on the Java server).</li>
+</ul>
+
+<p>If you are familiar with plain DWR, you don't need dwr.xml or any annotation configuration.</p>
+
+<p>Demo files:</p>
+<ul>
+<li><strong>demoServer.war</strong>: This is a simple demonstration web application that includes both of the files above and a trivial test client.</li>
+
+<li><strong>demoRemoting.zip</strong>: Partner to demoServer.war for deploying to the Jaxer server. Unzip this archive into $JAXER_HOME/public.</li>
+</ul>
+
+<p>If you want an easy way to see what DWR+Jaxer does, start by deploying this file to a Java server and by deploying demoRemoting.zip to a Jaxer server. See below for more detailed instructions.</p>
+
+
+<h2>How to get started with DWR+Jaxer</h2>
+
+<p><strong>1</strong>. In your Aptana_Jaxer/public directory, create a directory called demoRemoting, then download and unzip demoRemoting.zip, into this directory.</p>
+
+<p>You should now have 2 extra files:</p>
+<ul>
+<li>Aptana_Jaxer/public/demoRemoting/index.html</li>
+<li>Aptana_Jaxer/public/demoRemoting/frameworkPatch.js<br/><small>(You shouldn't need this file, see troubleshooting note below)</small></li>
+</ul>
+
+<p><strong>2</strong>. Next, download demoServer.war and deploy it into your application server.</p>
+
+<p><strong>3</strong>. Start the application server and browse to http://localhost:8081/demoRemoting.</p>
+
+
+<h2>Troubleshooting</h2>
+
+<p>If you get an error message like this:</p>
+
+<pre>Jaxer error processing request: JavaScript Error: "Jaxer.dwr is undefined"</pre>
+
+<p>Then you are running against a version of Jaxer that does not contain the Jaxer/DWR integration. The preferred solution is to upgrade Jaxer, however if that fails you can also make a small edit to demoRemoting/index.html. See the comments in that file.</p>
+
+<p>If your application server is not on the same machine, or is running on a different port, then you will need to edit Jaxer.dwr.pathToDwrServlet to point at the deployment of a web application containing jaxer-dwr.jar. See demoRemoting/index.html (around line 16) for more details.</p>
+
+</body>
+</html>

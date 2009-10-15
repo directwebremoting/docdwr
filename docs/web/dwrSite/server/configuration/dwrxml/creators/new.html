@@ -1,0 +1,37 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <title>'New' Creator</title>
+  <meta name='alias' content='/dwr/server/configuration/dwrxml/creators/new'>
+  <link rel="stylesheet" type="text/css" href="../../../../media/styles.css">
+</head>
+<body>
+
+<h1>The 'new' Creator</h1>
+
+<p>The new creator is declared by default by DWR as follows: <code>&lt;creator id="new" class="org.directwebremoting.create.NewCreator"/&gt;</code> You don't need to add this line to your dwr.xml because it is already in DWR's internal dwr.xml file.</p>
+
+<p>This creator will create an instance of a class using the default constructor. There are several benefits to using the 'new' creator:</p>
+
+<ul>
+
+<li>Security: The shorter lived the objects created by DWR are the less chance that they can be exploited by loading them up with invalid values in one call and then the invalid values fired at something that wasn't expecting it in another.</li>
+<li>Low memory overhead: If you have a site with many users, then you don't run as high of a risk of running out of VM memory.</li>
+
+</ul>
+
+<p>You allow DWR to use the new creator to create and remote your beans as follows:</p>
+
+<pre>
+&lt;allow&gt;
+  &lt;create creator="new" javascript="Blah"&gt;
+    &lt;param name="class" value="java.util.Date"/&gt;
+  &lt;/create&gt;
+  ... 
+&lt;/allow&gt;
+</pre>
+
+<p>This remotes <code>java.util.Date</code> to Javascript and gives it the name <code>Blah</code> so in Javascript when you call <code>Blah.toString(reply)</code> a new java.util.Date will be constructed using the default constructor. Then the toString() method will be called, and the data returned to the javascript reply function (in this case the current date in string form).</p>
+<p>Please note that the creator, and javascript attributes are required as well as the param element which indicates which class DWR should create.</p>
+</body>
+</html>
