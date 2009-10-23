@@ -28,7 +28,7 @@ If you would like to limit the maximum allowed size of file uploads we provide t
       &lt;param-value>5000&lt;/param-value&gt;
      &lt;/init-param&gt;</pre>
 <h1>Plugging in a custom Upload implementation</h1>
-The FileUpload implementation used by DWR is also pluggable.  If you would like to write your own implementation simply implement org.directwebremoting.dwrp.FileUpload and use DWR's plug-in architecture to specify the implementation via an init-param on the DWR servlet.
+The FileUpload implementation used by DWR is also <a href="../../servlet/plugin.html">pluggable</a>.  If you would like to write your own implementation simply implement org.directwebremoting.dwrp.FileUpload and use <a href="../../servlet/plugin.html">DWR's plug-in architecture</a> to specify the implementation via an init-param on the DWR servlet.
   <pre>
     &lt;init-param&gt;
      &lt;param-name>org.directwebremoting.dwrp.FileUpload&lt;/param-name&gt;
