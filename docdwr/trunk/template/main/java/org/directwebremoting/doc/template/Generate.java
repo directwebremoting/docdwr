@@ -178,7 +178,9 @@ public class Generate
             out.print(getTemplateHeaderInsert(page));
             out.print(page.neck);
             out.print(getTemplatePreBodyInsert(page));
+            out.print("<div id='content'>\n");
             out.print(page.body);
+            out.print("</div>\n");
             out.print(getTemplatePostBodyInsert(page, pages.get(ROOT)));
             out.print(page.close);
             out.close();
@@ -482,8 +484,8 @@ public class Generate
     private static String getTemplatePostBodyInsert(Page base, Page root)
     {
         StringBuilder menu = new StringBuilder();
-
-        menu.append("<ul class='menu' id='nav'>\n");
+        menu.append("<div class='menu'>\n");
+        menu.append("<ul id='nav'>\n");
 
         menu.append("<li class='noChildren'>");
         menu.append(root.getLink(base, "Home", false));
@@ -494,7 +496,7 @@ public class Generate
             addMenuOptions(menu, base, child);
         }
 
-        menu.append("</ul>\n");
+        menu.append("</ul></div>\n");
 
         return menu.toString();
     }
