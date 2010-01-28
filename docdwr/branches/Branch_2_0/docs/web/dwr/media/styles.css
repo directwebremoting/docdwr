@@ -38,12 +38,13 @@ b { font-weight:normal; color:#000; }
 
 table.noborder td { border:0; }
 
-#nav { position:absolute; top:78px; left:5px; border:1px solid #ddd; -moz-border-radius:5px; padding:10px; background:#f8f8f8; }
+#nav { position:absolute; top:78px; left:5px; border:1px solid #ddd; -moz-border-radius:5px; padding:1px 10px; background:#f8f8f8; }
+#content { margin-left: 100px; padding: 0px; }
 .menu { }
 .menu, .menu ul { list-style:none; padding-left:30px; }
 .menu a.currentLink { color:#933; }
 .menu a { display:block; text-decoration:none; border:0; color:#aaa; }
-#nav:hover { opacity:0.95; border:1px solid #ddd; -moz-border-radius:5px; }
+#nav:hover { opacity:0.95; padding: 0px 9px; border:1px solid #ddd; -moz-border-radius:5px; }
 #nav:hover a { color:#666; }
 #nav:hover a:hover { color:#1b67c9; }
 
