@@ -24,7 +24,7 @@
  
  
 <h2>One thread per application is scalable, one thread per request is not</h2>
-<p>Most reverse ajax implementations require a separate thread to push data to clients. Spawning a separate thread for each DWR request is not scalable, instead you should use a single thread for reverse ajax.  You can also use a thread pool, please see the Clock example in the dwr.war for a sample implementation.</p>
+<p>Most reverse ajax implementations require a separate thread to push data to clients. Spawning a separate thread for each DWR request is not scalable, instead you should use a single thread for reverse ajax as illustrated below.  You can also use a thread pool, please see the Clock example in the dwr.war for a sample implementation.</p>
  
 Eg:
 <pre>
