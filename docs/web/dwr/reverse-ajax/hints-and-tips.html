@@ -24,53 +24,56 @@
  
  
 <h2>One thread per application is scalable, one thread per request is not</h2>
-<p>Most reverse ajax implementations require a separate thread to push data to clients. Spawning a separate thread for each DWR request is not scalable, instead you should use a single thread for reverse ajax.</p>
+<p>Most reverse ajax implementations require a separate thread to push data to clients. Spawning a separate thread for each DWR request is not scalable, instead you should use a single thread for reverse ajax.  You can also use a thread pool, please see the Clock example in the dwr.war for a sample implementation.</p>
  
 Eg:
 <pre>
-public class RemoteClass {
-   /**
-    * Remote DWR method called by a client to initiate the server push.
-    */
-   public void startReverseAjax () {
-      ReverseAjaxThread thread = ReverseAjaxThread.getInstance();
-      thread.addScriptSession(WebContextFactory.get().getScriptSession());
-   }
-}
-
-public class ReverseAjaxThread {
+public class ReverseAjaxThread implements Runnable
+{
    private static ReverseAjaxThread INSTANCE;
-   private Set&lt;ScriptSession&gt; scriptSessions = new HashSet&lt;ScriptSession&gt;();
-   
-   public synchronized ReverseAjaxThread getInstance() {
-      if (INSTANCE == null) {
-         INSTANCE = new ReverseAjaxThread();
-         INSTANCE.start();
-      }
-      return INSTANCE;
+
+   private Set<ScriptSession> scriptSessions = new HashSet<ScriptSession>();
+
+   public synchronized ReverseAjaxThread getInstance()
+   {
+       if (INSTANCE == null)
+       {
+           INSTANCE = new ReverseAjaxThread();
+           new Thread(INSTANCE).start();
+       }
+       return INSTANCE;
    }
-   
-   public void run() {
-      while (true) {
-         for (ScriptSession scriptSession : scriptSessions) {
-            if (scriptSession.isValid()) {
-               // alert('hello')
-               new ScriptProxy(scriptSession).addFunctionCall("alert", "hello");
-            } else {
-               synchronized (this) {
-                  scriptSessions.remove(scriptSession);
+
+   public void run()
+   {
+       while (true)
+       {
+           for (ScriptSession scriptSession : scriptSessions) {
+               Browser.withSession(scriptSession.getId(), new Runnable()
+               {
+                   public void run()
+                   {
+                       ScriptSessions.addFunctionCall("alert", "hello");
+                   }
+               });
+               try
+               {
+                   Thread.sleep(10000); // sleep for 10 seconds
                }
-            }
-         }
-         Thread.sleep(10000); // sleep for 10 seconds
-      }
+               catch (InterruptedException ie)
+               {
+                   Thread.currentThread().interrupt();
+               }
+           }
+       }
    }
-   
-   public synchronized void addScriptSession(ScriptSession scriptSession) {
-      // use a copy so that code reading from scriptSessions does not need to be synchronized
-      Set&lt;ScriptSession&gt; scriptSessionsCopy = new HashSet&lt;ScriptSession&gt;(scriptSessions);
-      scriptSessionsCopy.add(scriptSession);
-      scriptSessions = scriptSessionsCopy;
+
+   public synchronized void addScriptSession(ScriptSession scriptSession)
+   {
+       // use a copy so that code reading from scriptSessions does not need to be synchronized
+       Set<ScriptSession> scriptSessionsCopy = new HashSet<ScriptSession>(scriptSessions);
+       scriptSessionsCopy.add(scriptSession);
+       scriptSessions = scriptSessionsCopy;
    }
 }
 </pre> 
