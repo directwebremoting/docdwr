@@ -35,12 +35,12 @@
 
 <!--break-->
 
-<p>The simplest filter is a no-op filter; one that does nothing, it would look something like this:</p>
+<p>The simplest filter is a no-op filter; one that does nothing, it would look something like this (note: you must implement AjaxFilter):</p>
 
 <pre>
 package com.example;
 
-public class NoopFilter {
+public class NoopFilter implements org.directwebremoting.AjaxFilter {
   public Object doFilter(Object obj, Method method, Object[] params, AjaxFilterChain chain) throws Exception {
     return chain.doFilter(obj, method, params);
   }
