@@ -67,8 +67,8 @@ public class Remote {
 <p>Then in Javascript we will see the following:</p>
 
 <pre>
-function errh(msg) {
-  alert(msg);
+function errh(msg, exc) {
+  alert("Error message is: " + msg + " - Error Details: " + dwr.util.toDescriptiveString(exc, 2));
 }
 
 dwr.engine.setErrorHandler(errh);
@@ -76,7 +76,7 @@ dwr.engine.setErrorHandler(errh);
 Remote.getData(function(data) { alert(data); });
 </pre>
 
-<p>The result will be an alert dialog from the <code>errh()</code> error handler.</p>
+<p>The result will be an alert dialog from the <code>errh()</code> error handler.  The first parameter always contains the error message, the second parameter will contain an exception object.</p>
 
 <p>Exceptions are subject to the usual marshaling rules - that is nothing is converted without express permission. However, there is one deviation from this rule. If there is no marshaller in place for an exception, then a default MinimalistExceptionConverter is used. The MinimalistExceptionConverter tells the client that something has gone wrong (which the client could guess anyway, since the call did not work) but for security reasons, it does not say what broke - so exception types are converted to a java.lang.Throwable.</p>
 
