@@ -100,17 +100,16 @@ public class Generate
             StringBuilder builder = new StringBuilder();
             Page current = this.parent;
 
-            if (path.endsWith("index.html"))
+            if (null != current && path.endsWith("index.html"))
             {
                builder.append("../");
             }
 
+            current = current.parent;
             while (current != null)
             {
-                current = current.parent;
                 builder.append("../");
             }
-
             return builder.toString();
         }
     }
@@ -134,10 +133,10 @@ public class Generate
             System.exit(0);
         }
         String root = args[0];
-        Map<String, Page> pages = readInput(root + "/docs/web");
+        Map<String, Page> pages = readInput(root + "/docs/web/dwr");
 
         writeHtmlOutput(pages, root + "/target/publish/");
-        copyStatic(root + "/docs/web", root + "/target/publish", new String[] {
+        copyStatic(root + "/docs/web/dwr", root + "/target/publish", new String[] {
             "png", "gif", "jpg", "css", "pdf", "dtd", "xsd", "js"
         });
 
@@ -427,11 +426,11 @@ public class Generate
 
         builder.append("  <script type='text/javascript' src='");
         builder.append(page.getPathToRoot());
-        builder.append("dwr/media/dojo.js");
+        builder.append("media/dojo.js");
         builder.append("'> </script>\n");
         builder.append("  <script type='text/javascript' src='");
         builder.append(page.getPathToRoot());
-        builder.append("dwr/media/menu.js");
+        builder.append("media/menu.js");
         builder.append("'> </script>\n");
 
         return builder.toString();
