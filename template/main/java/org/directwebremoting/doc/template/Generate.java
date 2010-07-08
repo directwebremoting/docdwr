@@ -104,11 +104,13 @@ public class Generate
             {
                builder.append("../");
             }
-
-            current = current.parent;
-            while (current != null)
+            while (null != current)
             {
-                builder.append("../");
+                current = current.parent;
+                if (null != current)
+                {
+                   builder.append("../");
+                }
             }
             return builder.toString();
         }
