@@ -43,8 +43,8 @@
 
 <p>DWR 1.1.4 contains a number of security and bug fixes:</p>
 <ul>
-<li>It was possible to craft a request to DWR that avoided the <a href="../../server/dwrxml/creators/index.html">include/exclude</a> checks allowing an attacker to access public methods that should not be accessible. These checks are now made properly.</li>
-<li>It was also possible to craft attacks that caused out of memory errors which could cause the servlet engine to stop responding. The fix limits the number of calls that are possible in a batch. The limit can be adjusted using the new <a href="../../server/servlet/index.html">maxCallCount</a> init-param.</li>
+<li>It was possible to craft a request to DWR that avoided the <a href="../../server/configuration/dwrxml/creators/index.html">include/exclude</a> checks allowing an attacker to access public methods that should not be accessible. These checks are now made properly.</li>
+<li>It was also possible to craft attacks that caused out of memory errors which could cause the servlet engine to stop responding. The fix limits the number of calls that are possible in a batch. The limit can be adjusted using the new <a href="../../server/configuration/servlet/index.html">maxCallCount</a> init-param.</li>
 <li>Some Weblogic users that use forwardToString() may have experienced difficulties due to Weblogic making assumptions about inheritance hierarchies. This release works around these assumptions.</li>
 </ul>
 
