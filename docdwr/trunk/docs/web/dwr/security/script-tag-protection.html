@@ -22,7 +22,7 @@
 
 <p>If you can only support one of these protections, this is the one to chose. Including a secret in the request allows the server to reject the request as invalid before any actions take place. It is common to include the secret in the URL, however this is a slightly vulnerable position for a secret since it is likely to turn up in web server log files and so on.</p>
 
-<p>DWR uses a secret in a POST body to allow the server to deny forged requests. (This secret comes from the JSESSIONID cookie read using Javascript). You can turn this protection off (to allow cross-domain requests for public data) by setting the <a href="../server/servlet/index.html">crossDomainSessionSecurity=false init-param</a> in web.xml.</p>
+<p>DWR uses a secret in a POST body to allow the server to deny forged requests. (This secret comes from the JSESSIONID cookie read using Javascript). You can turn this protection off (to allow cross-domain requests for public data) by setting the <a href="../server/configuration/servlet/index.html">crossDomainSessionSecurity=false init-param</a> in web.xml.</p>
 
 <p>A future version of DWR will not use the JSESSIONID cookie but have a different way to get security credentials. This will allow DWR to work with systems that have had their session cookies marked as <a href="http://msdn.microsoft.com/en-us/library/ms533046.aspx">HttpOnly</a>.</p>
 
