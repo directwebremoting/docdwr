@@ -67,7 +67,7 @@
 
 <h3>The configuration tag</h3>
 
-<p>The <code>&lt;dwr:configuration/&gt;</code> is used to mimic the behavior of the configuration available in <a href="../dwrxml/index.html">dwr.xml</a>. This tag is optional and it may have nested tags (init, creator, signatures,..). These nested tags mimic the behavior of those available in <a href="../dwrxml/index.html">dwr.xml</a>. Understand their functioning first and then use your IDE to translate to the correct syntax.</p><h3>The remote tag</h3>
+<p>The <code>&lt;dwr:configuration/&gt;</code> is used to mimic the behavior of the configuration available in <a href="../configuration/dwrxml/index.html">dwr.xml</a>. This tag is optional and it may have nested tags (init, creator, signatures,..). These nested tags mimic the behavior of those available in <a href="../dwrxml/index.html">dwr.xml</a>. Understand their functioning first and then use your IDE to translate to the correct syntax.</p><h3>The remote tag</h3>
 
 <p>Inside each bean you want to remote include a <code>&lt;dwr:remote javascript="Fred"&gt;</code> tag. There you can specify the methods that are going to be proxied and those that won't. For example:<pre><code>&lt;bean id="timeConvert" class="com.mycompany.ui.util.TimeConvert">
 &nbsp;&nbsp;&lt;dwr:remote javascript="AjaxTimeConvert"&gt;

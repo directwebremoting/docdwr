@@ -45,7 +45,7 @@ Google use this method to protect data in GMail. '<code>while(1);</code>' is pos
 <br/>
 It is potentially vulnerable to some browser allowing an attacker to redefine the Error or String constructors to prevent the throw from happening, however this does not work on any browser that I know of, and it's hard to see how it could happen.
 <br/>
-DWR uses this method. You can control it using the <a href="../server/servlet/index.html">allowScriptTagRemoting=true init-param</a> in web.xml. There is also an experimental feature 'scriptTagProtection' that allows you to set the prefix used.</li>
+DWR uses this method. You can control it using the <a href="../server/configuration/servlet/index.html">allowScriptTagRemoting=true init-param</a> in web.xml. There is also an experimental feature 'scriptTagProtection' that allows you to set the prefix used.</li>
 </ul>
 
 <h2>Force POST Requests</h2>
