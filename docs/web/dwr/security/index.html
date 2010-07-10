@@ -26,13 +26,13 @@ is being remoted, and how. The principle is that DWR should only be
 calling methods on your code with your explicit permission.</p>
 
 <p>dwr.xml requires you to have a 'create' entry for each class that it
-remotes. You can further refine this by specifying <a href="../server/dwrxml/creators/index.html">include and exclude
+remotes. You can further refine this by specifying <a href="../server/configuration/dwrxml/creators/index.html">include and exclude
 elements</a> which give you fine-grained control over exactly which
 methods are called on your remoted beans.</p>
 
 <p>In addition to this if you wish to allow DWR to convert your Java
 Beans to and from Javascript you need to give it permission, and again
-there is <a href="../server/dwrxml/converters/bean.html">fine grained
+there is <a href="../server/configuration/dwrxml/converters/bean.html">fine grained
 control</a> over which properties of the beans get converted.</p>
 
 <p>An obvious point, but one that is worth making - don't run with the
@@ -73,7 +73,7 @@ what happens with the request information.</p>
 
 <p>DWR allows you to grant access using two J2EE based mechanisms.
 Firstly you can define <a href="../server/servlet/multiconfig.html">access
-to dwr based on J2EE roles</a>. Secondly within DWR you can <a href="../server/dwrxml/creators/index.html">define access to methods
+to dwr based on J2EE roles</a>. Secondly within DWR you can <a href="../server/configuration/dwrxml/creators/index.html">define access to methods
 on a role basis</a>.</p>
 
 <h2>Other Measures</h2>
