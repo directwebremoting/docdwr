@@ -132,13 +132,6 @@ dwr.engine.endBatch({
 		indicates session timeout).</td>
 	</tr>
 	<tr>
-		<td><a name="pollStatusHandler"></a>pollStatusHandler</td>
-		<td>3.0 RC2</td>
-		<td>-</td>
-		<td>-</td>
-		<td>Action when the server comes online or offline.  For reverse Ajax polling.</td>
-	</tr>
-	<tr>
 		<th colspan="5">Call Handlers <span class="note">(Registered
 		for individual calls not all calls in a batch).</span></th>
 	</tr>
@@ -287,7 +280,13 @@ dwr.engine.endBatch({
 		In this case the first retry will occur in 1 second and the second retry
 		will occur in 1 second - DWR will be offline if both of these retries are unsuccessful.  While DWR is offline we will continue to poll for server status every 10 seconds.  When DWR goes offline or online <a href="#pollStatusHandler">pollStatusHandler</a> will be called.</td>
 	</tr>
-
+    <tr>
+		<td><a name="pollStatusHandler"></a>pollStatusHandler</td>
+		<td>3.0 RC2</td>
+		<td>-</td>
+		<td>-</td>
+		<td>Action when the server comes online or offline.  For reverse Ajax polling.</td>
+	</tr>
 </table>
 
 <h2>Guaranteed Responses</h2>
