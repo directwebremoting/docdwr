@@ -61,61 +61,233 @@ dwr.engine.endBatch({
 <p>The following options are available.</p>
 
 <table class="documentation">
-<tr><th>Option</th><th>Global</th><th>Batch</th><th>Call</th><th>Summary</th></tr>
+	<tr>
+		<th>Option</th>
+		<th>Global</th>
+		<th>Batch</th>
+		<th>Call</th>
+		<th>Summary</th>
+	</tr>
 
-<tr><td><a href="options.html">async</a></td> <td>1.1</td><td>1.1</td><td>1.1</td><td>Set to <code>false</code> for asynchronous behaviour (not recommended).</td></tr>
+	<tr>
+		<td><a href="options.html">async</a></td>
+		<td>1.1</td>
+		<td>1.1</td>
+		<td>1.1</td>
+		<td>Set to <code>false</code> for asynchronous behaviour (not
+		recommended).</td>
+	</tr>
 
-<tr><td>headers</td> <td>2.0</td><td>2.0</td><td>2.0</td><td>Extra headers to add to XHR calls.</td></tr>
+	<tr>
+		<td>headers</td>
+		<td>2.0</td>
+		<td>2.0</td>
+		<td>2.0</td>
+		<td>Extra headers to add to XHR calls.</td>
+	</tr>
 
-<tr><td>parameters</td> <td>2.0</td><td>2.0</td><td>2.0</td><td>Meta-data that is made available through <code>request.getAttribute(attrName).</code></td></tr>
+	<tr>
+		<td>parameters</td>
+		<td>2.0</td>
+		<td>2.0</td>
+		<td>2.0</td>
+		<td>Meta-data that is made available through <code>request.getAttribute(attrName).</code></td>
+	</tr>
 
-<tr><td><a href="errors.html">timeout</a></td> <td>1.0</td><td>1.1</td><td>1.1</td><td>Cancel request after X ms.</td></tr>
+	<tr>
+		<td><a href="errors.html">timeout</a></td>
+		<td>1.0</td>
+		<td>1.1</td>
+		<td>1.1</td>
+		<td>Cancel request after X ms.</td>
+	</tr>
 
-<tr><th colspan="5">Handlers</th></tr>
+	<tr>
+		<th colspan="5">Handlers</th>
+	</tr>
 
-<tr><td><a href="../errors.html">errorHandler</a></td> <td>1.0</td><td>1.1</td><td>1.1</td><td>Action when something is broken.</td></tr>
+	<tr>
+		<td><a href="../errors.html">errorHandler</a></td>
+		<td>1.0</td>
+		<td>1.1</td>
+		<td>1.1</td>
+		<td>Action when something is broken.</td>
+	</tr>
 
-<tr><td><a href="../errors.html">warningHandler</a></td> <td>1.0</td><td>2.0</td><td>2.0</td><td>Action when something breaks which can be triggered by browser bugs, so by default this is set to null (turned off).</td></tr>
+	<tr>
+		<td><a href="../errors.html">warningHandler</a></td>
+		<td>1.0</td>
+		<td>2.0</td>
+		<td>2.0</td>
+		<td>Action when something breaks which can be triggered by
+		browser bugs, so by default this is set to null (turned off).</td>
+	</tr>
 
-<tr><td><a href="../errors.html">textHtmlHandler</a></td> <td>2.0</td><td>2.0</td><td>2.0</td><td>Action when an unexpected text/html page is received (usually indicates session timeout).</td></tr>
+	<tr>
+		<td><a href="../errors.html">textHtmlHandler</a></td>
+		<td>2.0</td>
+		<td>2.0</td>
+		<td>2.0</td>
+		<td>Action when an unexpected text/html page is received (usually
+		indicates session timeout).</td>
+	</tr>
+	<tr>
+		<td><a name="pollStatusHandler"></a>pollStatusHandler</td>
+		<td>3.0 RC2</td>
+		<td>-</td>
+		<td>-</td>
+		<td>Action when the server comes online or offline.  For reverse Ajax polling.</td>
+	</tr>
+	<tr>
+		<th colspan="5">Call Handlers <span class="note">(Registered
+		for individual calls not all calls in a batch).</span></th>
+	</tr>
 
-<tr><th colspan="5">Call Handlers <span class="note">(Registered for individual calls not all calls in a batch).</span></th></tr>
+	<tr>
+		<td><a href="../../introduction/scripting-dwr.html">callback</a></td>
+		<td>-</td>
+		<td>-</td>
+		<td>1.0</td>
+		<td>Executed on successful call completion with a single
+		parameter; the returned data.</td>
+	</tr>
 
-<tr><td><a href="../../introduction/scripting-dwr.html">callback</a></td> <td>-</td><td>-</td><td>1.0</td><td>Executed on successful call completion with a single parameter; the returned data.</td></tr>
+	<tr>
+		<td><a href="../../introduction/scripting-dwr.html">callbackHandler</a></td>
+		<td>-</td>
+		<td>-</td>
+		<td>3.0</td>
+		<td>Synonymous with callback to match exceptionHandler.</td>
+	</tr>
 
-<tr><td><a href="../../introduction/scripting-dwr.html">callbackHandler</a></td> <td>-</td><td>-</td><td>3.0</td><td>Synonymous with callback to match exceptionHandler.</td></tr>
+	<tr>
+		<td><a href="../errors.html">exceptionHandler</a></td>
+		<td>-</td>
+		<td>-</td>
+		<td>2.0</td>
+		<td>Executed when a remote call fails either due to a server
+		exception or a data marshalling problem.</td>
+	</tr>
 
-<tr><td><a href="../errors.html">exceptionHandler</a></td> <td>-</td><td>-</td><td>2.0</td><td>Executed when a remote call fails either due to a server exception or a data marshalling problem.</td></tr>
+	<tr>
+		<td><a href="../extra-data.html">arg</a></td>
+		<td>-</td>
+		<td>-</td>
+		<td>3.0</td>
+		<td>A default argument to pass to the callbackHandler and
+		exceptionHandler.</td>
+	</tr>
 
-<tr><td><a href="../extra-data.html">arg</a></td> <td>-</td><td>-</td><td>3.0</td><td>A default argument to pass to the callbackHandler and exceptionHandler.</td></tr>
+	<tr>
+		<td><a href="../extra-data.html">callbackArg&nbsp</a></td>
+		<td>-</td>
+		<td>-</td>
+		<td>3.0</td>
+		<td>An argument to pass to the callbackHandler. If specified
+		overrides arg.</td>
+	</tr>
 
-<tr><td><a href="../extra-data.html">callbackArg&nbsp</a></td> <td>-</td><td>-</td><td>3.0</td><td>An argument to pass to the callbackHandler.  If specified overrides arg.</td></tr>
+	<tr>
+		<td><a href="../extra-data.html">exceptionArg</a></td>
+		<td>-</td>
+		<td>-</td>
+		<td>3.0</td>
+		<td>An argument to pass to the exceptionHandler. If specified
+		overrides arg.</td>
+	</tr>
 
-<tr><td><a href="../extra-data.html">exceptionArg</a></td> <td>-</td><td>-</td><td>3.0</td><td>An argument to pass to the exceptionHandler.  If specified overrides arg.</td></tr>
+	<tr>
+		<td><a href="../extra-data.html#scope">scope</a></td>
+		<td>-</td>
+		<td>-</td>
+		<td>3.0</td>
+		<td>The scope in which the callbackHandler and exceptionHandler
+		will be executed. Default is window.</td>
+	</tr>
 
-<tr><td><a href="../extra-data.html#scope">scope</a></td> <td>-</td><td>-</td><td>3.0</td><td>The scope in which the callbackHandler and exceptionHandler will be executed.  Default is window.</td></tr>
+	<tr>
+		<td><a href="../extra-data.html#scope">callbackScope&nbsp</a></td>
+		<td>-</td>
+		<td>-</td>
+		<td>3.0</td>
+		<td>The scope in which the callbackHandler will be executed. If
+		specified overrides scope.</td>
+	</tr>
 
-<tr><td><a href="../extra-data.html#scope">callbackScope&nbsp</a></td> <td>-</td><td>-</td><td>3.0</td><td>The scope in which the callbackHandler will be executed.  If specified overrides scope.</td></tr>
+	<tr>
+		<td><a href="../extra-data.html#scope">exceptionScope</a></td>
+		<td>-</td>
+		<td>-</td>
+		<td>3.0</td>
+		<td>The scope in which the exceptionHandler will be executed. If
+		specified overrides scope.</td>
+	</tr>
 
-<tr><td><a href="../extra-data.html#scope">exceptionScope</a></td> <td>-</td><td>-</td><td>3.0</td><td>The scope in which the exceptionHandler will be executed.  If specified overrides scope.</td></tr>
 
+	<tr>
+		<th colspan="5">Hooks <span class="note">(Multiple hooks
+		can be registered per batch).</span></th>
+	</tr>
 
-<tr><th colspan="5">Hooks <span class="note">(Multiple hooks can be registered per batch).</span></th></tr>
+	<tr>
+		<td><a href="hooks.html">preHook</a></td>
+		<td>1.0</td>
+		<td>1.1</td>
+		<td>1.1</td>
+		<td>Function called just before the remote call.</td>
+	</tr>
 
-<tr><td><a href="hooks.html">preHook</a></td> <td>1.0</td><td>1.1</td><td>1.1</td><td>Function called just before the remote call.</td></tr>
+	<tr>
+		<td><a href="hooks.html">postHook</a></td>
+		<td>1.0</td>
+		<td>1.1</td>
+		<td>1.1</td>
+		<td>Function called just after the remote call.</td>
+	</tr>
 
-<tr><td><a href="hooks.html">postHook</a></td> <td>1.0</td><td>1.1</td><td>1.1</td><td>Function called just after the remote call.</td></tr>
+	<tr>
+		<th colspan="5">Global Options <span class="note">(Not
+		available at a call or batch level).</span></th>
+	</tr>
 
-<tr><th colspan="5">Global Options <span class="note">(Not available at a call or batch level).</span></th></tr>
+	<tr>
+		<td><a href="ordering.html">ordered</a></td>
+		<td>1.0</td>
+		<td>-</td>
+		<td>-</td>
+		<td>true if DWR should provide ordering guarantees.</td>
+	</tr>
 
-<tr><td><a href="ordering.html">ordered</a></td> <td>1.0</td><td>-</td><td>-</td><td>true if DWR should provide ordering guarantees.  </td></tr>
+	<tr>
+		<td>activeReverseAjax</td>
+		<td>2.0</td>
+		<td>-</td>
+		<td>-</td>
+		<td>Should we be looking for inbound calls.</td>
+	</tr>
 
-<tr><td>activeReverseAjax</td> <td>2.0</td><td>-</td><td>-</td><td>Should we be looking for inbound calls.</td></tr>
+	<tr>
+		<td>maxRetries</td>
+		<td>3.0 RC2</td>
+		<td>-</td>
+		<td>-</td>
+		<td>For reverse AJAX calls. The number of times we should
+		re-attempt failed calls.</td>
+	</tr>
 
-<tr><td>maxRetries</td> <td>3.0 RC2</td><td>-</td><td>-</td><td>For reverse AJAX calls.  The number of times we should re-attempt failed calls.</td></tr>
+	<tr>
+		<td>retryIntervals[]</td>
+		<td>3.0 RC2</td>
+		<td>-</td>
+		<td>-</td>
+		<td>For reverse AJAX calls. An array specifying the default time
+		between retries (in seconds). Defaults to: <br>
+		[ 1, 1, 10 ]<br>
+		<br>retryIntervals.length - 1 = The number of retry attempts until DWR is offline.<br><br>retryIntervals[retryIntervals.length - 1] = The interval used to poll the server while DWR is offline.<br><br>
+		In this case the first retry will occur in 1 second and the second retry
+		will occur in 1 second - DWR will be offline if both of these retries are unsuccessful.  While DWR is offline we will continue to poll for server status every 10 seconds.  When DWR goes offline or online <a href="#pollStatusHandler">pollStatusHandler</a> will be called.</td>
+	</tr>
 
-<tr><td>retryIntervals</td> <td>3.0 RC2</td><td>-</td><td>-</td><td>For reverse AJAX calls.  An array specifying the default time between retries (in seconds).  Defaults to: <br>[ 2, 5, 10, 60, 300 ]<br><br>In this case the first retry will occur in 2 seconds, the second retry will occur in 5 seconds, and each retry after the 5th will occur after 300 seconds.</td></tr>
- 
 </table>
 
 <h2>Guaranteed Responses</h2>
