@@ -27,6 +27,11 @@
 <p>There is no way of knowing the underlying type of the collection just using reflection. So the 2 converters above can convert from any collection to something meaningful in JavaScript, however there is no way to know what sort of Collection to convert <b>to</b> going the other way.</p>
 
 <p>Since we can't work it out automatically we may need to use the <a href="../signatures.html">special signatures syntax</a> in the dwr.xml file to allow us to hint types to the conversion process.</p>
-
+<h2>Maps and null keys</h2>
+<p>Javascript does not  support non string keys.  Because of this  a null key in a Map it will not be converted.  DWR allows you to specify a String you would like to use when a null key is encountered.  To configure this you will need to override the default map converter in the allow section of your applications dwr.xml.
+<pre><code>
+&lt;convert converter=&quot;map&quot; match=&quot;java.util.Map&quot;&gt;
+  &lt;param name=&quot;nullKey&quot; value=&quot;null&quot;/&gt;
+&lt;/convert&gt;</code></pre> </p>
 </body>
 </html>
