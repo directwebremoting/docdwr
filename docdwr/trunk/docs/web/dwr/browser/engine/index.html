@@ -265,11 +265,11 @@ dwr.engine.endBatch({
 		<td>-</td>
 		<td>-</td>
 		<td>For reverse AJAX calls. The number of times we should
-		re-attempt failed calls.</td>
+		re-attempt failed calls after DWR has went offline.  Defaults to -1, unlimited.</td>
 	</tr>
 
 	<tr>
-		<td>retryIntervals[]</td>
+		<td><a name="retryIntervals"></a>retryIntervals[]</td>
 		<td>3.0 RC2</td>
 		<td>-</td>
 		<td>-</td>
@@ -278,14 +278,14 @@ dwr.engine.endBatch({
 		[ 1, 1, 10 ]<br>
 		<br>retryIntervals.length - 1 = The number of retry attempts until DWR is offline.<br><br>retryIntervals[retryIntervals.length - 1] = The interval used to poll the server while DWR is offline.<br><br>
 		In this case the first retry will occur in 1 second and the second retry
-		will occur in 1 second - DWR will be offline if both of these retries are unsuccessful.  While DWR is offline we will continue to poll for server status every 10 seconds.  When DWR goes offline or online <a href="#pollStatusHandler">pollStatusHandler</a> will be called.</td>
+		will occur in 1 second - DWR will be offline if both of these retries are unsuccessful.  While DWR is offline we will continue to poll for server status every 10 seconds until maxRetries is reached.  When DWR goes offline or online <a href="#pollStatusHandler">pollStatusHandler</a> will be called.</td>
 	</tr>
     <tr>
 		<td><a name="pollStatusHandler"></a>pollStatusHandler</td>
 		<td>3.0 RC2</td>
 		<td>-</td>
 		<td>-</td>
-		<td>Action when the server comes online or offline.  For reverse Ajax polling.</td>
+		<td>Function to call when the server comes online or offline.  For reverse Ajax polling.</td>
 	</tr>
 </table>
 
