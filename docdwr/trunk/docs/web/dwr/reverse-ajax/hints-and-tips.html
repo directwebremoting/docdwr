@@ -87,8 +87,8 @@ public class ReverseAjaxThread implements Runnable
 <pre>
 public void remoteMethod() {
    String value = "someValue"; // this may come from the HttpSession for example
-   ScriptSession scriptSession = WebContextFactory().get().getScriptSession();
-   scriptSession.setValue("key", value);
+   ScriptSession scriptSession = WebContextFactory.get().getScriptSession();
+   scriptSession.setAttribute("key", value);
 }
 </pre> 
 <p>2. Add a script session listener which will be notified when script sessions are created and destroyed.</p>
