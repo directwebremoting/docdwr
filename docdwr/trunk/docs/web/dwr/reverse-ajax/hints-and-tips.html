@@ -98,11 +98,11 @@ ScriptSessionManager manager = container.getBean(ScriptSessionManager.class);
 ScriptSessionListener listener = new ScriptSessionListener() {
     public void sessionCreated(ScriptSessionEvent ev) {
 	    HttpSession session = WebContextFactory.get().getSession();
-		String userId = (String) session.getAttribute("userId");
-		ev.getSession().setAttribute("userId", userId);
-	}
+	    String userId = (String) session.getAttribute("userId");
+	    ev.getSession().setAttribute("userId", userId);
+    }
 
-	public void sessionDestroyed(ScriptSessionEvent ev) { }
+    public void sessionDestroyed(ScriptSessionEvent ev) { }
 };
 manager.addScriptSessionListener(listener);
 </pre>
