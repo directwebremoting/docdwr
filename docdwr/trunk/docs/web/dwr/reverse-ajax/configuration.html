@@ -17,7 +17,7 @@
 <li><a href="#polling">Polling Mode</a></li>
 </ul>
 
-<p>This page describes these modes, when they make sense, and how to configure them.</p>
+<p>This page describes these modes, when they make sense, and how to configure them. However, first you need to enable Reverse Ajax which is described in the next section - General Configuration.</p>
 <h2>General Configuration</h2>
 <p>To use Reverse Ajax in any of the modes listed below the following general configuration is necessary:</p>
 <ol><li>Set the activeReverseAjaxEnabled init-param on the DWRServlet to true:
@@ -38,7 +38,7 @@ dwr.engine.setActiveReverseAjax(true);
 </ol>
 <!--break-->
 
-<h2><a name="earlyClosing></a>Early Closing Mode</h2>
+<h2><a name="earlyClosing"></a>Early Closing Mode</h2>
 
 <p>In Early Closing Mode, DWR holds connection open as in Full Streaming Mode, however it only holds the connection open for 60 seconds if there is no output to the browser. Once output occurs, DWR pauses for some configurable time (maxWaitAfterWrite) before closing the connection, forcing proxies to pass any messages on. To use Early Closing Mode in DWR 2.0.4 and onwards, no configuration is needed - this is the default.   The maxWaitAfterWrite parameter defaults to 500 (ms) and can be configured through an init-param on the DWRServlet: </p>
 
@@ -51,15 +51,13 @@ dwr.engine.setActiveReverseAjax(true);
 
 <p>In this case DWR will keep the connection open for an additional 1000 milliseconds after the first output in case there is additional output, before forcing a flush by closing the connection and requesting it to be re-opened.</p>
 
-
-
 <p>The downside of Early Closing Mode is that for applications with a high rate of output, it can cause a large hit count. This can be countered by increasing the pause by setting maxWaitAfterWrite=1000 or similar.</p>
 
 <p>In applications with a large number of connected browsers that are simultaneously sent a message they are likely to all try to reconnect at the same time. If you are affected by this type of problem, then you should consider investigating Full Streaming Mode.</p>
 
 <p>A future version of DWR might attempt to automatically detect buggy proxies.</p>
 
-<h2><a name="fullStreaming></a>Full Streaming Mode (not available in IE)</h2>
+<h2><a name="fullStreaming"></a>Full Streaming Mode (not available in IE)</h2>
 
 <p>Full Streaming mode  has the fastest response characteristics because it closes connections only once every 60 seconds or so to check that the browser is still active. Due to limitations Internet Explorer users are unable to use Full Streaming mode.  All Internet Explorer users will be automatically pushed to Early Closing mode.</p>
 
@@ -92,7 +90,7 @@ dwr.engine.setActiveReverseAjax(true);
    protocol="org.apache.coyote.http11.Http11NioProtocol" redirectPort="8443"/&gt;
 </pre>
 
-<h2><a name="polling></a>Polling Mode</h2>
+<h2><a name="polling"></a>Polling Mode</h2>
 
 <p>If it is deemed unwise to hold connections open at all then DWR can use polling mode. In addition to the activeReverseAjaxEnabled=true init-param you should specify the PollingServerLoadMonitor as follows:</p>
 
