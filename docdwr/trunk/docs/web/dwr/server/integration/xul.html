@@ -8,7 +8,6 @@
   <link rel="stylesheet" type="text/css" href="../../media/styles.css">
 </head>
 <body>
-<pre>
 <h1>Using DWR from XUL applications</h1>
 
 <p>DWR is usable from XUL applications except that DWR can't find cookies in the standard way because document.cookie is not available to XUL applications.</p>
@@ -16,7 +15,7 @@
 <p>You can allow use of DWR from XUL by making the following change to engine.js. It's not an official part of DWR because we don't regularly test with XUL applications.</p>
 
 <p>The easy way to make this change is simply to load the following script after engine.js</p>
-
+<pre>
 /** @private What is our session id? */
 dwr.engine._getJSessionId = function() {
   if (typeof document.cookie == 'undefined') { // not in a classic html so guessing xul
@@ -46,6 +45,6 @@ dwr.engine._getJSessionId = function() {
 }
 </pre>
 
-<p>We're grateful to S.Pérès-Labourdette for this submission to the DWR mailing list.</p>
+<p>We're grateful to S.Peres-Labourdette for this submission to the DWR mailing list.</p>
 </body>
 </html>
