@@ -1,0 +1,35 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <title>Upgrading to Version 2.0</title>
+  <meta name='alias' content='/dwr/other/upgrading/dwr20'>
+  <link rel="stylesheet" type="text/css" href="../../media/styles.css">
+</head>
+<body>
+
+<h1>Upgrading from DWR version 1.x to DWR version 2.0</h1>
+
+<p>There are a number of changes that you must make to upgrade from version 1.x:</p>
+
+<ul>
+<li>dwr.util defaults to mode that is safer from XSS attacks - it assumes that all text is free of HTML, and escapes any HTML characters. You can alter the default mode to allowing HTML with the following statement as part of the page setup:
+<pre>dwr.util.setEscapeHtml(false);</pre>
+A better solution is to escape only the cases that you know to validly include HTML. For example:
+<pre>dwr.util.setValue('id', '<em>Some HTML</em>' , { escapeHtml:false });</pre>
+</li>
+
+<li>Error handling has been improved by the addition of an exception handler. Most of the changes fix bugs and make the action in edge cases more logical, but error handling code should be reviewed.</li>
+
+<li>The callback-as-first-parameter system has been deprecated since version 0.9 in favor of the callback-as-last-parameter system. In version 2.0 we removed support for the first-parameter option because it caused some hard to detect bugs with null parameters. From version 2.0 the callback must be the last parameter, and can not be the first parameter.</li>
+</ul>
+
+<p>There are a number of changes that are optional in that DWR will function just fine without these changes, however you are strongly recommended to check through this list. These changes may become mandatory in a future release:</p>
+
+<ul>
+<li>The DWR package has changed from uk.ltd.getahead to org.directwebremoting. There are deprecated stubs in place for backwards compatibility, however more future proof code will use the new package names. The change that will affect most people is the altered servlet name. The preferred name is now: <code>org.directwebremoting.servlet.DwrServlet</code></li>
+
+<li>The Javascript code has been altered to occupy a smaller part of the global namespace. DWRUtil is now deprecated and replaced with dwr.util and DWREngine is deprecated in favor of dwr.engine.</li>
+</ul>
+
+</body>
+</html>

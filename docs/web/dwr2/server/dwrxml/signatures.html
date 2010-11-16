@@ -1,0 +1,118 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <title>Signatures</title>
+  <meta name='weight' content='5'>
+  <meta name='alias' content='/dwr/server/dwrxml/signatures'>
+  <link rel="stylesheet" type="text/css" href="../../media/styles.css">
+</head>
+<body>
+
+<h1>Signatures in dwr.xml</h1>
+
+<p>The signatures section is to enable resolution of the types stored in Collections. For example in the following example DWR has no way to know that it should cast the incoming data to be a list of numbers.</p>
+
+<pre>
+public class Check
+{
+  public void setLotteryResults(List nos)
+  {
+      ...
+  }
+}
+</pre>
+
+<p>The signatures section allows us to hint to DWR what types should be used. The format will be obvious to anyone that has an understanding of generic types under JDK5:</p>
+
+<pre>
+&lt;signatures&gt;
+  &lt;![CDATA[
+  import java.util.List;
+  import com.example.Check;
+  Check.setLotteryResults(List&lt;Integer&gt; nos);
+  ]]&gt;
+&lt;/signatures&gt;
+</pre>
+
+<p>DWR contains a parser written just for the job so this will work under JDK 1.3 even though the syntax is derived from a JDK 5 feature.</p>
+
+<p>The parser rules are as close to the rules you would expect as possible (with two exceptions) so all the <code>java.lang</code> types are imported by default.</p>
+
+<p>The first is down to a bug in the parser in DWR 1.0, which fails to take account of return types under some circumstances. So you may need to leave them out.</p>
+
+<p>The second exception is that the parser is a "sunny day" parser; That is to say it is quite forgiving, unlike a complier which will insist on you getting it just right. So sometimes it will let you miss out imports too:</p>
+
+<pre>
+&lt;signatures&gt;
+  &lt;![CDATA[
+  import java.util.List;
+  Check.setLotteryResults(List&lt;Integer&gt;);
+  ]]&gt;
+&lt;/signatures&gt;
+</pre>
+
+<p>A future version of DWR might use a more formally defined parser which could be based on the official Java definition, so it might be best to avoid making too much use of this laxness.</p>
+
+<h2>Nested Generic Definitions</h2>
+
+<p>The signatures element does not currently support nested generic defintions. So for example the following will <b>not</b> work:</p>
+
+<pre>
+&lt;signatures&gt;
+  &lt;![CDATA[
+  import java.util.List;
+  import java.util.Map ;
+  Check.setConditions(Map&lt;String, <b>Map&lt;String, String&gt;</b>&gt;);
+  ]]&gt;
+&lt;/signatures&gt;
+</pre>
+
+<p>While the parser is updated to support nested generic definitions, you can use the following trick: In the absence of other type information, DWR assumes that a parameter will be a String. So the above example can be written:</p>
+
+<pre>
+&lt;signatures&gt;
+  &lt;![CDATA[
+  import java.util.List;
+  import java.util.Map ;
+  Check.setConditions(Map&lt;String, Map&gt;);
+  ]]&gt;
+&lt;/signatures&gt;
+</pre>
+
+<h2>Examples</h2>
+
+<p>The signatures section is only needed to resolve the type parameters in a generic parameter. DWR works out everything else for itself using reflection or run-time types, and assumes String as a parameter otherwise. So:</p>
+
+<p>No entry required in signatures section - no generic type parameters:</p>
+<pre>
+public void method(String p);
+public void method(String[] p);
+</pre>
+
+<p>Entry required - DWR can't work it out from reflection:</p>
+<pre>
+public void method(List&lt;Date&gt; p);
+public void method(Map&lt;String, WibbleBean&gt; p);
+</pre>
+
+<p>No entry required - DWR guesses correctly:</p>
+<pre>
+public void method(List&lt;String&gt; p);
+public void method(Map&lt;String, String&gt; p);
+</pre>
+
+<p>No entry required - DWR works it out from runtime types:</p>
+<pre>
+public List&lt;Date&gt; method(String p);
+</pre>
+
+<p>It is worth noting that the keys of Objects in Javascript are all Strings - you can use other objects as keys, however they are converted into Strings before use. DWR 1.x uses this Javascript 'feature' to convert keys into Strings. It is likely that DWR 2.0 will do the conversion using on the server (having issued a warning) using the toString() method.</p>
+
+<h2>Resolving Proxy Classes</h2>
+
+<p>Sometimes DWR will be remoting classes that are wrapped in dynamic proxies. This causes a problem because DWR will be looking up the wrong type, and not find a match.</p>
+
+<p>From DWR version 2 you can specify the Javascript version of the class name in place of the full Java name. This allows you to specify a Creator that we should attach the signature to rather than a class.</p>
+
+</body>
+</html>

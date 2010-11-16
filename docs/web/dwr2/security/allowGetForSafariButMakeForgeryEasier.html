@@ -1,0 +1,44 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <title>Safari, GET and CSRF</title>
+  <meta name='alias' content='/dwr/security/allowGetForSafariButMakeForgeryEasier'>
+  <meta name='navTitle' content='Safari, GET and CSRF'>
+  <link rel="stylesheet" type="text/css" href="../media/styles.css">
+</head>
+<body>
+
+<h1>Safari, GET and Request Forgery</h1>
+
+<p>Versions of Safari (up to 1.2) and Opera Mobile (up to at least 8.6.5) have buggy XHR implementations that claim to support GET and POST, however the body of POST requests is lost.</p>
+
+<p>To work around this limitation DWR automatically detects buggy versions of Safari and switches from POST (the default) to GET.</p>
+
+<p>There are 2 downsides of GET:</p>
+
+<ul>
+<li>There is a limit to the amount of data that can be passed in a GET request, and it's not hard to hit that limit.</li>
+<li>GET requests are a lot easier to forge than POST requests. POST is still forgable using DOM form manipulation (in fact DWR does this to submit iframe/POST requests) however it is more work, so it will slow attackers down.</li>
+</ul>
+
+<p>From DWR version 2.0 the default is to disallow GET requests because the majority of Safari users are on less buggy versions of the browser.</p>
+
+<p>If you wish to enable GET for maximum compatibility, and accept the slightly increased security risks, you should set the <code>allowGetForSafariButMakeForgeryEasier</code> init-param to true.</p>
+
+<p>Add to your WEB-INF/web.xml as follows:</p>
+
+<pre>
+&lt;servlet&gt;
+  &lt;servlet-name&gt;dwr-invoker&lt;/servlet-name&gt;
+  &lt;servlet-class&gt;org.directwebremoting.servlet.DwrServlet&lt;/servlet-class&gt;
+  <span class="codehighlight">&lt;init-param&gt;</span>
+    <span class="codehighlight">&lt;param-name&gt;allowGetForSafariButMakeForgeryEasier&lt;/param-name&gt;</span>
+    <span class="codehighlight">&lt;param-value&gt;true&lt;/param-value&gt;</span>
+  <span class="codehighlight">&lt;/init-param&gt;</span>
+&lt;/servlet&gt;
+</pre>
+
+
+
+</body>
+</html>

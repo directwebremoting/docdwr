@@ -1,0 +1,46 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <title>Struts  Integration</title>
+  <meta name='weight' content='5'>
+  <meta name='alias' content='/dwr/server/struts'>
+  <meta name='navTitle' content='Struts'>
+  <link rel="stylesheet" type="text/css" href="../../media/styles.css">
+</head>
+<body>
+
+<h1>Integrating DWR with Struts</h1>
+
+<p>DWR can fix inside almost any framework. This website is a fairly extreme demonstration of this because it uses DWR inside <a href="http://www.drupal.org/">Drupal</a> (PHP).</p>
+
+<p>There are 2 levels at which DWR will work with <a href="http://struts.apache.org">Struts</a>. The most basic level just involves using both at the same time, which is perfectly possible, but it does not allow you to share actions between DWR and Struts.</p>
+
+<!--break-->
+
+<p>DWR can call any method so there is nothing to stop you calling a Struts action from DWR, except that you don't want to do that. What would be the contents of the ActionForm? and what would DWR do with the returned ActionForward?</p>
+
+<p>A good approach is to refactor the Actions you wish to call so the logic is extracted from the Action. DWR and your Action then call the same method.</p>
+
+<h2>The 'struts' Creator</h2>
+
+<p>As of DWR 1.1 a StrutsCreator is included with the normal DWR download. You can use this from dwr.xml as follows:</p>
+
+<pre>
+&lt;allow&gt;
+  ...
+  &lt;create creator="struts" javascript="ScriptName"&gt;
+    &lt;param name="formBean" value="formBeanName"/&gt;
+  &lt;/create&gt;
+  ...
+&lt;/allow&gt;
+</pre>
+
+<p>This will allow you to make calls into your FormBeans from DWR.</p>
+
+<h2>Startup Ordering</h2>
+
+<p>If you are using the StrutsCreator then you should ensure that Struts is initialized before DWR. You do this by ensuring that your web.xml has a <code>&lt;load-on-startup&gt;</code> value that is lower for Struts than for DWR.</p>
+
+
+</body>
+</html>
