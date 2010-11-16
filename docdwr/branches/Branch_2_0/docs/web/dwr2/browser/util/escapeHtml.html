@@ -1,0 +1,37 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <title>escapeHtml</title>
+  <meta name='alias' content='/dwr/browser/escapeHtml'>
+  <link rel="stylesheet" type="text/css" href="../../media/styles.css">
+</head>
+<body>
+
+<h1>XSS and escapeHtml:false</h1>
+
+<p>Many of the dwr.util functions feature an optional 'option' parameter, which allows you to customize how the function performs.</p>
+
+<p>Of these the most important, and most common is <strong>escapeHtml:false</strong>.</p>
+
+<p>This option has existed since DWR version 2.0 when DWR added input data filtering to help prevent XSS attacks. For more information on XSS see:</p>
+
+<ul>
+<li><a href='http://en.wikipedia.org/wiki/Cross-site_scripting'>Wikipedia on XSS</a></li>
+<li><a href='http://www.owasp.org/index.php/Top_10_2007-A1'>OWASP 2007 Top 10</a></li>
+<li><a href='http://ha.ckers.org/xss.html'>Ha.ckers.org XSS cheat sheet</a></li>
+</ul>
+
+<p>By default (since verison 2.0) DWR assumes that any characters like &lt;, &gt;, &amp; &quot;, or &apos; should be escaped before inclusion in HTML, however there are times when this is not what you want. Particularly when you wish to add HTML to a page.</p>
+
+<p>Adding the options string <code>{ escapeHtml:false }</code> to a dwr.util function call will make DWR not perform output escaping before adding the string to the web page. See an example on the <a href="setValue.html">setValues() page</a>.</p>
+
+<p>If you find yourself using escapeHtml on every function call, then you can set the default escapeHtml flag to false using the following code:</p>
+
+<pre>
+dwr.util.setEscapeHtml(false);
+</pre>
+
+<p>However, before doing this, please understand the risks from XSS attacks</p>
+
+</body>
+</html>

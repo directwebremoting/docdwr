@@ -1,0 +1,23 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <title>Upgrading to Version 3.0</title>
+  <meta name='alias' content='/dwr/other/upgrading/dwr30'>
+  <link rel="stylesheet" type="text/css" href="../../media/styles.css">
+</head>
+<body>
+
+<h1>Upgrading from DWR version 2.0 to DWR version 3.0</h1>
+
+<p>DWR 3.0 has not been officially released yet. This pages tracks the changes that we see as being required when the final release comes.</p>
+
+<p>If you are upgrading from a version prior to 2.0, see the full upgrade notes.</p>
+
+<p>These are the changes that you must make to upgrade from version 2.0 to version 3.0:</p>
+
+<ul>
+<li>For DWR 1.x the Javascript libraries had the prefixes DWREngine and DWRUtil. These were deprecated in version 2.0 in favor of dwr.engine and dwr.util. In version 3.0, the prefixes DWREngine and DWRUtil have been removed. The best way top upgrade is to replace all accessed to the new method. Alternatively you can use the two-liner: <code>DWREngine = dwr.engine; DWRUtil = dwr.util;</code> to re-enable the old behavior.</li>
+</ul>
+
+</body>
+</html>

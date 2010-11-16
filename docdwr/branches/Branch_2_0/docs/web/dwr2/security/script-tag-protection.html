@@ -1,0 +1,64 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <title>About DWR's JavaScript Security</title>
+  <meta name='alias' content='/dwr/security/script-tag-protection'>
+  <meta name='navTitle' content='JavaScript Security'>
+  <link rel="stylesheet" type="text/css" href="../media/styles.css">
+</head>
+<body>
+
+<h1>About DWR's Javascript Security</h1>
+
+<p>There are 3 basic ways to protect any service that returns JSON or JavaScript against <a href="http://directwebremoting.org/blog/joe/2007/03/05/json_is_not_as_safe_as_people_think_it_is.html">the &lt;script&gt; tag hack</a>.</p>
+
+<ul>
+<li>Use a Secret in the Request</li>
+<li>Force pre-eval() Processing</li>
+<li>Force POST requests</li>
+</ul>
+
+<h2>Use a Secret in the Request</h2>
+
+<p>If you can only support one of these protections, this is the one to chose. Including a secret in the request allows the server to reject the request as invalid before any actions take place. It is common to include the secret in the URL, however this is a slightly vulnerable position for a secret since it is likely to turn up in web server log files and so on.</p>
+
+<p>DWR uses a secret in a POST body to allow the server to deny forged requests. (This secret comes from the JSESSIONID cookie read using Javascript). You can turn this protection off (to allow cross-domain requests for public data) by setting the <a href="../server/servlet/index.html">crossDomainSessionSecurity=false init-param</a> in web.xml.</p>
+
+<p>A future version of DWR will not use the JSESSIONID cookie but have a different way to get security credentials. This will allow DWR to work with systems that have had their session cookies marked as <a href="http://msdn.microsoft.com/en-us/library/ms533046.aspx">HttpOnly</a>.</p>
+
+<h2>Force pre-eval() Processing</h2>
+
+<p>Since &lt;script&gt; tag remoting does not allow you to process the JSON or JavaScript before it is eval()ed you can protect your JSON by forcing it to be manipulated before it is eval()ed. There are 3 ways to do this:</p>
+
+<ul>
+<li>Wrap the JSON in a comment. For example, <code>/* { 'data':'protected' } */</code>. When this is eval()ed, there will be no result, however if you have fetched the data using XHR or iframe, you can do some string manipulation before eval() to remove the leading /* and trailing */.
+<br/>
+There are 2 problems with this approach. The first is that it requires manipulation of both ends of the string (the others only require one). The other, more serious, is that if your content could contain '*/', then the comment will terminate early, potentially leaving executable code behind. There could be many innovative ways to exploit this weakness, and it would be a mistake to thing that you were safe based on a trivial analysis.</li>
+
+<li>Prefix the script with '<code>while(1);</code>'. Since this is an infinite loop, it causes browsers to hang, and maybe give an error message. Either way the script does not get executed.
+<br/>
+There is a potential issue with this solution - that some browser may allow you to override the action of 'while', using something like this: '<code>function while() {}</code>'. None of the current browsers allow this though.
+<br/>
+Google use this method to protect data in GMail. '<code>while(1);</code>' is possibly better than '<code>while(true);</code>' in case there are any browsers that allow you to redefine truth.</li>
+
+<li>Prefix the script with '<code>throw new Error("message");</code>'. This is a neat solution in that it allows you to explain what is wrong to users that get the message by mistake.
+<br/>
+It is potentially vulnerable to some browser allowing an attacker to redefine the Error or String constructors to prevent the throw from happening, however this does not work on any browser that I know of, and it's hard to see how it could happen.
+<br/>
+DWR uses this method. You can control it using the <a href="../server/servlet/index.html">allowScriptTagRemoting=true init-param</a> in web.xml. There is also an experimental feature 'scriptTagProtection' that allows you to set the prefix used.</li>
+</ul>
+
+<h2>Force POST Requests</h2>
+
+<p>Since browsers use GET to process <code>&lt;script&gt;</code> tags, you can prevent <code>&lt;script&gt;</code> tags from working by denying GET requests for some JavaScript resource. This is the most common solution, however it is also perhaps the weakest.</p>
+
+<p>Firstly XHR-POST doesn't work with older versions of Safari, so some support for GET is often useful.</p>
+
+<p>More importantly future versions of Firefox are touted to include cross-domain XHR support. While we don't have exact knowledge of how this will happen, it would be foolish to base your security plans on this technique holding up.</p>
+
+<p>Finally, we're working in an environment where new possibilities are popping up every day - betting your security on a system that works more by fluke than design isn't a great idea in my opinion.</p>
+
+<p>By default DWR denies POST requests for belt and braces security, however this is customizable using the <a href="allowGetForSafariButMakeForgeryEasier.html">allowGetForSafariButMakeForgeryEasier=true init-param</a> in web.xml.</p>
+
+</body>
+</html>

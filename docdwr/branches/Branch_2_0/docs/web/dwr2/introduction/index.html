@@ -1,0 +1,43 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <title>Overview of DWR</title>
+  <meta name='alias' content='/dwr/overview/dwr'>
+  <meta name='navTitle' content='Overview'>
+  <link rel="stylesheet" type="text/css" href="../media/styles.css">
+</head>
+<body>
+
+<h1>DWR: Easy AJAX for JAVA</h1>
+
+<p>DWR is a RPC library which makes it easy to call Java functions from JavaScript and to call JavaScript functions from Java (a.k.a Reverse Ajax).</p>
+
+<p>It has a large user-base, active mailing list and has been used in many projects including the Walmart shopping site and American Airlines flight booking site.</p>
+
+<p>DWR has a number of features like call batching, marshalling of virtually any data-structure between Java and Javascript (including binary file uploading and downloading), exception handling, advanced CSRF protection
+and deep integration with several Java server-side technologies like Spring and Guice.</p>
+
+<p>The first diagram shows how DWR can alter the contents of a selection list as a result of some Javascript event.</p>
+
+<p style="text-align:center;"><img src="../media/howitworks.png" alt="dwr version 1.0 interaction diagram" /></p>
+
+<p>Reverse Ajax (available since DWR version 2.0) allows Java code running on the server to find out what clients are viewing certain pages, and to send to them JavaScript, generated either manually or using a Java API. These JavaScript generating APIs generally match a client-side APIs.</p>
+
+<p style="text-align:center;"><img align="center" src="../media/howitworks2.png" alt="dwr version 2.0 interaction diagram" /></p>
+
+<p>DWR consists of two main parts:</p>
+<ul>
+<li>A Java Servlet running on the server that processes requests and sends responses back to the browser.</li>
+<li>JavaScript running in the browser that sends requests and can dynamically update the webpage.</li>
+</ul>
+
+<p>DWR works by dynamically generating Javascript based on Java classes. The code does some Ajax magic to make it feel like the execution is happening on the browser, but in reality the server is executing the code and DWR is marshalling the data back and forwards.</p>
+
+<p>This method of remoting functions from Java to JavaScript gives DWR users a feel much like conventional RPC mechanisms like RMI or SOAP, with the benefit that it runs over the web without requiring web-browser plug-ins.</p>
+
+<p>The DWR project is developing a method of automatically creating Java versions of JavaScript APIs which developers can use to control browsers from the server. A server-side version of the TIBCO GI library is currently in alpha release, and the DWR project aims to expand this to cover other client side APIs including the Dojo Toolkit, JQuery, YUI, Ext and others.</p>
+
+<p>For details on how to get started with DWR see the <a href="getting-started.html">getting started guide</a> and <a href="../download.html">download instructions</a>.</p>
+
+</body>
+</html>

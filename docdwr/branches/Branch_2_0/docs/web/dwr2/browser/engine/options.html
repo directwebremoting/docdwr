@@ -1,0 +1,145 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <title>Remoting Options</title>
+  <meta name='alias' content='/dwr/browser/engine/options'>
+  <link rel="stylesheet" type="text/css" href="../../media/styles.css">
+</head>
+<body>
+
+<h1>Remoting Options</h1>
+
+<p>There are a number of options on how remoting is handled by DWR, the method and verb should be transparent to the user, but might have different browser side-effects. Generally speaking DWR will pick the right method for you, but these options might be useful to get around unwanted browser side effects.</p>
+
+<h2>dwr.engine.setAsync(flag)</h2>
+
+<p>Supported by DWR 1.1 and above.</p>
+
+<p>Do we ask the XHR object to be asynchronous? The default is true. Warning: This option will be ignored if you are using IFrame or ScriptTag remoting (see below) and is often generally a bad idea to change it to false because it can make your browser slow to respond.</p>
+
+<p>To set the synchronisity on a global level:</p>
+
+<pre>
+dwr.engine.setAsync(true);
+</pre>
+
+<p>Or to set it on a call level:</p>
+
+<pre>
+Remote.method(params, {
+  callback:function(data) { ... },
+  async:true
+});
+</pre>
+
+<p>Or to set it on a batch level:</p>
+
+<pre>
+dwr.engine.beginBatch();
+Remote.method1(params, callback1);
+Remote.method2(params, callback2);
+dwr.engine.endBatch({
+  async:true
+});
+</pre>
+
+<h2>dwr.engine.setRpcType(newmethod)</h2>
+
+<p>Set the preferred remoting method. <code>setRpcType()</code> does not guarantee that the selected method will be used, just that we will try that method first. <br/> <code>newmethod</code> must be one of <code>dwr.engine.XMLHttpRequest</code> or <code>dwr.engine.IFrame</code>, or, from 2.0 onwards you can also use <code>dwr.engine.ScriptTag</code>. In DWR 1.0 this was called <code>setMethod()</code>.</p>
+
+<p>In version 3.0 (under development) this option is likely to be removed because the number of cases where DWR would override this setting was increasing and it was felt that it was giving the impression that it was more than just a hint. If you have reasons to need to set this manually, please contact the DWR mailing list.</p>
+
+<p>XMLHttpRequest is the default and will work in most cases. IFrame is useful when ActiveX is turned off, although DWR will work this out and automatically switch to IFrame mode for you. ScriptTag is useful if you wish to get around cross-domain restrictions.</p>
+
+<p>For example, to set the remoting method on a global level:</p>
+
+<pre>
+dwr.engine.setRpcType(dwr.engine.IFrame);
+</pre>
+
+<p>Or to set it on a call level:</p>
+
+<pre>
+Remote.method(params, {
+  callback:function(data) { ... },
+  rpcType:dwr.engine.IFrame
+});
+</pre>
+
+<p>Or to set it on a batch level:</p>
+
+<pre>
+dwr.engine.beginBatch();
+Remote.method1(params, callback1);
+Remote.method2(params, callback2);
+dwr.engine.endBatch({
+  rpcType:dwr.engine.IFrame
+});
+</pre>
+
+<p>ScriptTag remoting is useful when using DWR cross-domain. It is strongly recommended to ONLY use this system if you really need to. DWR protects you from a number of security attacks unless you are using it in cross-domain mode. As a general rule you should only use cross-domain scripting for totally public services.</p>
+
+<p>To use script tag remoting, 2 bits of set-up are required - you need to configure the server to allow cross-domain requests, and to tell the client where the services are located.</p>
+
+<p>To allow cross-domain script tag requests you need to add the following incantation to <a href="../../server/servlet/index.html">web.xml</a>:</p>
+
+<pre>
+&lt;init-param&gt;
+  &lt;param-name&gt;allowGetForSafariButMakeForgeryEasier&lt;/param-name&gt;
+  &lt;param-value&gt;true&lt;/param-value&gt;
+&lt;/init-param&gt;
+&lt;init-param&gt;
+  &lt;param-name&gt;crossDomainSessionSecurity&lt;/param-name&gt;
+  &lt;param-value&gt;false&lt;/param-value&gt;
+&lt;/init-param&gt;
+&lt;init-param&gt;
+  &lt;param-name&gt;allowScriptTagRemoting&lt;/param-name&gt;
+  &lt;param-value&gt;true&lt;/param-value&gt;
+&lt;/init-param&gt;
+</pre>
+
+<p>To configure the client where to send cross-domain requests, set the <code>._path</code> variable for the remote interface in question:</p>
+
+<pre>
+Remote._path = 'http://otherdomain.com/webapp/dwr';
+Remote.someFunction();
+</pre>
+
+<p>Cross-domain remoting may not work properly with reverse ajax.</p>
+
+<h2>dwr.engine.setHttpVerb(verb)</h2>
+
+<p>This allows you to select between POST and GET, for both iframe and XMLHttpRequest methods. Some browsers (e.g. older versions of Safari) do not support XHR-POST so DWR will automatically switch to GET even if the POST verb is selected. So <code>setHttpVerb()</code> ought to be treated as a hint only. In DWR 1.0 this was called <code>setVerb()</code>.</p>
+
+<p>In version 3.0 (under development) this option is removed because the number of cases where DWR would override this setting was increasing and it was felt that it was giving the impression that it was more than just a hint. If you really need to default to GET rather than POST you can do the following: <code>dwr.engine.transport.xhr.httpMethod = 'GET';</code> (Note this is for version 3.0 and above only)</p>
+
+<p>Setting the verb is not supported when using ScriptTag remoting.</p>
+
+<p>For example, to set the remoting verb on a global level:</p>
+
+<pre>
+dwr.engine.setHttpVerb("GET");
+</pre>
+
+<p>Or to set it on a call level:</p>
+
+<pre>
+Remote.method(params, {
+  callback:function(data) { ... },
+  httpVerb:"GET"
+});
+</pre>
+
+<p>Or to set it on a batch level:</p>
+
+<pre>
+dwr.engine.beginBatch();
+Remote.method1(params, callback1);
+Remote.method2(params, callback2);
+dwr.engine.endBatch({
+  httpVerb:"GET"
+});
+</pre>
+
+</body>
+</html>

@@ -1,0 +1,125 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <title>Creators</title>
+  <meta name='alias' content='/dwr/server/dwrxml/creators'>
+  <link rel="stylesheet" type="text/css" href="../../../media/styles.css">
+</head>
+<body>
+
+<p class='xwarn'>Warning: The link to /dwr/server/dwrxml/creators#none needs checking</p>
+
+<h1>The Creators</h1>
+
+<p>The create element in your dwr.xml file has the following structure.</p>
+
+<pre>
+&lt;allow&gt;
+  &lt;create creator="..." javascript="..." scope="..."&gt;
+    &lt;param name="..." value="..."/&gt;
+    &lt;auth method="..." role="..."/&gt;
+    &lt;exclude method="..."/&gt;
+    &lt;include method="..."/&gt;
+  &lt;/create&gt;
+  ...
+&lt;/allow&gt;
+</pre>
+
+<p>Most of these elements are optional - All you really need is to specify a creator and a JavaScript name.</p>
+
+<p><b>The creator attribute</b> is required - it specifies which creator will be used.</p>
+
+<p>The following Creators are available in DWR:</p>
+
+<!--break-->
+
+<ul>
+
+<li><b><a href="new.html">new</a></b>: Which uses the Java 'new' operator.</li>
+
+<li><b><a href="#none">none</a></b>: This does not create objects. See below for why. (v1.1+)</li>
+
+<li><b><a href="scripted.html">scripted</a></b>: Uses a scripting language like BeanShell or Groovy via BSF.</li>
+
+<li><b><a href="../../integration/spring.html">spring</a></b>: Gives access to beans through the Spring Framework.</li>
+
+<li><b><a href="../../integration/jsf.html">jsf</a></b>: Uses objects from JSF. (v1.1+)</li>
+
+<li><b><a href="../../integration/struts.html">struts</a></b>: Uses struts FormBeans. (v1.1+)</li>
+
+<li><b><a href="../../integration/pageflow.html">pageflow</a></b>: Gives access to a PageFlow from Beehive or Weblogic. (v1.1+)</li>
+
+<li><b>ejb3</b>: An experimental Creator to give access to EJB3 session beans. This code should not be seen as production quality until it has undergone more testing, and has an official maintainer. (v2.0+)</li>
+
+</ul>
+
+<p>Should you need to write your own creator, you must register it using the <code>&lt;init&gt;</code> section.</p>
+
+<p><b>The javascript attribute</b> gives your newly created object a name in the browser. You should avoid using JavaScript reserved words.</p>
+
+<p><b>The scope attribute</b> is largely the same as the scope attribute as defined by the servlet spec. It allows you to specify what a bean is available to. The options are "application", session, "request", "page" and an additional scope "script". These first 4 of these values should be familiar to Servlet and JSP developers. "script" scope allows you to have something similar to an HTTP session that is tied to an ID in a page rather than in a cookie.</p>
+
+<p>The scope attribute is optional. It defaults to "page".</p>
+
+<p><b>The param element</b> is used by the various creators for specific bits of configuration. For example the 'new' creator needs to be told what type of object to call 'new' on. The parameters that are available to each creator are specified in the documentation for that creator. See the list above for links.</p>
+
+<p><b>The include and exclude elements</b> allow a creator to restrict access to class methods. A Creator should specify EITHER a list of include elements (which implies that the default policy is denial) OR a list of exclude elements (which implies that the default policy is to allow access)</p>
+
+<p>For example to deny access to all methods in some class except for the <code>setWibble()</code> method you should put the following into your dwr.xml</p>
+
+<pre>
+&lt;create creator="new" javascript="Fred"&gt;
+  &lt;param name="class" value="com.example.Fred"/&gt;
+  &lt;include method="setWibble"/&gt;
+&lt;/create&gt;
+</pre>
+
+<p>The default visibility is that having added a class to a 'create' element, all its methods are accessible.</p>
+
+<p><b>The auth element</b> allows you to specify a J2EE role level for further access control checking:</p>
+
+<pre>
+&lt;create creator="new" javascript="Fred"&gt;
+  &lt;param name="class" value="com.example.Fred"/&gt;
+  &lt;auth method="setWibble" role="admin"/&gt;
+&lt;/create&gt;
+</pre>
+
+<a name="none"></a>
+<h2>The 'none' Creator</h2>
+
+<p>The none creator does not do any object creation - it makes the assumption that you don't need one. This might be true for 2 reasons.</p>
+
+<p>You might be using a scope other than "page" (see above) and have arranged to pre-populate the scope with the given object. In this case no object creation is required.</p>
+
+<p>Alternatively the method to call is static in which case no object is required. DWR does a check for static methods before deciding if it needs to call the creator.</p>
+
+<p>For both of these options you will need a param element - "class". This tells DWR what type it is working on.</p>
+
+<h2>Using static methods</h2>
+
+<p>DWR does a check before calling any Creators to see if the method to be called is static. If it is then the Creator is not called. Clearly this logic will work with any creator, however the 'null' Creator is easiest to configure.</p>
+
+<h2>Using Singletons</h2>
+
+<p>The best way to handle singletons is to create an instance of the object using BeanShell and BSF. See the section on the <a href="scripted.html">'Scripted' Creator</a> for more details.</p>
+
+<h2>Other Creators</h2>
+
+<p>We have occasional requests for new creators, the most common is for an EjbCreator. The best place to discuss new creators is the <a href="../../../support.html">DWR mailing list</a>.</p>
+
+<h2>DWR and HttpSessionBindingListeners</h2>
+
+<p>One subtlety about the way the DWR 1.x stores created beans is that it re-calls the corresponding <code>setAttribute()</code> method for every request. That is, if your bean has been given session lifetime in dwr.xml, session.setAttribute(yourBean) will be invoked everytime you invoke a method on that bean. This seems innocuous enough, however, if you're attempting to use servlet events, say, by way of the HttpSessionBindingListener interface then you'll see valueBound and valueUnbound events for every call, rather than only when your bean is created and when the session expires, as you might expect.</p>
+
+<p>DWR 2 only calls <code>setAttribute()</code> when it first creates the object.</p>
+
+<br/>
+
+<div class="book"><div class="tree"><div class="menu"><ul>
+<li class="leaf"><a href="../../integration/spring.html">Spring Integration</a></li>
+<li class="leaf"><a href="../../integration/struts.html">Struts Integration</a></li>
+</ul></div></div></div>
+
+</body>
+</html>

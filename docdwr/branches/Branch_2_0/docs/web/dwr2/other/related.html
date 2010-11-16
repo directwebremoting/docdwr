@@ -1,0 +1,51 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <title>Related Projects</title>
+  <meta name='weight' content='9'>
+  <meta name='alias' content='/dwr/other/related'>
+  <link rel="stylesheet" type="text/css" href="../media/styles.css">
+</head>
+<body>
+
+<h1>Related Projects</h1>
+
+<h2>IWebMvc</h2>
+
+<p><a href="http://code.google.com/p/internna/">IWebMvc</a> glues together DWR, Dojo, Spring and Hibernate/JPA.</p>
+
+<img src="../media/iwebmvc-screenshot.png"/>
+
+<p>Despite the name, it's not really another Web MVC framework, but more along the lines of AppFuse or Grails, as a way to kick-start a project and provide some sensible defaults without needing to learn everything from scratch.</p>
+
+<p>IWebMvc is:</p>
+<ul>
+<li><b>based on Java</b>
+<br>although supporting Groovy / JRuby is a plus</li>
+<li><b>a way to kick start a project</b>
+<br>by simplifying the process by giving the best set of frameworks for each task</li>
+<li><b>an integration between server and client sides</b>
+<br>and is lightweight, robust and extensible. Read <i>enterprise quality</i>.</li>
+<li>
+<b>able to support all the common tasks a web app has to handle</b>
+<br>including: User Management, CRUD operations, i18n support (both framework &amp; data), AJAX and astounding visuals</li>
+</ul>
+</p>
+
+<h2>JAWR</h2>
+
+<p><a href="https://jawr.dev.java.net/">JAWR</a> is a packaging and compressing library for serving JavaScript and CSS. It includes <a href="https://jawr.dev.java.net/integration/dwr.html">DWR integration</a> to help reducing the footprint of DWR script files. Jawr is an Open Source library that helps achieve two main goals for rich java web applications.</p>
+
+<p>First, it's a productivity tool, since it allows heavy modularization in JavaScript code. Instead of having big all-in-one scripts, users can develop their components in separate files, which makes development, maintenance and version control a lot easier.</p>
+
+<p>On the other hand, it is a performance tool for serving pages fast. When its production mode is active, all the modules are concatenated, minified and compressed automatically into one or several files (as per configuration). Thus, the number of HTTP requests and their size is reduced, improving dramatically page loading times.</p>
+
+<p>When you use DWR with Jawr, you can have all the static scripts joined together, plus you can have them in turn joined with your own scripts or libraries (such as Dojo). Also, dynamically generated javascript stubs for your DWR beans can also be joined in any way you find convenient. Finally, all these scripts will be minified and gzipped, so in the end users will have to download a lot less bytes.</p>
+
+
+<h2>JSON-RPC-Java</h2>
+
+<p><a href="http://oss.metaparadigm.com/jsonrpc/">JSON-RPC-Java</a> does a similar job to DWR. The main difference between JSON-RPC-Java and DWR is that JSON focuses on a standardized wire protocol so you can re-write your back end server and leave the browser as it is. DWR focuses on making remoting easy for both ends of the spectrum, Java and JavaScript.</p>
+
+</body>
+</html>
