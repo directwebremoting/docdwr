@@ -82,8 +82,46 @@ public class ReverseAjaxThread implements Runnable
 <p>One of the most common ways to differentiate users on the same page is by setting attributes on the script session and getting them in a reverse ajax thread. Since the script session does not exist until engine.js is included this cannot be done in an MVC controller or a JSP, please vote for this issue http://bugs.directwebremoting.org/bugs/browse/DWR-320 to resolve this.</p>
  
 <p>There are currently two best practices for populating the script session on page load.</p>
- 
-<p>1. Call a remote DWR method on page load which populates the script session:</p>
+
+<p><b>1.</b> Use the <a href="http://directwebremoting.org/dwr/javadoc/org/directwebremoting/Browser.html">Browser API</a> (recommended approach available in DWR 3.x and up)</p>
+
+<p>DWR's' Browser API contains several useful methods for differentiating Script Sessions by using a <a href="http://directwebremoting.org/dwr/javadoc/org/directwebremoting/ScriptSessionFilter.html">ScriptSessionFilter</a>.</p>
+
+<p>Below is an example of a ScriptSessionFilter that will check for the presence of an attribute on the ScriptSession:
+
+<pre>
+public class TestScriptSessionFilter implements ScriptSessionFilter
+{
+    public TestScriptSessionFilter(String attributeName)
+    {
+        this.attributeName = attributeName;
+    }
+
+    /* (non-Javadoc)
+     * @see org.directwebremoting.ScriptSessionFilter#match(org.directwebremoting.ScriptSession)
+     */
+    public boolean match(ScriptSession session)
+    {
+        Object check = session.getAttribute(attributeName);
+        return (check != null && check.equals(Boolean.TRUE));
+    }
+
+    private String attributeName;
+}
+</pre>
+An example use of TestScriptSessionFilter:
+<pre>
+Browser.withPageFiltered(page, filter, new Runnable()
+{
+    public void run()
+    {
+        Util.setValue("divID", "value of div");
+    }
+});
+</pre>
+</p>
+
+<p><b>2.</b> Call a remote DWR method on page load which populates the script session:</p>
 <pre>
 public void remoteMethod() {
    String value = "someValue"; // this may come from the HttpSession for example
@@ -91,24 +129,16 @@ public void remoteMethod() {
    scriptSession.setAttribute("key", value);
 }
 </pre> 
-<p>2. Add a script session listener which will be notified when script sessions are created and destroyed.</p>
+<p><b>3.</b> Use a script session listener which will be notified when script sessions are created and destroyed.  Please see the <a href="#scriptSessionListeners">ScriptSessionListener</a> section for more details.</p>
 <pre>
-Container container = ServerContextFactory.get().getContainer();
-ScriptSessionManager manager = container.getBean(ScriptSessionManager.class);
-ScriptSessionListener listener = new ScriptSessionListener() {
-    public void sessionCreated(ScriptSessionEvent ev) {
-        HttpSession session = WebContextFactory.get().getSession();
-        String userId = (String) session.getAttribute("userId");
-        ev.getSession().setAttribute("userId", userId);
-    }
-
-    public void sessionDestroyed(ScriptSessionEvent ev) { }
-};
-manager.addScriptSessionListener(listener);
+public void sessionCreated(ScriptSessionEvent ev) {
+    HttpSession session = WebContextFactory.get().getSession();
+    String userId = (String) session.getAttribute("userId");
+    ev.getSession().setAttribute("userId", userId);
+}
 </pre>
-Once the script session is populated, a reverse ajax thread can call scriptSession.getAttribute() to differentiate the users.
+<p>Once the script session is populated, a reverse ajax thread can call scriptSession.getAttribute() to differentiate the users.</p>
  
-
 <h2>Differentiating ScriptSessions by request parameters</h2>
 Another way to differentiate users on the same page is by the request parameters. In order to use this functionality, you must set the normalizeIncludesQueryString init-param to true (http://directwebremoting.org/dwr/server/servlet). Once this is enabled, the script session manager will include request parameters in the page name.
 <pre>
@@ -136,6 +166,31 @@ scriptSessionManager.getScriptSessionsByPage("/page?foo=bar")
 Container container = ServerContextFactory.get().getContainer();
 ScriptSessionManager manager = container.getBean(ScriptSessionManager.class);
 </pre>
+
+<h2><a name="scriptSessionListeners"></a>ScriptSessionListeners</h2>
+
+<p>ScriptSessionListeners allow you to take action when a ScriptSession has been created or destroyed.  To configure a ScriptSessionListener you will need to execute code similar to the following:
+
+<pre>
+Container container = ServerContextFactory.get().getContainer();
+ScriptSessionManager manager = container.getBean(ScriptSessionManager.class);
+ScriptSessionListener listener = new ScriptSessionListener() {
+    public void sessionCreated(ScriptSessionEvent ev) {
+        HttpSession session = WebContextFactory.get().getSession();
+        String userId = (String) session.getAttribute("userId");
+        ev.getSession().setAttribute("userId", userId);
+    }
+
+    public void sessionDestroyed(ScriptSessionEvent ev) { }
+};
+manager.addScriptSessionListener(listener);
+</pre>
+<p>It is important to note that ScriptSessionListeners must be added after DWR has initialized.  There are generally two ways to do this:
+<ol>
+<li>Extend the DWR servlet and execute the above code after the DWR servlet initializes.</li>
+<li>Execute the above code in a servlet that has a <load-on-startup /> value larger than the DWR servlet</li>
+</ol>
+</p>
 
 </body>
 </html>
