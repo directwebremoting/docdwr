@@ -36,5 +36,45 @@ public class Check
 
 <p>DWR uses the generic type to cast the incoming data.  This is possible because DWR 3.x requires Java 1.5 or greater - because of this DWR signatures are largely obsolete.</p>
 
+<h2>If you still need Signatures</h2>
+
+<p>The signatures section allows us to hint to DWR what types should be used. The format will be obvious to anyone that has an understanding of generic types under JDK5:</p>
+
+<pre>
+&lt;signatures&gt;
+  &lt;![CDATA[
+  import java.util.List;
+  import com.example.Check;
+  Check.setLotteryResults(List&lt;Integer&gt; nos);
+  ]]&gt;
+&lt;/signatures&gt;
+</pre>
+
+<h2>Nested Generic Definitions</h2>
+
+<p>The signatures element does not currently support nested generic defintions. So for example the following will <b>not</b> work:</p>
+
+<pre>
+&lt;signatures&gt;
+  &lt;![CDATA[
+  import java.util.List;
+  import java.util.Map ;
+  Check.setConditions(Map&lt;String, <b>Map&lt;String, String&gt;</b>&gt;);
+  ]]&gt;
+&lt;/signatures&gt;
+</pre>
+
+<p>While the parser is updated to support nested generic definitions, you can use the following trick: In the absence of other type information, DWR assumes that a parameter will be a String. So the above example can be written:</p>
+
+<pre>
+&lt;signatures&gt;
+  &lt;![CDATA[
+  import java.util.List;
+  import java.util.Map ;
+  Check.setConditions(Map&lt;String, Map&gt;);
+  ]]&gt;
+&lt;/signatures&gt;
+</pre>
+
 </body>
 </html>
