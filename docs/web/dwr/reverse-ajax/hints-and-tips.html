@@ -111,6 +111,13 @@ public class TestScriptSessionFilter implements ScriptSessionFilter
 </pre>
 An example use of TestScriptSessionFilter:
 <pre>
+// Add the attribute into the ScriptSession sometime before using the Filter.
+ScriptSession scriptSession = webContext.getScriptSession();
+String attributeName = "attr";
+scriptSession.setAttribute(attributeName, true);
+</pre>
+<pre>
+ScriptSessionFilter filter = new TestScriptSessionFilter(attributeName);
 Browser.withPageFiltered(page, filter, new Runnable()
 {
     public void run()
