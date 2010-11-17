@@ -126,6 +126,18 @@ Browser.withPageFiltered(page, filter, new Runnable()
     }
 });
 </pre>
+Or:
+<pre>
+ScriptSessionFilter filter = new TestScriptSessionFilter(attributeName);
+for (ScriptSession session : allScriptSessions)
+{
+    if (filter.match(session))
+    {
+        // Do something with the matching ScriptSession here ...
+    }
+}
+</pre>
+
 </p>
 
 <p><b>2.</b> Call a remote DWR method on page load which populates the script session:</p>
