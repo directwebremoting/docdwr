@@ -186,7 +186,7 @@ for (ScriptSession session : allScriptSessions)
     }
 }
 </pre>
- 
+It is important to note that a few Browser methods required a WebContext meaning the requests come from a DWR thread.  Currently the methods that require this are - withCurrentPageFiltered, withCurrentPage, and getTargetSessions.  All other methods can be called safely from non-DWR threads.
 <h2><a name="scriptSessionListeners"></a>ScriptSessionListeners</h2>
 
 <p>ScriptSessionListeners allow you to take action when a ScriptSession has been created or destroyed.  To configure a ScriptSessionListener you will need to execute code similar to the following:
