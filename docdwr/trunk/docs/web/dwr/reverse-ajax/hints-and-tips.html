@@ -22,7 +22,7 @@
 <h2>Passing request information to a non-dwr thread</h2>
 <p>Non-dwr threads have no reference to the dwr-thread that created them. Because of this, WebContextFactory().get().getScriptSession() will return null in a non-dwr thread. You will therefore need to pass data from DWR threads to non-DWR threads such as the ScriptSession in the example below.</p>
  
-<h2>Obtaining the script session manager from a non-dwr thread</h2>
+<h2>Obtaining the ScriptSessionManager from a non-dwr thread</h2>
 <p>The ScriptSessionManager can be obtained using the following code:</p>
  
 <pre>
