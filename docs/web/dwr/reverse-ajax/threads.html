@@ -13,7 +13,7 @@
 
 <p>You have three options:</p>
 <ol>
-  <li>Use the <a href="hints-and-tips.html#browserAPI">Browser API</a>.</li>
+  <li>Use the <a href="hints-and-tips.html#browserAPI">Browser API</a>. <p>It is important to note that a few Browser methods required a WebContext meaning the requests come from a DWR thread.  Currently the methods that require this are - withCurrentPageFiltered, withCurrentPage, and getTargetSessions.  All other methods can be called safely from non-DWR threads.</p></li>
   <li>Obtain the ScriptSessionManager, which will provide  access to the ScriptSessions:
  
 <pre>
