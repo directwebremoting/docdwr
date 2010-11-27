@@ -74,7 +74,8 @@ public class Foo {
     @RemoteProperty
     private int foo;
 
-    public int getFoo() {<br>        return foo;
+    public int getFoo() {
+        return foo;
     }
 
     @RemoteProperty
@@ -84,12 +85,10 @@ public class Foo {
 }
 </pre>
  
-<p>To use more sophisticated converters see the <code>converter</code> attribute of the <a href="http://directwebremoting.org/dwr/javadoc/org/directwebremoting/annotations/DataTransferObject.html">@DataTransferObject</a> annotation.   Here is an example that configures the Hibernate converter and tells DWR to exclude propertyToExclude from serialization.
+<p>To use more sophisticated converters see the <code>converter</code> attribute of the <a href="http://directwebremoting.org/dwr/javadoc/org/directwebremoting/annotations/DataTransferObject.html">@DataTransferObject</a> annotation.   Here is an example that configures the Hibernate converter and tells DWR to exclude propertyToExclude from serialization.</p>
 <pre>
 @DataTransferObject(converter=H3BeanConverter.class,
 params = @Param(name = "exclude", value = "propertyToExclude"))  
-
-</pre></p>
-
+</pre>
 </body>
 </html>
