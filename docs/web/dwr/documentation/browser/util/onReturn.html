@@ -1,0 +1,54 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <title>onReturn</title>
+  <meta name='alias' content='/dwr/browser/util/onreturn'>
+  <link rel="stylesheet" type="text/css" href="../../../media/styles.css">
+</head>
+<body>
+
+<script type='text/javascript' src='../../../media/util.js'> </script>
+
+<h1>DWRUtil.onReturn</h1>
+
+<h2>Getting notified when return is pressed</h2>
+
+<p>When inputs are part of a form then the return key causes the form to be submitted. When you are using Ajax, this is generally not what you want. Usually it would be far better if some JavaScript was triggered.</p>
+
+<p>Unfortunately different browsers handle events in quite a different manner. So <code>DWRUtil.onReturn</code> patches over the differences. If you want to have a submit button that does the same as pressing return in a form field, then you need to code your application like this:</p>
+
+<!--break-->
+
+<pre>
+&lt;input type="text"
+    onkeypress="DWRUtil.onReturn(event, submitFunction)"/&gt;
+&lt;input type="button" onclick="submitFunction()"/&gt;
+</pre>
+
+<p>You can use either the <code>onkeypress</code> event or the <code>onkeydown</code> event; they do roughly the same thing.</p>
+
+<script>
+function submitFunction()
+{
+    $("alert").style.display = "inline";
+    setTimeout("unsubmitFunction();", 1000);
+}
+function unsubmitFunction()
+{
+    $("alert").style.display = "none";
+}
+</script>
+
+<p><input type="text" onkeydown="DWRUtil.onReturn(event, submitFunction)"/>
+<input type="button" onclick="submitFunction()" value="GO"/>
+<span id="alert" style="display:none; background:#FFFFDD; font-weight:bold;">submitFunction called</span>
+</p>
+
+<p>Generally speaking DWR is not a generic JavaScript library so it does not attempt to provide fill this need. However this is one of these really useful functions to have around if you are doing Ajax work.</p>
+
+<h2>onSubmit</h2>
+
+<p>This function makes up for the fact that the onSubmit() event <a href="http://www.w3.org/TR/REC-html40/interact/scripts.html">only works with <code>&lt;FORM ...&gt;</code> elements</a>.</p>
+
+</body>
+</html>

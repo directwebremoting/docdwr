@@ -1,0 +1,104 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <title>getValue</title>
+  <meta name='alias' content='/dwr/browser/util/getvalue'>
+  <link rel="stylesheet" type="text/css" href="../../../media/styles.css">
+</head>
+<body>
+
+<script type='text/javascript' src='../../../media/util.js'> </script>
+<script type="text/javascript">
+function doGetValue() {
+  var ret = dwr.util.getValue($('getvalue').value);
+  dwr.util.setValue("getvalueret", ret);
+}
+</script>
+
+<h1>dwr.util.getValue(id)</h1>
+
+<p><code>dwr.util.getValue(id)</code> is the read version of <code>setValue()</code>. This gets the values out of the HTML elements without you needing to worry about how a selection list differs from a div.</p>
+
+<p>This method works for most HTML elements including selects (where the option with a matching value and not text is selected), input elements (including textareas) divs and spans.</p>
+
+<p>For example:</p>
+
+<!--break-->
+
+<p><code>dwr.util.getValue</code>(
+<input id="getvalue" onchange="dwr.util.onReturn(event, doGetValue)" value="div" size="10"/> )
+<input type="button" value="getValue" onclick="doGetValue()"/>
+<br/>
+Returns "<span id="getvalueret" class="reply"> </span>" (Press 'getValue').</p>
+
+<!-- START COPIED BLOCK: Source: node/75 Copies: node/76-79 -->
+
+<style>
+.small { font-size:80%; }
+.testblock { margin:10px; background-color:#fff8dd; padding:10px }
+</style>
+
+<div class="testblock">
+
+<p><b>HTML Test Elements</b></p>
+
+<div style="border:1px solid #999;" id="div">A div element with id="div".</div>
+
+<table>
+<tr>
+
+<td>Text area <span class="small">(id="textarea")</span>:</td>
+<td><textarea id="textarea"></textarea></td>
+
+<td>Selection list <span class="small">(id="select")</span>:</td>
+<td>
+  <select id="select">
+    <option selected="selected" value="value one">text one</option>
+    <option value="value two">text two</option>
+    <option value="value three">text three</option>
+  </select>
+</td>
+
+</tr>
+<tr>
+
+<td>Text input <span class="small">(id="text")</span>:</td>
+<td><input id="text" value="" /></td>
+
+<td>Password input <span class="small">(id="password")</span>:</td>
+<td><input id="password" value="password" type="password" /></td>
+
+<!--
+
+</tr>
+<tr>
+
+<td>Radio buttons <span class="small">(id="radio")</span>:</td>
+<td>
+  <input id="radio" name="radio" value="one" type="radio" checked="checked"/>one<br/>
+  <input id="radio" name="radio" value="two" type="radio"/>two
+</td>
+
+<td>Check box <span class="small">(id="checkbox")</span>:</td>
+<td><input id="checkbox" value="input checkbox" type="checkbox" />input</td>
+
+-->
+
+</tr>
+<tr>
+
+<td>Form button <span class="small">(id="formbutton")</span>:</td>
+<td><input id="formbutton" value="button" type="button" /></td>
+
+<td>Fancy button <span class="small">(id="button")</span>:</td>
+<td><button id="button">button</button></td>
+
+</tr>
+</table>
+
+</div>
+
+<!-- END COPIED BLOCK -->
+
+</body>
+</html>

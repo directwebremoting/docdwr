@@ -1,0 +1,33 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <title>Array Converters</title>
+  <meta name='alias' content='/dwr/server/dwrxml/converters/array.html'>
+  <meta name='navTitle' content='Arrays'>
+  <link rel="stylesheet" type="text/css" href="../../../../../media/styles.css">
+</head>
+<body>
+
+<h1>Array Converters</h1>
+
+<p>The array entries are less obvious. By default DWR marshalls arrays of all primitive types as well as arrays of all marshallable objects, which by default includes String and Date as noted previously. <br/> Advanced Java programmers will probably recognise why the match line is a <a href="http://java.sun.com/j2se/1.4.2/docs/api/java/lang/Class.html#getName()">little strange</a>.</p>
+
+<!--break-->
+
+<pre>
+&lt;convert converter="array" match="[Z"/&gt;
+&lt;convert converter="array" match="[B"/&gt;
+&lt;convert converter="array" match="[S"/&gt;
+&lt;convert converter="array" match="[I"/&gt;
+&lt;convert converter="array" match="[J"/&gt;
+&lt;convert converter="array" match="[F"/&gt;
+&lt;convert converter="array" match="[D"/&gt;
+&lt;convert converter="array" match="[C"/&gt;
+&lt;convert converter="array" match="[L*"/&gt;
+</pre>
+
+<p>The * is not explained by the link above - it is a wildcard that matches any following string, which is how DWR can marshall arrays of any type that is marshallable by other means.</p>
+
+
+</body>
+</html>

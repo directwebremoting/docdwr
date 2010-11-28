@@ -1,0 +1,103 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <title>Logging</title>
+  <meta name='alias' content='/dwr/server/logging'>
+  <meta name="weight" content="5">  
+  <link rel="stylesheet" type="text/css" href="../../media/styles.css">
+</head>
+<body>
+
+<h1>Logging</h1>
+<h2>Logging Dependencies and Implementations</h2>
+<p>DWR currently depends on <a href="http://commons.apache.org/logging/" target="new">Apache Commons Logging</a>.  Because we use commons-logging you are free to choose your logging implementation (<a href="http://logging.apache.org/log4j/1.2/index.html" target="new">Log4j</a> is a common choice).</p>
+
+<h2>Our Default Logging Policy</h2>
+<p>Out of the box, DWR is silent about &quot;application&quot; exceptions/errors (when DWR's debug mode is disabled).   &quot;Application&quot; exceptions are exceptions/errors thrown from your application:</p><pre>
+// Suppose the remoteMe method is exposed to DWR, and called<br>// through the browser.  Also assume this method invocation results<br>// in a MyBusinessException being thrown.<br><br>public String remoteMe() throws MyBusinessException {<br>  // Whatever is here throws MyBusinessException<br>}</pre>In this situation MyBusinessException is an &quot;application&quot; exception  and DWR will not log the exception/error regardless of the severity.<br><br>   Contrary to &quot;application&quot; exceptions/errors DWR will always log exceptions thrown/caught by DWR internals (Conversion exceptions, Creator exceptions, etc.) at a level dependent of their severity (DEBUG, INFO, WARN, etc.).  <br><h2>Logging Configuration</h2>DWR's default logging policy can be configured by an init-param  (accessLogLevel) on the DWR servlet (declared in your web.xml).<pre>
+...
+&lt;servlet&gt;
+    &lt;servlet-name&gt;dwr-invoker&lt;/servlet-name&gt;
+    &lt;display-name&gt;DWR Servlet&lt;/display-name&gt;
+    &lt;description&gt;Direct Web Remoter Servlet&lt;/description&gt;
+    &lt;servlet-class&gt;org.directwebremoting.servlet.DwrServlet&lt;/servlet-class&gt;
+    
+    &lt;init-param&gt;
+      &lt;param-name&gt;accessLogLevel&lt;/param-name&gt;
+      &lt;param-value&gt;EXCEPTION&lt;/param-value&gt;
+    &lt;/init-param&gt;
+...</pre>
+<p>The accessLogLevel parameter may have the following values (case insensitive).  Similar to other logging frameworks  logging requests are  enabled if the level is higher than or equal to the accessLogLevel specified (e.g. An accessLogLevel of CALL will result in the logging of all levels):<br><ol><li>CALL - Most verbose level.  Will log incoming and outgoing DWR calls.</li><li>EXCEPTION - Logging  of checked Exceptions will be enabled.</li><li>RUNTIMEEXCEPTION - Logging of RuntimeExceptions will be enabled</li><li>ERROR - Logging of Errors will be enabled.</li></ol>All access logging is written to the same logger - org.directwebremoting.log.accessLog.  This allows an application to easily control and separate DWR logging from the rest of the system.<h2>Debug Mode and Logging</h2>When <a href="index.html">debug mode</a> is enabled DWR will set the accessLogLevel to EXCEPTION by default.  This behavior can be modified by specifying a valid accessLogLevel.  <br><br>When debug mode is disabled and no accessLogLevel has been specified or an invalid accessLogLevel has been specified all logging will be disabled.
+<h2>Configuring Log4J for DWR</h2>
+<p>Using Log4j requires that the Log4j.jar and the Log4j configuration file be in your application's classpath (WEB-INF/lib and WEB-INF/classes). Here is a log4j.xml file that can help get you started (this should be placed in your WEB-INF/classes directory):</p>
+<pre>
+&lt;?xml version="1.0" encoding="UTF-8" ?>
+&lt;!DOCTYPE log4j:configuration SYSTEM "log4j.dtd">
+
+&lt;log4j:configuration xmlns:log4j="http://jakarta.apache.org/log4j/"&gt;
+  &lt;appender name="console" class="org.apache.log4j.ConsoleAppender"&gt; 
+    &lt;param name="Target" value="System.out"/&gt; 
+    &lt;layout class="org.apache.log4j.PatternLayout"&gt; 
+      &lt;param name="ConversionPattern" value="%-5p %c{1} - %m%n"/&gt; 
+    &lt;/layout&gt; 
+  &lt;/appender&gt; 
+
+  &lt;appender name="dwrLogFile" class="org.apache.log4j.FileAppender"&gt;
+     &lt;param name="File" value="C:/Program Files/Apache Software Foundation/Tomcat 6.0/webapps/dwr/log/dwrAccess.log"/&gt;
+     &lt;param name="Append" value="true"/&gt;
+     &lt;param name="Threshold" value="DEBUG"/&gt;
+     &lt;layout class="org.apache.log4j.PatternLayout"&gt;
+       &lt;param name="ConversionPattern" value="%d %-5p [%c] %m%n"/&gt;
+     &lt;/layout&gt;	    
+  &lt;/appender&gt;
+  
+  &lt;appender name="otherFile" class="org.apache.log4j.FileAppender"&gt;
+     &lt;param name="File" value="C:/Program Files/Apache Software Foundation/Tomcat 6.0/webapps/dwr/log/other.log"/&gt;
+     &lt;param name="Append" value="true"/&gt;
+     &lt;param name="Threshold" value="DEBUG"/&gt;
+     &lt;layout class="org.apache.log4j.PatternLayout"&gt;
+       &lt;param name="ConversionPattern" value="%d %-5p [%c] %m%n"/&gt;
+     &lt;/layout&gt;	    
+  &lt;/appender&gt;
+  
+  &lt;!-- All application exceptions/errors will be written here --&gt;  
+  &lt;category name="org.directwebremoting.log.accessLog"&gt;
+     &lt;priority value="INFO"/&gt;
+     &lt;appender-ref ref="dwrLogFile" /&gt;
+  &lt;/category&gt;
+  
+  &lt;!-- All DWR startup information will be written here --&gt; 
+  &lt;category name="org.directwebremoting.log.startup"&gt;
+     &lt;priority value="DEBUG"/&gt;
+     &lt;appender-ref ref="dwrLogFile" /&gt;
+  &lt;/category&gt;
+  
+  &lt;!-- All DWR script information will be written here --&gt; 
+  &lt;category name="org.directwebremoting.log.scripts"&gt;
+     &lt;priority value="DEBUG"/&gt;
+     &lt;appender-ref ref="dwrLogFile" /&gt;
+  &lt;/category&gt;
+  
+  &lt;!-- All DWR session information will be written here --&gt; 
+  &lt;category name="org.directwebremoting.log.session"&gt;
+     &lt;priority value="DEBUG"/&gt;
+     &lt;appender-ref ref="dwrLogFile" /&gt;
+  &lt;/category&gt;
+  
+  &lt;!-- All other messages will be written here, including exceptions internal to DWR --&gt;
+  &lt;root&gt;
+    &lt;priority value="DEBUG" /&gt; 
+    &lt;appender-ref ref="otherFile" /&gt;
+  &lt;/root&gt;
+
+&lt;/log4j:configuration&gt;
+</pre>
+
+<p>See the <a href="http://logging.apache.org/log4j/docs/documentation.html" target="new">log4j documentation</a> for more details.</p>
+
+<h3>Configuring java.util.logging for DWR</h3>
+
+<p>See the <a href="http://java.sun.com/j2se/1.4.2/docs/guide/util/logging/overview.html" target="new">java.util.logging documentation</a> for more details.</p>
+
+</body>
+</html>
