@@ -1,0 +1,299 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <title>engine.js</title>
+  <meta name='alias' content='/dwr/browser/engine'>
+  <link rel="stylesheet" type="text/css" href="../../../media/styles.css">
+</head>
+<body>
+
+<h1>engine.js Functions</h1>
+
+<p><code>engine.js</code> is vital to DWR since it is used to marshal calls from the dynamically generated interface JavaScript function, so it is needed wherever DWR is used.</p>
+
+<p>All engine.js functions have the <code>dwr.engine</code> prefix.</p>
+
+<p>The engine.js file</p>
+<p>All DWR pages need the following script element to import the main DWR engine.</p>
+
+<pre>
+&lt;script type='text/javascript'
+    src='/<i>[YOUR-WEB-APP]</i>/dwr/engine.js'&gt;
+&lt;/script&gt;
+</pre>
+
+<h2>Using the options</h2>
+
+<p>These options may be set globally using a dwr.engine.setX() function. For example:</p>
+
+<pre>dwr.engine.setTimeout(1000);</pre>
+
+<p>Or at a call level (Assume Remote is exported by DWR):</p>
+
+<pre>
+Remote.singleMethod(params, {
+  callback:function(data) { ... },
+  timeout:2000
+});
+</pre>
+
+<p>Remote calls can be <a href="batch.html">batched together</a> to reduce latency. Options can also be set on the <code>endBatch()</code> method:</p>
+
+<pre>
+dwr.engine.beginBatch();
+Remote.methodInBatch1(params, callback1);
+Remote.methodInBatch2(params, callback2);
+dwr.engine.endBatch({
+  timeout:3000
+});
+</pre>
+
+<p>It is possible to mix these styles, in which case call or batch level settings override global settings (as you would expect). When if you set an option several times in a batch, the last setting is taken. So if the <code>Remote.singleMethod()</code> example above was included in the batch, a timeout of 3000ms would be used for the batch.</p>
+
+<p>2 of the options, callback and exceptionHandler, are always specific to a call and not to a batch.</p>
+
+<p>2 of the options, preHook and postHook, are additive, that is you can have multiple hooks per call. The global preHook is called before the batch and call preHooks. The global postHook is called after the call and batch postHooks.</p>
+
+<p>If all of this sounds confusing then don't worry. DWR is designed to do what you expect, so it should not be complex.</p>
+
+<h2>Option index</h2>
+
+<p>The following options are available.</p>
+
+<table class="documentation">
+	<tr>
+		<th>Option</th>
+		<th>Global</th>
+		<th>Batch</th>
+		<th>Call</th>
+		<th>Summary</th>
+	</tr>
+
+	<tr>
+		<td><a href="options.html">async</a></td>
+		<td>1.1</td>
+		<td>1.1</td>
+		<td>1.1</td>
+		<td>Set to <code>false</code> for asynchronous behaviour (not
+		recommended).</td>
+	</tr>
+
+	<tr>
+		<td>headers</td>
+		<td>2.0</td>
+		<td>2.0</td>
+		<td>2.0</td>
+		<td>Extra headers to add to XHR calls.</td>
+	</tr>
+
+	<tr>
+		<td>attributes</td>
+		<td>3.0</td>
+		<td>-</td>
+		<td>-</td>
+		<td>Meta-data that is made available through <code>request.getAttribute(attrName).</code></td>
+	</tr>
+
+	<tr>
+		<td><a href="errors.html">timeout</a></td>
+		<td>1.0</td>
+		<td>1.1</td>
+		<td>1.1</td>
+		<td>Cancel request after X ms.</td>
+	</tr>
+
+	<tr>
+		<th colspan="5">Handlers</th>
+	</tr>
+
+	<tr>
+		<td><a href="../errors.html">errorHandler</a></td>
+		<td>1.0</td>
+		<td>1.1</td>
+		<td>1.1</td>
+		<td>Action when something is broken.</td>
+	</tr>
+
+	<tr>
+		<td><a href="../errors.html">warningHandler</a></td>
+		<td>1.0</td>
+		<td>2.0</td>
+		<td>2.0</td>
+		<td>Action when something breaks which can be triggered by
+		browser bugs, so by default this is set to null (turned off).</td>
+	</tr>
+
+	<tr>
+		<td><a href="../errors.html">textHtmlHandler</a></td>
+		<td>2.0</td>
+		<td>2.0</td>
+		<td>2.0</td>
+		<td>Action when an unexpected text/html page is received (usually
+		indicates session timeout).</td>
+	</tr>
+	<tr>
+		<th colspan="5">Call Handlers <span class="note">(Registered
+		for individual calls not all calls in a batch).</span></th>
+	</tr>
+
+	<tr>
+		<td><a href="../../../introduction/scripting-dwr.html">callback</a></td>
+		<td>-</td>
+		<td>-</td>
+		<td>1.0</td>
+		<td>Executed on successful call completion with a single
+		parameter; the returned data.</td>
+	</tr>
+
+	<tr>
+		<td><a href="../../../introduction/scripting-dwr.html">callbackHandler</a></td>
+		<td>-</td>
+		<td>-</td>
+		<td>3.0</td>
+		<td>Synonymous with callback to match exceptionHandler.</td>
+	</tr>
+
+	<tr>
+		<td><a href="../errors.html">exceptionHandler</a></td>
+		<td>-</td>
+		<td>-</td>
+		<td>2.0</td>
+		<td>Executed when a remote call fails either due to a server
+		exception or a data marshalling problem.</td>
+	</tr>
+
+	<tr>
+		<td><a href="../extra-data.html">arg</a></td>
+		<td>-</td>
+		<td>-</td>
+		<td>3.0</td>
+		<td>A default argument to pass to the callbackHandler and
+		exceptionHandler.</td>
+	</tr>
+
+	<tr>
+		<td><a href="../extra-data.html">callbackArg&nbsp</a></td>
+		<td>-</td>
+		<td>-</td>
+		<td>3.0</td>
+		<td>An argument to pass to the callbackHandler. If specified
+		overrides arg.</td>
+	</tr>
+
+	<tr>
+		<td><a href="../extra-data.html">exceptionArg</a></td>
+		<td>-</td>
+		<td>-</td>
+		<td>3.0</td>
+		<td>An argument to pass to the exceptionHandler. If specified
+		overrides arg.</td>
+	</tr>
+
+	<tr>
+		<td><a href="../extra-data.html#scope">scope</a></td>
+		<td>-</td>
+		<td>-</td>
+		<td>3.0</td>
+		<td>The scope in which the callbackHandler and exceptionHandler
+		will be executed. Default is window.</td>
+	</tr>
+
+	<tr>
+		<td><a href="../extra-data.html#scope">callbackScope&nbsp</a></td>
+		<td>-</td>
+		<td>-</td>
+		<td>3.0</td>
+		<td>The scope in which the callbackHandler will be executed. If
+		specified overrides scope.</td>
+	</tr>
+
+	<tr>
+		<td><a href="../extra-data.html#scope">exceptionScope</a></td>
+		<td>-</td>
+		<td>-</td>
+		<td>3.0</td>
+		<td>The scope in which the exceptionHandler will be executed. If
+		specified overrides scope.</td>
+	</tr>
+
+
+	<tr>
+		<th colspan="5">Hooks <span class="note">(Multiple hooks
+		can be registered per batch).</span></th>
+	</tr>
+
+	<tr>
+		<td><a href="hooks.html">preHook</a></td>
+		<td>1.0</td>
+		<td>1.1</td>
+		<td>1.1</td>
+		<td>Function called just before the remote call.</td>
+	</tr>
+
+	<tr>
+		<td><a href="hooks.html">postHook</a></td>
+		<td>1.0</td>
+		<td>1.1</td>
+		<td>1.1</td>
+		<td>Function called just after the remote call.</td>
+	</tr>
+
+	<tr>
+		<th colspan="5">Global Options <span class="note">(Not
+		available at a call or batch level).</span></th>
+	</tr>
+
+	<tr>
+		<td><a href="ordering.html">ordered</a></td>
+		<td>1.0</td>
+		<td>-</td>
+		<td>-</td>
+		<td>true if DWR should provide ordering guarantees.</td>
+	</tr>
+
+	<tr>
+		<td>activeReverseAjax</td>
+		<td>2.0</td>
+		<td>-</td>
+		<td>-</td>
+		<td>Should we be looking for inbound calls.</td>
+	</tr>
+
+	<tr>
+		<td>maxRetries</td>
+		<td>3.0 RC2</td>
+		<td>-</td>
+		<td>-</td>
+		<td>For reverse AJAX calls. The number of times we should
+		re-attempt failed calls after DWR has went offline.  Defaults to -1, unlimited.</td>
+	</tr>
+
+	<tr>
+		<td><a name="retryIntervals"></a>retryIntervals[]</td>
+		<td>3.0 RC2</td>
+		<td>-</td>
+		<td>-</td>
+		<td>For reverse AJAX calls. An array specifying the default time
+		between retries (in seconds). Defaults to: <br>
+		[ 1, 1, 10 ]<br>
+		<br>retryIntervals.length - 1 = The number of retry attempts until DWR is offline.<br><br>retryIntervals[retryIntervals.length - 1] = The interval used to poll the server while DWR is offline.<br><br>
+		In this case the first retry will occur in 1 second and the second retry
+		will occur in 1 second - DWR will be offline if both of these retries are unsuccessful.  While DWR is offline we will continue to poll for server status every 10 seconds until maxRetries is reached.  When DWR goes offline or online <a href="#pollStatusHandler">pollStatusHandler</a> will be called.</td>
+	</tr>
+    <tr>
+		<td><a name="pollStatusHandler"></a>pollStatusHandler</td>
+		<td>3.0 RC2</td>
+		<td>-</td>
+		<td>-</td>
+		<td>Function to call when the server comes online or offline.  For reverse Ajax polling.</td>
+	</tr>
+</table>
+
+<h2>Guaranteed Responses</h2>
+
+<p>DWR aims to be able to tell you exactly what happened to all calls. Given the existence of browser bugs this can be tricky in places.</p>
+
+<p>If you set a callback, exceptionHandler, errorHandler, warningHandler and textHtmlHandler then DWR should always give you a response for each request.</p>
+
+</body>
+</html>

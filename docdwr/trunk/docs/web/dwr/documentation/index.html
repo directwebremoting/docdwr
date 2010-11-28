@@ -1,0 +1,98 @@
+<!DOCTYPE html>
+<html><head>
+  <title>Documentation Index</title>  
+  <meta name="weight" content="4">  
+  <meta name="alias" content="/dwr/documentation">  
+  <meta name="navTitle" content="Documentation">  
+  <link rel="stylesheet" type="text/css" href="../media/styles.css">
+</head><body>
+<h1>Documentation Index</h1>
+
+<p>On this site, there are a number of documents to help you get
+started with DWR:</p>
+
+<ul>
+
+  <li>The <a href="../introduction/index.html">overview of what DWR does</a>.</li>
+  
+  <li>A basic <a href="../introduction/getting-started.html">getting
+started</a> guide (Your first DWR page).</li>
+  <li>An introduction to <a href="../introduction/scripting-dwr.html">writing
+JavaScript that calls DWR</a> (Your second DWR page).</li>
+  <li>Some <a href="../introduction/tutorials.html">examples</a> to
+demonstrate basic functionality.</li>
+  <li>A <a href="../support/faqs.html">page containing answers to common
+questions pulled from our mailing list</a>.</li>
+  <li>A list of <a href="../support/common_problems.html">troubleshooting
+advice and common errors and how to fix them</a>.</li>
+</ul>
+
+<p>Outside of this site there is a growing collection of <a href="../introduction/elsewhere.html">tutorials from around the web</a>.</p>
+
+<h1><a href="server/index.html">Configuring the Server</a></h1>
+
+<p>There are various different ways to configure DWR depending on how
+you like to work:</p>
+
+<ul>
+
+  <li>The <a href="server/configuration/servlet/index.html">WEB-INF/web.xml</a>
+configuration options will be useful to all DWR users</li>
+  <li>Many people declare what to export using <a href="server/configuration/dwrxml/index.html">dwr.xml</a>. We also have more
+detailed documentation on:
+    <ul>
+      <li><a href="server/configuration/dwrxml/creators/index.html">Creators</a>, <a href="server/configuration/dwrxml/converters/index.html">Converters</a> and <a href="server/configuration/dwrxml/signatures.html">Signatures</a></li>
+    </ul>
+  </li>
+  <li><a href="server/configuration/annotations.html">Annotations</a> are available
+from 2.0, if you don't want to use an XML configuration file</li>
+  <li>Spring 2.0 users can configure DWR using <a href="server/integration/spring.html">Spring</a> Namespaces</li>
+  <li>It is also possible to configure DWR using the <a href="server/configuration/fluent.html">Fluent Configurator</a></li>
+</ul>
+
+<p><a href="reverse-ajax/index.html">Reverse Ajax</a> in DWR 2.0 needs <a href="reverse-ajax/configuration.html">careful configuration</a> to
+work around the various network problems that can arise. Reverse Ajax
+is Comet + Polling + Piggyback. See the <a href="reverse-ajax/index.html">reverse ajax</a> documentation for more
+details.</p>
+
+<p>DWR integrates with many external libraries like Struts, JSF,
+Webwork, Rife and so on. See the section on <a href="server/integration/index.html">integration</a> for more details.</p>
+
+<h1><a href="browser/index.html">Scripting the Browser</a></h1>
+
+<p>The <a href="../introduction/scripting-dwr.html">scripting introduction</a>
+gets you started with how to write JavaScript code to call your Java
+code. DWR comes with some small JavaScript libraries to help you:</p>
+
+<ul>
+
+  <li><a href="browser/engine/index.html">engine.js</a>: Handles all
+server communication</li>
+  <li><a href="browser/util/index.html">util.js</a>: Helps you alter
+web pages with the data you got from the server (and a few neat extras
+too)</li>
+</ul>
+
+<p>DWR is not a generic JavaScript library so we try to steer clear of
+functions that are not specific to remoting functionality, however
+there are a few functions that sneak into util.js to make life a lot
+easier.</p>
+
+<p>It is common to need to <a href="browser/extra-data.html">pass
+extra data to callback methods</a> and there is also a reference to how
+to <a href="browser/errors.html">handle errors</a> too.</p>
+
+
+<ul>
+
+  <li>How to write <a href="security/index.html">secure</a> code with
+DWR</li>
+  <li>The <a href="browser/support.html">supported browsers</a></li>
+  <li>The <a href="server/environment.html">supported environments</a></li>
+  <li>How to <a href="../downloads/upgrading/index.html">upgrade from
+older versions of DWR</a></li>
+  <li>There is also a small collection of <a href="server/index.html">generated
+documents</a> from things like JavaDoc.</li>
+</ul>
+
+</body></html>

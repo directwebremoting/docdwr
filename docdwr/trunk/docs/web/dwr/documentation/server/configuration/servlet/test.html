@@ -1,0 +1,28 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <title>Test Mode</title>
+  <meta name='alias' content='/dwr/server/servlet/test'>
+  <link rel="stylesheet" type="text/css" href="../../../../media/styles.css">
+</head>
+<body>
+
+<h1>Using debug/test mode</h1>
+
+<p>You put DWR into debug/test mode by adding the following parameter:</p>
+
+<pre>
+&lt;init-param&gt;
+  &lt;param-name&gt;debug&lt;/param-name&gt;
+  &lt;param-value&gt;true&lt;/param-value&gt;
+&lt;/init-param&gt;
+</pre>
+
+<p>DWR will generate test pages for each of the allowed classes (see dwr.xml below) in debug mode. These can be very useful in seeing what DWR can do and how it works. This mode can also alert you to problems like javascript reserved word clashes.</p>
+
+<p>However this mode should not be used in live deployment as it could give an attacker a lot of information about the services that you export. If you have designed your website properly then this extra information will not help an attacker exploit your website however it is generally wise not to give anyone a route map to exploit any mistakes you might have made. </p>
+
+<p>DWR is provided 'as is', without any warranty, so the security of your website is your responsibility. Please take care to keep it secure.</p>
+
+</body>
+</html>

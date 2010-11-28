@@ -1,0 +1,47 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <title>Remoting Options</title>
+  <meta name='alias' content='/dwr/browser/engine/options'>
+  <link rel="stylesheet" type="text/css" href="../../../media/styles.css">
+</head>
+<body>
+
+<h1>Remoting Options</h1>
+
+<p>There are a number of options on how remoting is handled by DWR, the method and verb should be transparent to the user, but might have different browser side-effects. Generally speaking DWR will pick the right method for you, but these options might be useful to get around unwanted browser side effects.</p>
+
+<h2>dwr.engine.setAsync(flag)</h2>
+
+<p>Supported by DWR 1.1 and above.</p>
+
+<p>Do we ask the XHR object to be asynchronous? The default is true. Warning: This option will be ignored if you are using IFrame or ScriptTag remoting (see below) and is often generally a bad idea to change it to false because it can make your browser slow to respond.</p>
+
+<p>To set the synchronisity on a global level:</p>
+
+<pre>
+dwr.engine.setAsync(true);
+</pre>
+
+<p>Or to set it on a call level:</p>
+
+<pre>
+Remote.method(params, {
+  callback:function(data) { ... },
+  async:true
+});
+</pre>
+
+<p>Or to set it on a batch level:</p>
+
+<pre>
+dwr.engine.beginBatch();
+Remote.method1(params, callback1);
+Remote.method2(params, callback2);
+dwr.engine.endBatch({
+  async:true
+});
+</pre>
+
+</body>
+</html>

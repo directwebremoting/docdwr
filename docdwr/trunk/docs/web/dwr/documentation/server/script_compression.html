@@ -1,0 +1,22 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <title>Script Compression</title>
+  <meta name='weight' content='8'>
+  <meta name='alias' content='/dwr/server/script_compression'>
+  <link rel="stylesheet" type="text/css" href="../../media/styles.css">
+</head>
+<body>
+
+<h1>Script Compression</h1>
+   When not in debug mode (<a href="configuration/servlet/index.html">debug init-param</a> not set or set to false) DWR will automatically detect the <a href="http://developer.yahoo.com/yui/compressor">Yahoo Compressor Jar</a> and the <a href="http://o.dojotoolkit.org/docs/shrinksafe"> Shrinksafe Jar</a> in the classpath and use them for script compression if available.  <p>You may also create and plugin in your own Compressor by implementing the org.directwebremoting.extend.Compressor interface and configuring your web.xml to use it:</p>  
+   <pre>&lt;init-param&gt;
+    &lt;param-name&gt;org.directwebremoting.extend.Compressor&lt;/param-name&gt;
+    &lt;param-value&gt;com.example.Compressor&lt;/param-value&gt;
+&lt;/init-param&gt;</pre>
+    It's also worth checking out <a href="https://jawr.dev.java.net/">JAWR</a> which includes <a href="https://jawr.dev.java.net/integration/dwr.html">DWR integration</a>. JAWR is a packaging and compressing library for serving JavaScript and CSS.</h1>
+
+
+
+</body>
+</html>

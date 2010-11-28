@@ -1,0 +1,21 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <title>Call Ordering</title>
+  <meta name='alias' content='/dwr/browser/engine/ordering'>
+  <link rel="stylesheet" type="text/css" href="../../../media/styles.css">
+</head>
+<body>
+
+<h1>Call Ordering</h1>
+
+<p>Since AJAX is a normally asynchronous model remote calls may not return in the order in which they were sent. <code>dwr.engine.setOrdered(boolean)</code> Allows you to request that all replies are made in the strict order that they were sent. DWR achieves this by only sending new requests when old requests have been completed.</p>
+
+<p>Do we attempt to ensure that remote calls happen in the order in which they were sent? (Default: false)</p>
+
+<p><b>Warning</b>: Setting this to true will slow down your application, and could leave users with an unresponsive browser if a message gets lost. Sometimes there are better solutions where you make your application use the asynchronous model properly. Please think before you use this method.</p>
+
+<!--break-->
+
+</body>
+</html>
