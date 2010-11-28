@@ -157,7 +157,7 @@ public class Generate
             {
                 out.print("Redirect ");
                 out.print(alias);
-                out.print(" /");
+                out.print(" /dwr/");
                 out.print(page.path);
                 out.println();
             }
