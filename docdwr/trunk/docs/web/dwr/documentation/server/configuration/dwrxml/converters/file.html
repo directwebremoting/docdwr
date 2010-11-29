@@ -35,7 +35,16 @@ The FileUpload implementation used by DWR is also <a href="../../servlet/plugin.
      &lt;param-value>your.package.YourFileUploadImpl&lt;/param-value&gt;
     &lt;/init-param&gt;</pre>
 <h1>Examples in the DWR.war</h1>
-<p>The DWR war file contains a number of examples of generating PDF files, as well as uploading and downloading images. Full source and explanations are included with these examples.</p>
+<p>The DWR war file contains an example of generating PDF files, as well as uploading and downloading images. Full source and explanations are included with these examples.</p>
+<h1>A note about your environment</h1>
+<p>It is important to note that servers running in production modes may not have access to the java.awt classes - making the use of DWR's upload feature limited (cannot upload images).  An example of this is Tomcat running in server mode:
+<pre>
+JAVA_OPTS="-server ... "
+</pre>
+<p>If Tomcat is configured to run with the preceding JAVA_OPTS uploading an image with DWR will fail with a marshalling error (as the AWT classes are not available).</p>
+<p>The only way we have found to resolve this is by not running Tomcat in server mode (it defaults to client mode, so unless you specify -server everything should run smoothly).</p>
+<p>Other servers may have similar problems and if you are getting generic marshalling exceptions this is something to look for.  If you do find this problem please consult your server's documentation.</p>
 
+</p>
 </body>
 </html>
