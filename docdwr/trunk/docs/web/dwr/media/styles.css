@@ -55,7 +55,7 @@ table.noborder td { border:0; }
 #nav, #nav ul { list-style:none; }
 #nav a.currentLink { color:#933; }
 #nav a { display:block; white-space: nowrap; overflow: visible; text-decoration:none; border:0; padding:0 0.1em; color:#aaa; }
-#nav ul { margin-left:2em; padding:0; }
+#nav ul { margin-left:1em; padding:0; }
 
 #nav.hovered { overflow:visible; opacity:0.90; width:auto; background:#f8f8f8; border:1px solid #ddd; }
 #nav.hovered a { color:#666; }
