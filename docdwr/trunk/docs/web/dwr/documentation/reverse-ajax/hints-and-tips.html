@@ -33,68 +33,12 @@ ScriptSessionManager manager = container.getBean(ScriptSessionManager.class);
 
  
 <h2>One thread per application is scalable, one thread per request is not</h2>
-<p>Most reverse ajax implementations require a separate thread to push data to clients. Spawning a separate thread for each DWR request is not scalable, instead you should use a single thread for reverse ajax as illustrated below.  You can also use a thread pool, please see the Clock example in the dwr.war for a sample implementation.</p>
- 
-Eg:
-<pre>
-public class ReverseAjaxThread implements Runnable
-{
-   private static ReverseAjaxThread INSTANCE;
-
-   private Set<ScriptSession> scriptSessions = new HashSet<ScriptSession>();
-
-   public synchronized ReverseAjaxThread getInstance()
-   {
-       if (INSTANCE == null)
-       {
-           INSTANCE = new ReverseAjaxThread();
-           new Thread(INSTANCE).start();
-       }
-       return INSTANCE;
-   }
-
-   public void run()
-   {
-       while (true)
-       {
-           for (ScriptSession scriptSession : scriptSessions) {
-               Browser.withSession(scriptSession.getId(), new Runnable()
-               {
-                   public void run()
-                   {
-                       ScriptSessions.addFunctionCall("alert", "hello");
-                   }
-               });
-               try
-               {
-                   Thread.sleep(10000); // sleep for 10 seconds
-               }
-               catch (InterruptedException ie)
-               {
-                   Thread.currentThread().interrupt();
-               }
-           }
-       }
-   }
-
-   public synchronized void addScriptSession(ScriptSession scriptSession)
-   {
-       // use a copy so that code reading from scriptSessions does not need to be synchronized
-       Set<ScriptSession> scriptSessionsCopy = new HashSet<ScriptSession>(scriptSessions);
-       scriptSessionsCopy.add(scriptSession);
-       scriptSessions = scriptSessionsCopy;
-   }
-}
-</pre> 
- 
+<p>Most reverse ajax implementations require a separate thread to push data to clients. Spawning a separate thread for each DWR request is not scalable.  We recommend that you use a thread pool in combination with an application scoped DWR creator, please see the Clock example in the dwr.war for a sample implementation.</p>
+  
 <h2>Differentiating ScriptSessions by attributes</h2>
 <p>One of the most common ways to differentiate users on the same page is by setting attributes on the script session and getting them in a reverse ajax thread. Since the script session does not exist until engine.js is included this cannot be done in an MVC controller or a JSP, please vote for this issue http://bugs.directwebremoting.org/bugs/browse/DWR-320 to resolve this.</p>
  
 <p>There are currently two best practices for populating the ScriptSession:</p>
-
-
-
-
 
 <p><b>1.</b> Call a remote DWR method:</p>
 <pre>
