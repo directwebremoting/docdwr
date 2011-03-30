@@ -87,7 +87,14 @@ public class Foo {
  
 <p>To use more sophisticated converters see the <code>converter</code> attribute of the <a href="http://directwebremoting.org/dwr/javadoc/org/directwebremoting/annotations/DataTransferObject.html">@DataTransferObject</a> annotation.   Here is an example that configures the Hibernate converter and tells DWR to exclude propertyToExclude from serialization.</p>
 <pre>
+// Standard Annotation Configuration
 @DataTransferObject(converter=H3BeanConverter.class,
+params = @Param(name = "exclude", value = "propertyToExclude"))  
+</pre>
+<p>Note: If you are using Spring you will need to use the type attribute:</p>
+<pre>
+// Spring Annotation Configuration
+@DataTransferObject(type="hibernate3",
 params = @Param(name = "exclude", value = "propertyToExclude"))  
 </pre>
 </body>
