@@ -10,6 +10,22 @@
 
 <h1>Bean and Object Converters</h1>
 
+<ul>
+	<li><a href="#overview">Overview</a></li>	
+	<li><a href="#beanSpec">BeanConverter and the JavaBeans Specification</a></li>
+	<li><a href="#parameters">Supplying parameters in calls from Javascript</a></li>
+	<li><a href="#restrictingPropertyConversion">Restricting Property Conversion</a></li>
+	<li><a href="#privateMembers">Private Members of Objects</a></li>
+	<li><a href="#mappingJavaToJavaScript">Mapping Java classes to JavaScript classes</a>
+	   <ul>
+	       <li><a href="#lightweightMapping">Mapping Java classes to JavaScript classes (Lightweight)</a></li>
+		   <li><a href="#interfacesAndAbstractClasses">Interfaces and Abstract Classes</a></li>		   
+	   </ul>
+	</li>
+	<li><a href="#jsWildcardExpansion">Javascript wildcard expansion</a></li>
+</ul>
+
+<h2><a name="overview"></a>Overview</h2>
 <p>Two converters that are not enabled by default are the Bean and Object converters. They will convert Java Beans and POJOs to and from JavaScript objects. These converters are not enabled by default because DWR makes sure that is has permission before it exposes any of your classes.</p>
 
 <p>The Bean converter will expose properties on your classes based upon getters and setters. The Object converter is similar except that it works on data members directly. All classes need to be concrete and have a default constructor, though non-concrete types (interfaces and abstract classes) may be used as method arguments when using the class mapping feature described later on this page. All the examples below work using 'object' in place of 'bean' to use direct member access.</p>
@@ -34,7 +50,7 @@
 &lt;convert converter="bean" match="com.example.**"/&gt;
 </pre>
 
-<h2>BeanConverter and the JavaBeans Spec.</h2>
+<h2><a name="beanSpec"></a>BeanConverter and the JavaBeans Specification</h2>
 
 <p>Beans converted using the BeanConverter need to follow the
  <a href="http://java.sun.com/products/javabeans/docs/spec.html">JavaBeans spec</a> 
@@ -47,7 +63,7 @@
  no overloading of setters. Mostly this is common sense, but it does trip some people 
  up. If your class does not follow the Java Bean specification then you need the ObjectConverter.</p>
 
-<h2>Supplying parameters in calls from Javascript</h2>
+<h2><a name="parameters"></a>Supplying parameters in calls from Javascript</h2>
 
 <p>Apart from converting Java objects into JavaScript objects (aka maps, aka 
 associative arrays) when returning data to the browser, DWR will convert Javascript 
@@ -104,7 +120,7 @@ Remoted.addToFriends(p);
 
 <p>Good security design commonly involves white-listing rather than black-listing.</p>
 
-<h2>Private Members of Objects</h2>
+<h2><a name="privateMembers"></a>Private Members of Objects</h2>
 
 <p>In addition to the parameters above the 'object' converter has a force parameter that instructs DWR to use reflection modifiers to access private members of objects.</p>
 
@@ -146,9 +162,9 @@ public class Employee extends Person {
 <p>Given the above declarations we can now make use of the feature from JavaScript:</p>
 
 <pre>
-var p = ... // get an Employee from the server
-p instanceof Employee // true
-Remoted.addToFriends(p);
+var person = ... // get an Employee from the server
+person instanceof Employee // true
+Remoted.addToFriends(person);
 </pre>
 
 <p>The code will result in p being assigned a JavaScript object instantiated from a 
@@ -161,18 +177,18 @@ behaviour based on addToFriends' argument type.</p>
 <p>It is also possible to create new instances from client code in the browser:</p>
 
 <pre>
-var p1 = new Person();
-var p2 = new Employee();
+var person1 = new Person();
+var person2 = new Employee();
 </pre>
 
 <p>It is worth noting that DWR does not set up inheritance between generated JavaScript
 classes, so <code>instanceof</code> tests will result in:</p>
 
 <pre>
-p1 instanceof Person // true
-p1 instanceof Employee // false
-p2 instanceof Person // false (unexpected!)
-p2 instanceof Employee // true
+person1 instanceof Person // true
+person1 instanceof Employee // false
+person2 instanceof Person // false (unexpected!)
+person2 instanceof Employee // true
 </pre>
 
 <p>This is solved by setting up Employee's prototype chain in JavaScript before the 
@@ -183,10 +199,42 @@ first objects are created:</p>
 Employee.prototype = new Person();
 Employee.prototype.constructor = Employee;
 ...
-p2 instanceof Person // true
+person2 instanceof Person // true
 </pre>
 
-<h3>Javascript wildcard expansion</h3>
+<h2><a name="lightweightMapping"></a>Mapping Java classes to JavaScript classes (Lightweight)</h2>
+
+<p>In the examples above DWR generates code in each generated interface script to allow the mapped types to be used from your JavaScript code.  In certain situations this may not be ideal (you have many mapped classes and do not want each interface script to have additional code) or required (you do not need to use the types from your JavaScript code).  In these cases you can use DWR's lightweight mapping ability.  First you need to configure DWR so it does not add the mapped classes to the interface scripts.  This can be done with the following init-param (specified in web.xml):
+<pre>
+  &lt;init-param&gt;
+    &lt;param-name>generateDtoClasses&lt;/param-name&gt;
+    &lt;param-value>&lt;/param-value&gt;
+  &lt;/init-param&gt;
+</pre>
+Next you need to set the $dwrClassName property on the JavaScript you are passing to your DWR remoted function:
+<pre>
+	var employee = {
+	  name: "Ralph",
+	  $dwrClassName: "Employee"
+	};	
+	Remoted.addToFriends(employee);
+</pre>
+Keep in mind that lightweight mapping also requires the "javascript" attribute to be set on your converter - see <a href="#mappingJavaToJavaScript">Mapping Java classes to JavaScript classes</a>.
+</p>
+
+<h3><a name="interfacesAndAbstractClasses"></a>Interfaces and Abstract Classes</h3>
+<p>The class mapping feature may also be used with interfaces and abstract 
+classes. Note though that a remoted method's argument types always have to be enabled
+for conversion, even when these types are non-concrete classes, otherwise DWR will
+not allow the data to pass through.</p>
+
+<p>The generated JavaScript classes are classic JavaScript prototype definitions
+that are included in every generated interface file. Thus, you do not have to
+include any additional files to benefit from the JavaScript classes but you may
+want to limit the number of classes you enable for class mapping as their definitions
+may be downloaded multiple times (once for each interface file).</p>
+
+<h3><a name="jsWildcardExpansion"></a>Javascript wildcard expansion</h3>
 
 <p>The javascript attribute of a converter will allow the * and ** wildcards. The * will map to the matched classes simple name while ** will be mapped to the fully qualified named. A few examples may help illustrate this feature:
 
@@ -205,18 +253,6 @@ Resulting JS identifier: model.BeanA
 </pre>
 Resulting JS identifier: foo.bar.BeanA
 </p>
-
-<h3>Interfaces and Abstract Classes</h3>
-<p>The class mapping feature may also be used with interfaces and abstract 
-classes. Note though that a remoted method's argument types always have to be enabled
-for conversion, even when these types are non-concrete classes, otherwise DWR will
-not allow the data to pass through.</p>
-
-<p>The generated JavaScript classes are classic JavaScript prototype definitions
-that are included in every generated interface file. Thus, you do not have to
-include any additional files to benefit from the JavaScript classes but you may
-want to limit the number of classes you enable for class mapping as their definitions
-may be downloaded multiple times (once for each interface file).</p>
 
 </body>
 </html>
