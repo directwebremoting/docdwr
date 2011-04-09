@@ -181,6 +181,8 @@ var person1 = new Person();
 var person2 = new Employee();
 </pre>
 
+<p>By default the JavaScript types will be available in all interface proxy scripts - see <a href="../../servlet/index.html#generateDtoClasses">this page for more configuration options.</p>
+
 <p>It is worth noting that DWR does not set up inheritance between generated JavaScript
 classes, so <code>instanceof</code> tests will result in:</p>
 
@@ -204,7 +206,7 @@ person2 instanceof Person // true
 
 <h2><a name="lightweightMapping"></a>Mapping Java classes to JavaScript classes (Lightweight)</h2>
 
-<p>In the examples above DWR generates code in each generated interface script to allow the mapped types to be used from your JavaScript code.  In certain situations this may not be ideal (you have many mapped classes and do not want each interface script to have additional code) or required (you do not need to use the types from your JavaScript code).  In these cases you can use DWR's lightweight mapping ability.  First you need to configure DWR so it does not add the mapped classes to the interface scripts.  This can be done with the following init-param (specified in web.xml):
+<p>In the examples above DWR generates code in each generated interface script to allow the mapped types to be used from your JavaScript code.  In certain situations this may not be ideal (you have many mapped classes and do not want each interface script to have additional code) or required (you do not need to use the types from your JavaScript code).  In these cases you can use DWR's lightweight mapping ability.  First you need to configure DWR so it does not add the mapped classes to the interface scripts.  This can be done with the following <a href="../../servlet/index.html#generateDtoClasses">init-param (specified in web.xml)</a>:
 <pre>
   &lt;init-param&gt;
     &lt;param-name>generateDtoClasses&lt;/param-name&gt;
