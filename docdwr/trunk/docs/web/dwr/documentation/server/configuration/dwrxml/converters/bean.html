@@ -181,7 +181,7 @@ var person1 = new Person();
 var person2 = new Employee();
 </pre>
 
-<p>By default the JavaScript types will be available in all interface proxy scripts - see <a href="../../servlet/index.html#generateDtoClasses">this page for more configuration options.</p>
+<p>All of this is possible because by default DWR will add the JavaScript types for each mapping to every interface proxy script - see <a href="../../servlet/index.html#generateDtoClasses">this page for more configuration options.</a></p>
 
 <p>It is worth noting that DWR does not set up inheritance between generated JavaScript
 classes, so <code>instanceof</code> tests will result in:</p>
