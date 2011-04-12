@@ -273,7 +273,8 @@ We increase the poll time to compensate and reduce the load.
 </td>
 <tr>
 <td valign="top">Notes:</td>
-<td>Controls whether or not DWR should generate script for class mappings - see <a href="../dwrxml/converters/bean.html#mappingJavaToJavaScript">Mapping Java classes to JavaScript classes</a>.  Defaults to interface which means DWR will add script for the mappings to each generated interface script.  To prevent DWR from generating script for mappings please set this parameter with an empty value.  Options include:<br><ul><li>interface - This is the default.  /dwr/interface/&lt;proxy&gt;.js all mapped classes
+<td>Controls whether or not DWR should generate script for class mappings - see <a href="../dwrxml/converters/bean.html#mappingJavaToJavaScript">Mapping Java classes to JavaScript classes</a>.  Defaults to interface which means DWR will add script for the mappings to each generated interface script.  A comma delimted list is allowed - interface, dto, dtoall will generate mapping script in all possible locations.
+To prevent DWR from generating script for mappings please set this parameter with an empty value.  Options include:<br><ul><li>interface - This is the default.  /dwr/interface/&lt;proxy&gt;.js all mapped classes
 will be included in each interface/proxy script.</li><li>dtoall - /dwr/dtoall.js all mapped classes will be included in a file named dtoall.js.</li><li>Single dto - dwr/dto/&lt;class&gt;.js includes a single mapped class.</li><li>Empty value - DWR will not generate script for mappings.</li></ul></td>
 </tr>
 
