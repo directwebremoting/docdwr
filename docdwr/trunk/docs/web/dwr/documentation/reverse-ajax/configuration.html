@@ -61,8 +61,6 @@ dwr.engine.setActiveReverseAjax(true);
 
 <p>Full Streaming mode  has the fastest response characteristics because it closes connections only once every 60 seconds or so to check that the browser is still active. Due to limitations Internet Explorer users are unable to use Full Streaming mode.  All Internet Explorer users will be automatically pushed to Early Closing mode.</p>
 
-<p>With a large number of connections held open, it is possible to thread starve an application server. Several web servers have a special mode to allow users to drop threads. DWR makes use of this functionality in Jetty from  version 2.0. DWR also attempts to protect all servers by dynamically reducing the connected time and increasing the disconnected time if the server load gets too high.</p>
-
 <p>The problem with full streaming is that it requires HTTP chunked mode which sometimes fails with network proxies, mod_jk, and other network scanners. If you try full streaming and find that messages are only getting through every 60 seconds, this could be why. </p>
 
 <p>To enable Full Streaming Mode in DWR, use the  maxWaitAfterWrite init-param with a -1 value:</p>
@@ -74,8 +72,15 @@ dwr.engine.setActiveReverseAjax(true);
 &lt;/init-param&gt;
 </pre>
 
-<p>DWR has special support for the Comet features in Jetty and Tomcat. The Jetty support is automatic, no special configuration is needed. For Tomcat you need to register a special version of the DwrServlet as follows:</p>
+<p>With a large number of connections held open, it is possible to thread starve an application server. Several web servers have a special mode to allow users to drop threads. DWR users also have the ability to create a ServerLoadMonitor implementation that can dynamically modify the disconnected time, etc. if the server load gets too high.  These features are discussed below.</p>
 
+<h3>Jetty</h3>
+
+<p>DWR makes use of Jetty Continuations from version 2.0.  The Jetty support is automatic, no special configuration is needed. </p>
+
+<h3>Tomcat</h3>
+<p><b>Note:</b>This feature is not currently working.  Please see/watch <a href="http://directwebremoting.org/jira/browse/DWR-143">DWR-143</a> for updates.</p>
+<p>For Tomcat you need to register a special version of the DwrServlet as follows:</p>
 <pre>
 &lt;servlet&gt;
   &lt;servlet-name&gt;dwr-invoker&lt;/servlet-name&gt;
@@ -88,6 +93,20 @@ dwr.engine.setActiveReverseAjax(true);
 <pre>
 &lt;Connector connectionTimeout="20000" port="8181"
    protocol="org.apache.coyote.http11.Http11NioProtocol" redirectPort="8443"/&gt;
+</pre>-->
+
+<h3>ServerLoadMonitor</h3>
+<p>DWR also provides a mechanism for you to create your own implementation of <a href="http://directwebremoting.org/dwr/javadoc/org/directwebremoting/extend/ServerLoadMonitor.html">ServerLoadMonitor</a> which can adjust disconnected time, etc. based on server load.  Plugging in a custom ServerLoadMonitor requires a web.xml init-param:</p>
+
+<pre>
+&lt;servlet&gt;
+  &lt;servlet-name&gt;dwr-invoker&lt;/servlet-name&gt;
+  &lt;servlet-class&gt;org.directwebremoting.servlet.DwrServlet&lt;/servlet-class&gt;
+  &lt;init-param&gt;
+    &lt;param-name&gt;org.directwebremoting.extend.ServerLoadMonitor&lt;/param-name&gt;
+    &lt;param-value&gt;com.example.MyCustomServerLoadMonitor,com.example.MyCustomServerLoadMonitor&lt;/param-value&gt;
+  &lt;/init-param&gt;
+&lt;/servlet&gt;
 </pre>
 
 <h2><a name="polling"></a>Polling Mode</h2>
