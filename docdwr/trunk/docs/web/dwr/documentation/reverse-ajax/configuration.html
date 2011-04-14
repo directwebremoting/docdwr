@@ -72,7 +72,7 @@ dwr.engine.setActiveReverseAjax(true);
 &lt;/init-param&gt;
 </pre>
 
-<p>With a large number of connections held open, it is possible to thread starve an application server. Several web servers have a special mode to allow users to drop threads. DWR users also have the ability to create a ServerLoadMonitor implementation that can dynamically modify the disconnected time, etc. if the server load gets too high.  These features are discussed below.</p>
+<p>With a large number of connections held open, it is possible to thread starve an application server. Several web servers have a special mode to allow users to drop threads. DWR users also have the ability to create and plug-in a ServerLoadMonitor implementation that can dynamically modify the disconnected time, etc. if the server load gets too high.  These features are discussed below.</p>
 
 <h3>Jetty</h3>
 
@@ -93,7 +93,7 @@ dwr.engine.setActiveReverseAjax(true);
 <pre>
 &lt;Connector connectionTimeout="20000" port="8181"
    protocol="org.apache.coyote.http11.Http11NioProtocol" redirectPort="8443"/&gt;
-</pre>-->
+</pre>
 
 <h3>ServerLoadMonitor</h3>
 <p>DWR also provides a mechanism for you to create and plug-in your own implementation of <a href="http://directwebremoting.org/dwr/javadoc/org/directwebremoting/extend/ServerLoadMonitor.html">ServerLoadMonitor</a> which can adjust disconnected time, etc. based on server load.  Plugging in a custom ServerLoadMonitor requires a web.xml init-param:</p>
