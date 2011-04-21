@@ -22,6 +22,8 @@ h3 { font-size:105%; }
 h4 { font-size:100%; }
 th { font-size:100%; }
 
+#content { margin-top: 46px; }
+
 tt, pre { font-family:'Courier New',monospace; white-space:pre-wrap; line-height:1; color:#336; font-size:90%; }
 
 pre {
