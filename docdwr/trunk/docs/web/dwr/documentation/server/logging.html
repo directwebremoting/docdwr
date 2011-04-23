@@ -17,11 +17,10 @@
 // Suppose the remoteMe method is exposed to DWR, and called<br>// through the browser.  Also assume this method invocation results<br>// in a MyBusinessException being thrown.<br><br>public String remoteMe() throws MyBusinessException {<br>  // Whatever is here throws MyBusinessException<br>}</pre>In this situation MyBusinessException is an &quot;application&quot; exception  and DWR will not log the exception/error regardless of the severity.<br><br>   Contrary to &quot;application&quot; exceptions/errors DWR will always log exceptions thrown/caught by DWR internals (Conversion exceptions, Creator exceptions, etc.) at a level dependent of their severity (DEBUG, INFO, WARN, etc.).  <br><h2>Logging Configuration</h2>DWR's default logging policy can be configured by an init-param  (accessLogLevel) on the DWR servlet (declared in your web.xml).<pre>
 ...
 &lt;servlet&gt;
-    &lt;servlet-name&gt;dwr-invoker&lt;/servlet-name&gt;
     &lt;display-name&gt;DWR Servlet&lt;/display-name&gt;
+    &lt;servlet-name&gt;dwr-invoker&lt;/servlet-name&gt;    
     &lt;description&gt;Direct Web Remoter Servlet&lt;/description&gt;
-    &lt;servlet-class&gt;org.directwebremoting.servlet.DwrServlet&lt;/servlet-class&gt;
-    
+    &lt;servlet-class&gt;org.directwebremoting.servlet.DwrServlet&lt;/servlet-class&gt;    
     &lt;init-param&gt;
       &lt;param-name&gt;accessLogLevel&lt;/param-name&gt;
       &lt;param-value&gt;EXCEPTION&lt;/param-value&gt;
