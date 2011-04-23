@@ -47,7 +47,7 @@ manually - DWR's server engine handles this.<br>
 In order to enable JSON/JSONP you must
 add the jsonpEnabled init-param to your DWR servlet definition in your
 web.xml.&nbsp; This parameter activates the JSON/JSONP service.
-<pre><code>   ...<br>  &lt;servlet&gt;<br>    &lt;servlet-name&gt;dwr-invoker&lt;/servlet-name&gt;<br>    &lt;display-name&gt;DWR Servlet&lt;/display-name&gt;<br>    &lt;description&gt;Direct Web Remoter Servlet&lt;/description&gt;<br>    &lt;servlet-class&gt;org.directwebremoting.servlet.DwrServlet&lt;/servlet-class&gt;<br>    &lt;init-param&gt;<br>     &lt;param-name&gt;jsonpEnabled&lt;/param-name&gt;<br>     &lt;param-value&gt;true&lt;/param-value&gt;<br>    &lt;/init-param&gt;<br>    ...	    </code></pre>
+<pre><code>   ...<br>  &lt;display-name&gt;DWR Servlet&lt;/display-name&gt;<br> &lt;servlet&gt;<br>    &lt;servlet-name&gt;dwr-invoker&lt;/servlet-name&gt;<br>        &lt;description&gt;Direct Web Remoter Servlet&lt;/description&gt;<br>    &lt;servlet-class&gt;org.directwebremoting.servlet.DwrServlet&lt;/servlet-class&gt;<br>    &lt;init-param&gt;<br>     &lt;param-name&gt;jsonpEnabled&lt;/param-name&gt;<br>     &lt;param-value&gt;true&lt;/param-value&gt;<br>    &lt;/init-param&gt;<br>    ...	    </code></pre>
 
 <h2>JSON/JSONP URL construction</h2>
 
