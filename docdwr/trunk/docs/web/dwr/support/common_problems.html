@@ -22,7 +22,8 @@
     <li>General Tips</li>
     <ol>
         <li><a href="#server_logs">Use the server logs</a></li>
-        <li><a href="#firebug">Debug your JavaScript</a> and if not available use <a href="to_descriptive_string">toDescriptiveString.</a></li>
+		<li><a href="#jsDebugging">Debug your JavaScript</a></li>
+        <li><a href="#firebug">Debugging with Firebug</a> and if not available use <a href="to_descriptive_string">toDescriptiveString.</a></li>
         <li>Use an <a href="debugging_proxies">HTTP Debugging proxy/Sniffer</a> to examine the request/response.</li>
     </ol>
     <li>If all else fails?  Search for your issue on the <a href="index.html#mailing_lists">DWR users mailing list</a>, if you can't find a solution send a message to the mailing list.  Make sure you include all of the information you have gathered from your troubleshooting!</li>
@@ -104,8 +105,9 @@ classpath will result in the following error:
 </pre>
 The logs are there for a reason -- use them. Many times reading the
 logs will guide you to a quick solution.
-<h3><a name="firebug"></a>Debugging with
-Firebug/IE or dwr.util.toDescriptiveString</h3>
+<h3><a name="jsDebugging"></a>JavaScript Debugging</h3>
+<p>Many modern web browsers have enhanced JavaScript debugging tools.  When encountering problems in a web browser it is recommended to first check your browsers error console (in Firefox: Tools -> Error Console).  If you see problems in the console you can discover more about the problem by using the browsers debugging features.</p>
+<h3><a name="firebug"></a>Debugging with Firefox/Firebug</h3>
 <p>Firebug is an invaluable tool when you are having
   problems with your DWR application and need to inspect what you are
   sending to or receiving from DWR. Firebug is an add-on for Firefox that
@@ -117,8 +119,8 @@ Firebug/IE or dwr.util.toDescriptiveString</h3>
 <p>You can learn more about Firebug and download it on the <a href="http://getfirebug.com/" target="new">Firebug
 site</a>. If you would like to use Firebug with a browser other
 than Firefox take a look at <a href="http://getfirebug.com/lite.html" target="new">Firebug
-Lite.</a></p><p>Newer versions of Internet Explorer also have enhanced JavaScript debugging.</p><h3><a name="to_descriptive_string"></a>dwr.util.toDescriptiveString</h3>
-<p> If for some reason you cannot use Firebug or a more recent version of IE the
+Lite.</a></p><h3><a name="to_descriptive_string"></a>dwr.util.toDescriptiveString</h3>
+<p> If for some reason you cannot use Firebug or you are having problems in an older browser that does not offer debugging tools the
   dwr.util.toDescriptiveString function will allow you to display the
   JavaScript objects you are sending to or receiving from DWR. This
   function is located in DWR's util.js and you must include this file in
