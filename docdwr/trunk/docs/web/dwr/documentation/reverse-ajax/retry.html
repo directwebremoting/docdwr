@@ -10,7 +10,7 @@
 
 <p>DWR has built in retry logic for reverse AJAX calls.  The first failure will result in the errorHandler being called then the retry logic will be initiated.  There are three properties in <a href="../browser/engine/index.html"/>engine.js that apply:
 <ol>
-   <li><b><a href="../browser/engine/index.html#"/>maxRetries</a> (dwr.engine.setMaxRetries)</b> - The number of times we should re-attempt failed calls after DWR has went offline. Defaults to -1, unlimited.</li>
+   <li><b><a href="../browser/engine/index.html#maxRetries"/>maxRetries</a> (dwr.engine.setMaxRetries)</b> - The number of times we should re-attempt failed calls after DWR has went offline. Defaults to -1, unlimited.</li>
    <li><b><a href="../browser/engine/index.html#retryIntervals"/>retryIntervals</a> (dwr.engine.setRetryIntervals)</b> - An array specifying the default time between retries (in seconds). Defaults to: [ 1, 1, 10 ]
 <ol><li>retryIntervals.length - 1 = The number of retry attempts until DWR is offline.</li>
 <li>retryIntervals[retryIntervals.length - 1] = The interval used to poll the server while DWR is offline.</li></ol>
