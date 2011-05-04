@@ -16,9 +16,13 @@
 <p>If you call the following javascript function:</p>
 <pre>dwr.engine.setNotifyServerOnPageUnload(true);</pre>
 
-<p>A remote DWR call will be made to the ScriptSessionManager when the page is unloaded, informing it to invalidate the script session. By default, ScriptSessions will be invalidated using a timeout strategy.</p>
+<p>A remote DWR call will be made to the ScriptSessionManager when the page is unloaded, informing it to invalidate the script session. By default DWR makes this call synchronously to give the call the greatest chance of success.  The synchronous nature of this call may result in a delay when closing the browser.  If this is undesired you may pass an optional second parameter into dwr.engine.setNotifyServerOnPageUnload:</p>   
+<pre>dwr.engine.setNotifyServerOnPageUnload(true, true);</pre>
+<p>The optional second parameter tells DWR to call the unloader asynchronously.  This may result in the unloader being called inconsistently due to the browser closing the connection while unloading.</p>
+<p>Note: In order for this to work DWR relies on the browser's "unload" event being fired.  Unfortunately, browsers handle this event inconsistently and there may be very little DWR can do.  If you are interested in following this issue you can watch <a href="http://directwebremoting.org/jira/browse/DWR-151">DWR-151</a>. </p> 
  
- 
+<p>If setNotifyServerOnPageUnload is not set to true or fails to notify the server due to browser limitations ScriptSessions will be invalidated using a timeout strategy on the server.</p>
+
 <h2>Passing request information to a non-dwr thread</h2>
 <p>Non-dwr threads have no reference to the dwr-thread that created them. Because of this, WebContextFactory().get().getScriptSession() will return null in a non-dwr thread. You will therefore need to pass data from DWR threads to non-DWR threads such as the ScriptSession in the example below.</p>
  
