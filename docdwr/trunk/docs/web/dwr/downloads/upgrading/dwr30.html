@@ -17,7 +17,9 @@
 <p>These are the changes that you must make to upgrade from version 2.0 to version 3.0:</p>
 
 <ul>
-<li>For DWR 1.x the Javascript libraries had the prefixes DWREngine and DWRUtil. These were deprecated in version 2.0 in favor of dwr.engine and dwr.util. In version 3.0, the prefixes DWREngine and DWRUtil have been removed. The best way top upgrade is to replace all accessed to the new method. Alternatively you can use the two-liner: <code>DWREngine = dwr.engine; DWRUtil = dwr.util;</code> to re-enable the old behavior.</li><li>Spring Integration - </li><li>@Convert -> @DataTransferObject</li>li>
+  <li>For DWR 1.x the Javascript libraries had the prefixes DWREngine and DWRUtil. These were deprecated in version 2.0 in favor of dwr.engine and dwr.util. In version 3.0, the prefixes DWREngine and DWRUtil have been removed. The best way top upgrade is to change all code to use the new method. Alternatively you can use the two-liner: <code>DWREngine = dwr.engine; DWRUtil = dwr.util;</code> to re-enable the old behavior.</li><li>Spring Integration - </li><li>@Convert -> @DataTransferObject</li>li>
+  <li>DWR 3.0 RC2 requires that engine.js is included before the DWR interface JavaScript files.</li>
+  <li>Spring Schema Change - Creator configuration is no longer allowed inside the dwr:configuration element.  Please see <a href="http://dwr.2114559.n2.nabble.com/Creators-in-a-Spring-context-tt4432553.html">this discussion on the mailing list</a> for more information.</li>
 </ul>
 
 </body>
