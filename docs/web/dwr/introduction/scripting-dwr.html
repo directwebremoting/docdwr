@@ -9,17 +9,25 @@
 </head>
 <body>
 
-<h1>Writing JavaScript with DWR</h1>
+<p>Getting started with DWR is easy but there are a few important concepts you need to be aware of:</p>
+<ul>
+  <li><a href="#remoteCalls">Remote calls with DWR - handling the asynchronous nature of AJAX with callbacks</a></li>
+  <li><a href="#JStoMatchJava">Creating JavaScript objects to match Java objects</a></li>
+</ul>
 
-<p>DWR generates Javascript code that is similar to the Java code remoted, using the &lt;create ... &gt; element, in your dwr.xml file.</p>
+<h1><a name="remoteCalls"></a>Remote calls with DWR - handling the asynchronous nature of AJAX with callbacks</h1>
 
-<p>The biggest challenge in creating a remote interface to match Java code across Ajax is the (usually) asynchronous nature of Ajax, compared to the synchronous nature of a normal Java call.</p>
+<p>DWR generates JavaScript proxy functions that are similar to the Java methods exposed using the &lt;create ... &gt; element, in your dwr.xml file.</p>
+
+<p>The biggest challenge in creating a remote interface to match Java code across AJAX is the (usually) asynchronous nature of AJAX, compared to the synchronous nature of a normal Java call.</p>
 
 <p>DWR solves this problem by introducing a callback function that is called when the data is returned from the server.</p>
 
 <p>There are 2 recommended ways to make a call using DWR. Either by appending a call options object or a callback function to the parameter list.</p>
 
-<h2>1. Call Options Object</h2>
+<ol>
+  <li>
+  <h2>Call Options Object</h2>
 
 <p>The recommended syntax is to make use of a call options object that specifies the callback function and other options.</p>
 
@@ -49,11 +57,13 @@ Remote.getData(42, {
 
 <p>'42' is just the parameter to the <code>getData()</code> Java function - see above.</p>
 
+<p>DWR will always pass a JavaScript version (serialized using DWR's converters) of the object returned from the remoted Java method as the first parameter of the callback.  In this case str will contain the String that getData returns.</p>
+
 <p>This method has some advantages: Depending on your style it may be easier to read, but more importantly it allows you to specify extra call options.</p>
 
 <h3>Timeouts and Handling Errors</h3>
 
-<p>In addition to the callback function you can also specify a timeout and an errorHandler. For example:</p>
+<p>In addition to the callback function you can also specify a timeout, errorHandler, and several other <a href="../documentation/browser/engine/index.html">call options</a>. For example:</p>
 
 <pre>
 Remote.getData(42, {
@@ -62,8 +72,9 @@ Remote.getData(42, {
   errorHandler:function(message) { alert("Oops: " + message); }
 });
 </pre>
-
-<h2>2. Simple Callback Functions</h2>
+  </li>
+  <li>
+  <h2>Simple Callback Functions</h2>
 
 <p>An alternative approach is to simply append a callback function to your parameter list:</p>
 
@@ -79,15 +90,17 @@ Remote.getData(42, handleGetData);
 <pre>
 Remote.getData(42, function(str) { alert(str); });
 </pre>
+  </li>
+</ol>
 
-<h2><a name="JStoMatchJava"></a>Creating Javascript objects to match Java objects</h2>
+<h2><a name="JStoMatchJava"></a>Creating JavaScript objects to match Java objects</h2>
 
-<p>Suppose you have an exposed Java method like this:</p>
+<p>Suppose you have exposed the following Java method, with a Person Java Bean as a parameter:</p>
 
 <pre>
 public class Remote {
-  public void setPerson(Person p) {
-    this.person = p;
+  public void doSomethingWithPerson(Person p) {
+    // Some Java code that does something with Person p.
   }
 }
 </pre>
@@ -106,17 +119,17 @@ public Person {
 <p>Then you can call this from Javascript like this:</p>
 
 <pre>
-var p = {
+var myJSPerson = {
   name:"Fred Bloggs",
   age:42,
   appointments:[ new Date(), new Date("1 Jan 2008") ]
 };
-Remote.setPerson(p);
+Remote.doSomethingWithPerson(myJSPerson);
 </pre>
 
-<p>Any fields missing from the Javascript representation will be left unset in the Java version.</p>
+<p>Any fields missing from the JavaScript representation will be left unset in the Java version.</p>
 
-<p>Since the setter returned 'void' we did not need to use a callback and could just leave it out. If you want to be notified of the completion of a server-side method that returns void then you can include a callback method. Obviously DWR will not pass any data to it.</p>
+<p>Since the doSomethingWithPerson method returns 'void' we do not need to use a callback and can just leave it out. If you want to be notified of the completion of a server-side method that returns void then you can include a callback method. Obviously DWR will not pass any data to it.</p>
 
 </body>
 </html>
