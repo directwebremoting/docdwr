@@ -1,0 +1,65 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <title>Non-Web Threads</title>
+  <meta name='alias' content='/dwr/reverse-ajax/load-monitors'>
+  <link rel="stylesheet" type="text/css" href="../../media/styles.css">
+</head>
+<body>
+
+<h1>Reverse Ajax Load Monitors</h1>
+
+<p>DWR comes packaged with different server load monitors which help balance server load between multiple users. The type of monitor chosen will depend on your application's need.</p>
+
+<h2>Throttling Server Load Monitor</h2>
+<p>The Throttling Server Load Monitor at its basic level works by controlling the maximum number of currently connected threads and the maximum hits per second to the server. To control load this load monitor will adjust the time a connection is allowed to stay connected, and the time that the reverse ajax api will wait before connecting to the server again. By adjusting the connected time and the disconnected time the Thottling Server Load Monitor can help give users a better overall experience during times of heavy load.</p>
+
+<p>Since it is inefficient to check load everytime a client requests a new connection, this server monitor runs a separate load management thread that will run at most once every 5 seconds while there are incoming connections. When no more incoming connections are being received the load monitor will simply shutdown and sleep until a new connection is requested. Note that the thread will verify load at least once per hour even if no connections are being received.</p>
+
+<p>When the server is throttling connections there are three possible modes that the server could be in. 
+<ol>
+<li>Low Usage
+<ul>
+<li>Server will accept and maintain all connections with the default connected and disconnected times. </li>
+</ul>
+</li>
+
+<li>High Usage
+<ul>
+<li>In high usage mode the server has reached the maximum connected thread limit and will impose a connected time of 49 second and a disconnected time of 1 second. After high usage has been reached the server will adjust the connected time and disconnected time in a linear fashion to lower server load, which in turn will cause end user response times to feel more and more sluggish based on the number of clients connected and the amount of data being sent and received.</li>
+</ul>
+</li>
+<li>Digg Usage
+<ul>
+<li>When the server is under extremely heavy load the thottling load monitor will switch to digg mode which decreases the connected time to 0 and increases the imposed disconnected time to 2 seconds. When the connected time is 0 clients are not allowed to maintain connections.  This mode is reached once the linear adjustment of high usage mode hits the threshold of connected time equal to 1 second.</li>
+</ul>
+</li>
+</ol>
+
+<h3>Setup</h3>
+<ol>
+
+  <li>Include an init parameter to the DWRServlet.
+<pre>
+&lt;servlet&gt;
+  &lt;servlet-name&gt;dwr-invoker&lt;/servlet-name&gt;
+  &lt;display-name&gt;DWR Servlet&lt;/display-name&gt;
+  &lt;servlet-class&gt;org.directwebremoting.servlet.DwrServlet&lt;/servlet-class&gt;
+
+  &lt;init-param&gt;
+    &lt;param-name&gt;activeReverseAjaxEnabled&lt;/param-name&gt;
+    &lt;param-value&gt;true&lt;/param-value&gt;
+  &lt;/init-param&gt;
+    &lt;init-param&gt;
+
+    &lt;param-name&gt;org.directwebremoting.extend.ServerLoadMonitor&lt;/param-name&gt;
+    &lt;param-value&gt;org.directwebremoting.impl.ThrottlingServerLoadMonitor&lt;/param-value&gt;
+  &lt;/init-param&gt;
+&lt;/servlet&gt;
+</pre></li>
+</ul>
+
+<p>At this point DWR will now use the ThrottlingServerLoadMonitor to balance reverse ajax connections.</p>
+
+</body>
+</html>
