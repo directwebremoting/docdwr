@@ -9,7 +9,18 @@
 
 <h1>Reverse Ajax Hints and Tips</h1>
 
-<h2>ScriptSession lifecycle</h2>
+<ul>
+  <li><a href="#ssLifeCycle">ScriptSession lifecycle</a> - About the creation and invalidation of ScriptSessions.</li>
+  <li><a href="#nonDWRThreads">Non DWR Threads</a> - Passing request information to a non-dwr thread.</li>
+  <li><a href="#obtainSSM">ScriptSessionManager</a> - Obtaining the ScriptSessionManager from a non-dwr thread.</li> 
+  <li><a href="#scale">Scaleability</a> - One thread per application is scalable, one thread per request is not.</li>
+  <li><a href="#browserAPI">Browser API</a> - How to target specific ScriptSessions.</li>
+  <li><a href="#differentiatingSS">ScriptSession Attributes</a> - Setting differentiating attribute(s) on a ScriptSession.</li>
+  <li><a href="#differentiatingSSByRequestParam">Differentiating ScriptSessions by request parameters.</li>
+  <li><a href="#scriptSessionListeners">ScriptSessionListeners</a> - How to use ScriptSessionListeners to take actions when a ScriptSession is created or destroyed.</li>
+</ul>
+
+<h2><a name="ssLifeCycle"></a>ScriptSession lifecycle</h2>
 
 <p>ScriptSessions are created when /dwr/engine.js is included in a page. By default, the lifecycle is maintained by the org.directwebremoting.impl.DefaultScriptSessionManager.</p>
         
@@ -21,12 +32,12 @@
 <p>The optional second parameter tells DWR to call the unloader asynchronously.  This may result in the unloader being called inconsistently due to the browser closing the connection while unloading.</p>
 <p>Note: In order for this to work DWR relies on the browser's "unload" event being fired.  Unfortunately, browsers handle this event inconsistently and there may be very little DWR can do.  If you are interested in following this issue you can watch <a href="http://directwebremoting.org/jira/browse/DWR-151">DWR-151</a>. </p> 
  
-<p>If setNotifyServerOnPageUnload is not set to true or fails to notify the server due to browser limitations ScriptSessions will be invalidated using a timeout strategy on the server.</p>
+<p>If setNotifyServerOnPageUnload is not set to true or fails to notify the server due to browser limitations ScriptSessions will be invalidated using a timeout strategy on the server - ScriptSessions inactive for five minutes or more will be invalidated.</p>
 
-<h2>Passing request information to a non-dwr thread</h2>
+<h2><a name="nonDWRThreads"></a>Passing request information to a non-dwr thread</h2>
 <p>Non-dwr threads have no reference to the dwr-thread that created them. Because of this, WebContextFactory().get().getScriptSession() will return null in non-dwr threads. You will therefore need to pass data from DWR threads to non-DWR threads.</p>
  
-<h2>Obtaining the ScriptSessionManager from a non-dwr thread</h2>
+<h2><a name="obtainSSM"></a>Obtaining the ScriptSessionManager from a non-dwr thread</h2>
 <p>The ScriptSessionManager can be obtained using the following code:</p>
  
 <pre>
@@ -34,10 +45,10 @@ Container container = ServerContextFactory.get().getContainer();
 ScriptSessionManager manager = container.getBean(ScriptSessionManager.class);
 </pre>
  
-<h2>One thread per application is scalable, one thread per request is not</h2>
+<h2><a name="scale"></a>One thread per application is scalable, one thread per request is not</h2>
 <p>Most reverse ajax implementations require a separate thread to push data to clients. Spawning a separate thread for each DWR request is not scalable.  We recommend that you use a thread pool in combination with an application scoped DWR creator, please see the Clock example in the dwr.war for a sample implementation.</p>
   
-<h2><a name="browserAPI"></a>Browser API - How to differentiate users and target specific ScriptSessions </h2>
+<h2><a name="browserAPI"></a>Browser API - How to target specific ScriptSessions </h2>
 
 <p>DWR's <a href="http://directwebremoting.org/dwr/javadoc/org/directwebremoting/Browser.html">Browser API</a> contains several useful methods for updating browsers. Several of the Browser methods take a <a href="http://directwebremoting.org/dwr/javadoc/org/directwebremoting/ScriptSessionFilter.html">ScriptSessionFilter</a> which will allow you to target specific ScriptSessions based on their attributes (<a href="#differentiatingSS">see Setting differentiating attribute(s) on a ScriptSession</a>).</p>
 
@@ -154,7 +165,8 @@ public void sessionCreated(ScriptSessionEvent ev) {
     ev.getSession().setAttribute("userId", userId);
 }
 </pre>
-<p>Once the ScriptSession has been populated with an attribute, a reverse ajax thread can use the <a href="#browserAPI">Browser API</a> (recommended) with a <a href="#browserAPI">ScriptSessionFilter</a> to target specific ScriptSessions or retrieve the attribute from the ScriptSession (scriptSession.getAttribute()) to differentiate the users.<h2>Differentiating ScriptSessions by request parameters</h2>
+<p>Once the ScriptSession has been populated with an attribute, a reverse ajax thread can use the <a href="#browserAPI">Browser API</a> (recommended) with a <a href="#browserAPI">ScriptSessionFilter</a> to target specific ScriptSessions or retrieve the attribute from the ScriptSession (scriptSession.getAttribute()) to differentiate the users.
+<h2><a name="differentiatingSSByRequestParam"></a>Differentiating ScriptSessions by request parameters</h2>
 Another way to differentiate users on the same page is by the request parameters. In order to use this functionality, you must set the <a href="../server/configuration/servlet/index.html">normalizeIncludesQueryString</a> init-param to true. Once this is enabled, the ScriptSessionManager will include request parameters in the page name.
 <pre>
 scriptSessionManager.getScriptSessionsByPage("/page?foo=bar")
