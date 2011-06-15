@@ -12,26 +12,26 @@
 
 <p>It is possible to use DWR cross-domain at the compromise of some of the security features of DWR.  You must follow these steps: 
 
-<ol><li>Add the following three parameters to your web.xml:
+<ol><li>Add the following <a href="../server/configuration/servlet/index.html">three parameters to your web.xml</a>:
 
 <pre>
 <!-- Enables <script> remoting -->
-<init-param>
-<param-name>allowScriptTagRemoting</param-name>
-<param-value>true</param-value>
-</init-param>
+&lt;init-param&gt;
+&lt;param-name&gt;allowScriptTagRemoting&lt;/param-name&gt;
+&lt;param-value&gt;true&lt;/param-value&gt;
+&lt;/init-param&gt;
 
 <!-- Disables DWR's CSRF protection -->
-<init-param>
-<param-name>crossDomainSessionSecurity</param-name>
-<param-value>false</param-value>
-</init-param>
+&lt;init-param&gt;
+&lt;param-name&gt;crossDomainSessionSecurity&lt;/param-name&gt;
+&lt;param-value&gt;false&lt;/param-value&gt;
+&lt;/init-param&gt;
 
 <!-- Enables GET requests which are necessary for X-domain calls -->
-<init-param>
-<param-name>allowGetForSafariButMakeForgeryEasier</param-name>
-<param-value>true</param-value>
-</init-param> 
+&lt;init-param&gt;
+&lt;param-name&gt;allowGetForSafariButMakeForgeryEasier&lt;/param-name&gt;
+&lt;param-value&gt;true&lt;/param-value&gt;
+&lt;/init-param&gt; 
 </pre>
 </li>
 <li>Specify a pathToDwrServlet variable in JavaScript BEFORE engine.js is included: 
