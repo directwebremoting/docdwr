@@ -10,7 +10,7 @@
 
 <h1>About DWR's JavaScript Security</h1>
 
-<p>There are 3 basic ways to protect any service that returns JSON or JavaScript against <a href="http://directwebremoting.org/blog/joe/2007/03/05/json_is_not_as_safe_as_people_think_it_is.html">the &lt;script&gt; tag hack</a>.</p>
+<p>There are 3 basic ways to protect any service that returns JSON or JavaScript against the &lt;script&gt; tag hack.</p>
 
 <ul>
 <li>Use a Secret in the Request</li>
@@ -57,7 +57,7 @@ DWR uses this method. You can control it using the <a href="../server/configurat
 
 <p>Finally, we're working in an environment where new possibilities are popping up every day - betting your security on a system that works more by fluke than design isn't a great idea in my opinion.</p>
 
-<p>By default DWR denies POST requests for belt and braces security, however this is customizable using the <a href="allowGetForSafariButMakeForgeryEasier.html">allowGetForSafariButMakeForgeryEasier=true init-param</a> in web.xml.</p>
+<p>By default DWR denies GET requests for belt and braces security, however this is customizable using the <a href="allowGetForSafariButMakeForgeryEasier.html">allowGetForSafariButMakeForgeryEasier=true init-param</a> in web.xml.</p>
 
 </body>
 </html>
