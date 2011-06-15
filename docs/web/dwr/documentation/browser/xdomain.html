@@ -15,35 +15,35 @@
 <ol><li>Add the following <a href="../server/configuration/servlet/index.html">three parameters to your web.xml</a>:
 
 <pre>
-<!-- Enables <script> remoting -->
+&lt;!-- Enables &lt;script&gt; remoting --&gt;
 &lt;init-param&gt;
-&lt;param-name&gt;allowScriptTagRemoting&lt;/param-name&gt;
-&lt;param-value&gt;true&lt;/param-value&gt;
+  &lt;param-name&gt;allowScriptTagRemoting&lt;/param-name&gt;
+  &lt;param-value&gt;true&lt;/param-value&gt;
 &lt;/init-param&gt;
 
-<!-- Disables DWR's CSRF protection -->
+&lt;!-- Disables DWR's CSRF protection --&gt;
 &lt;init-param&gt;
-&lt;param-name&gt;crossDomainSessionSecurity&lt;/param-name&gt;
-&lt;param-value&gt;false&lt;/param-value&gt;
+  &lt;param-name&gt;crossDomainSessionSecurity&lt;/param-name&gt;
+  &lt;param-value&gt;false&lt;/param-value&gt;
 &lt;/init-param&gt;
 
-<!-- Enables GET requests which are necessary for X-domain calls -->
+&lt;!-- Enables GET requests which are necessary for X-domain calls --&gt;
 &lt;init-param&gt;
-&lt;param-name&gt;allowGetForSafariButMakeForgeryEasier&lt;/param-name&gt;
-&lt;param-value&gt;true&lt;/param-value&gt;
+  &lt;param-name&gt;allowGetForSafariButMakeForgeryEasier&lt;/param-name&gt;
+  &lt;param-value&gt;true&lt;/param-value&gt;
 &lt;/init-param&gt; 
 </pre>
 </li>
 <li>Specify a pathToDwrServlet variable in JavaScript BEFORE engine.js is included: 
 <pre>
   &lt;script&gt;
-       var pathToDwrServlet = "http://directwebremoting.org/dwr-demo/dwr"; // Path to dwr on foreign domain
+    var pathToDwrServlet = "http://directwebremoting.org/dwr-demo/dwr"; // Path to dwr on foreign domain
   &lt;/script&gt;
   &lt;script type='text/javascript' src='http://directwebremoting.org/dwr-demo/dwr/engine.js'&gt; &lt;/script&gt;
 </pre>
 This is required because DWR makes an initial call to the server when engine.js is loading.  If the remote URL is static/known ahead of time this step can be skipped in place of setting the <a href="../server/configuration/servlet/index.html">overridePath parameter</a>. 
-</li>
-<li>Before making a remote call set the _path field on your DWR interface:</li>
+</li><br/>
+<li>Before making a remote call set the _path field on your DWR interface:
 <pre>
   &lt;script&gt;
     Demo._path =  'http://directwebremoting.org/dwr-demo/dwr';
@@ -51,6 +51,7 @@ This is required because DWR makes an initial call to the server when engine.js 
   &lt;/script>
 </pre>
 If the remote URL is static/known ahead of time this step can also be skipped in place of setting the <a href="../server/configuration/servlet/index.html">overridePath parameter</a>
+</li>
 </ol>
 </p>
 
