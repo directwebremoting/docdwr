@@ -41,7 +41,7 @@
   &lt;/script&gt;
   &lt;script type='text/javascript' src='http://directwebremoting.org/dwr-demo/dwr/engine.js'&gt; &lt;/script&gt;
 </pre>
-This is required because DWR makes an initial call to the server when engine.js is loading.  
+This is required because DWR makes an initial call to the server when engine.js is loading.  If the remote URL is static/known ahead of time this step can be skipped in place of setting the <a href="../server/configuration/servlet/index.html">overridePath parameter</a>. 
 </li>
 <li>Before making a remote call set the _path field on your DWR interface:</li>
 <pre>
@@ -50,6 +50,7 @@ This is required because DWR makes an initial call to the server when engine.js 
     Demo.sayHello(name, loadinfo); 
   &lt;/script>
 </pre>
+If the remote URL is static/known ahead of time this step can also be skipped in place of setting the <a href="../server/configuration/servlet/index.html">overridePath parameter</a>
 </ol>
 </p>
 
