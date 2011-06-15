@@ -1,0 +1,57 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <title>Cross-domain Support</title>
+  <meta name='weight' content='4'>
+  <meta name='alias' content='/dwr/browser/xdomain'>
+  <link rel="stylesheet" type="text/css" href="../../media/styles.css">
+</head>
+<body>
+
+<h1>DWR Cross-domain Support</h1>
+
+<p>It is possible to use DWR cross-domain at the compromise of some of the security features of DWR.  You must follow these steps: 
+
+<ol><li>Add the following three parameters to your web.xml:
+
+<pre>
+<!-- Enables <script> remoting -->
+<init-param>
+<param-name>allowScriptTagRemoting</param-name>
+<param-value>true</param-value>
+</init-param>
+
+<!-- Disables DWR's CSRF protection -->
+<init-param>
+<param-name>crossDomainSessionSecurity</param-name>
+<param-value>false</param-value>
+</init-param>
+
+<!-- Enables GET requests which are necessary for X-domain calls -->
+<init-param>
+<param-name>allowGetForSafariButMakeForgeryEasier</param-name>
+<param-value>true</param-value>
+</init-param> 
+</pre>
+</li>
+<li>Specify a pathToDwrServlet variable in JavaScript BEFORE engine.js is included: 
+<pre>
+  &lt;script&gt;
+       var pathToDwrServlet = "http://directwebremoting.org/dwr-demo/dwr"; // Path to dwr on foreign domain
+  &lt;/script&gt;
+  &lt;script type='text/javascript' src='http://directwebremoting.org/dwr-demo/dwr/engine.js'&gt; &lt;/script&gt;
+</pre>
+This is required because DWR makes an initial call to the server when engine.js is loading.  
+</li>
+<li>Before making a remote call set the _path field on your DWR interface:</li>
+<pre>
+  &lt;script&gt;
+    Demo._path =  'http://directwebremoting.org/dwr-demo/dwr';
+    Demo.sayHello(name, loadinfo); 
+  &lt;/script>
+</pre>
+</ol>
+</p>
+
+</body>
+</html>
