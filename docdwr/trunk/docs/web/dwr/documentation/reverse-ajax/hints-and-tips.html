@@ -207,7 +207,7 @@ manager.addScriptSessionListener(listener);
 <p>It is important to note that ScriptSessionListeners must be added after DWR has initialized.  There are generally two ways to do this:
 <ol>
 <li>Extend the DWR servlet and execute the above code after the DWR servlet initializes.</li>
-<li>Execute the above code in a servlet that has a <load-on-startup /> value larger than the DWR servlet</li>
+<li>Execute the above code in a servlet that has a <pre>&lt;load-on-startup /&gt;</pre> value larger than the DWR servlet</li>
 </ol>
 </p>
 
