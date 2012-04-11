@@ -9,11 +9,10 @@
 </head>
 
 <body>
-<p>This page is divided into two sections.  The first section - titled <a href="#troubleshooting">"Troubleshooting"</a> provides advice to follow if you encounter problems configuring or using DWR.  The second section - title <a href="#commonProblems">"Common Problems and Fixes"</a> lists several common problems and their associated fixes.</p>
-<h1><a name="troubleshooting"></a>Troubleshooting</h1>
+<p>This page is divided into two sections.  The first section - titled <a href="#troubleshooting">"Troubleshooting Steps"</a> provides step-by-step instructions to follow if you encounter problems configuring or using DWR.  The second section - title <a href="#commonProblems">"Common Problems and Fixes"</a> lists several common problems and their associated fixes.</p>
+<h1><a name="troubleshooting"></a>Troubleshooting Steps</h1>
 <ol>
-    <li><a href="#test_page">The DWR test page</a> - If you encounter problems using DWR your first step
-  should be to check the DWR test page.</li>
+    <li><a href="#test_page">The DWR test page</a> - Check the DWR <a href="#test_page">test page</a> and execute any problem methods from the test page.</li>
     <ol>
         <li><a href="#test_page_works">Everything works from the DWR test page, but not from a custom page. What should I do?</a></li>
         <li><a href="#test_page_broken">The DWR test page does not come up, my exposed class does not show up on the test page, or my method call does not work from the test page.  What should I do?</a></li>
@@ -55,10 +54,10 @@ This situation indicates that you have a Javascript problem on your custom page.
     the necessary JavaScript includes. If the includes are present verify
     that they are properly pathed by attempting to open the files through
     the browser at the path you specified.</li>
+  <li><b>Debug</b> - <a href="#jsDebugging">Debug your JavaScript</a>.</li>
   <li><b>Simplify, Simplify, Simplify</b> -
     Trim your script and simplify it as much as possible. If you are using
-    any third party libraries remove them.</li>
-  <li><b>Debug</b> - <a href="#jsDebugging">Debug your JavaScript</a>.</li>
+    any third party libraries remove them.</li>  
 </ul>
 <h3><a name="test_page_broken"></a>What to do
 when things don't work from the DWR test page or a custom page</h3>
@@ -103,10 +102,10 @@ The logs are there for a reason -- use them. Many times reading the
 logs will guide you to a quick solution.
 <h3><a name="jsDebugging"></a>JavaScript Debugging</h3>
 <p>All modern web browsers have  JavaScript debugging tools.  When encountering problems in a web browser it is recommended to first check your browsers error console.  If you see problems in the console you can discover more about the problem by using the browsers debugging features.
-<ul><li>Firefox - <a href="http://getfirebug.com/javascript" target="_blank">Firebug</a> is the most popular tool for debugging in Firefox.  If you are unfamiliar with Firebug the <a href="http://getfirebug.com/wiki/index.php/Main_Page" target="_blank">"Introduction To Firebug"</a> on the <a href="http://getfirebug.com/wiki/index.php/Main_Page" target="_blank">Firebug Wiki</a> will help you get started.</li>
-<li>Google Chrome - Google Chrome has advanced developer tools built-in.  For more information view the <a href="https://developers.google.com/chrome-developer-tools/docs/scripts" target="_blank">Google Chrome documenation</a>.</li>
-<li>Internet Explorer - Internet Explorer 8 has build in development tools.  You can read more about these tools on <a href="http://msdn.microsoft.com/en-us/library/dd565627%28v=vs.85%29.aspx" target="_blank">MSDN</a>.  If you are using a version of IE older than 8 you may use <a href="http://getfirebug.com/firebuglite">Firebug Lite</a>.</li>
-<li>Other Browsers - Please search for the browser you are using to find out what tools are available.  If your browser does not have built-in debugging tools check <a href="http://getfirebug.com/firebuglite" target="_blank">Firebug Lite</a> for compatibility.</li>
+<ul><li><b>Firefox</b> - <a href="http://getfirebug.com/javascript" target="_blank">Firebug</a> is the most popular tool for debugging in Firefox.  If you are unfamiliar with Firebug the <a href="http://getfirebug.com/wiki/index.php/Main_Page" target="_blank">"Introduction To Firebug"</a> on the <a href="http://getfirebug.com/wiki/index.php/Main_Page" target="_blank">Firebug Wiki</a> will help you get started.</li>
+<li><b>Google Chrome</b> - Google Chrome has advanced developer tools built-in.  For more information view the <a href="https://developers.google.com/chrome-developer-tools/docs/scripts" target="_blank">Google Chrome documenation</a>.</li>
+<li><b>Internet Explorer</b> - Internet Explorer 8 has build in development tools.  You can read more about these tools on <a href="http://msdn.microsoft.com/en-us/library/dd565627%28v=vs.85%29.aspx" target="_blank">MSDN</a>.  If you are using a version of IE older than 8 you may use <a href="http://getfirebug.com/firebuglite" target="new">Firebug Lite</a>.</li>
+<li><b>Other Browsers</b> - Please search for the browser you are using to find out what tools are available.  If your browser does not have built-in debugging tools check <a href="http://getfirebug.com/firebuglite" target="_blank">Firebug Lite</a> for compatibility.</li>
 </ul>
 </p>
 <h3><a name="debugging_proxies"></a>Using an HTTP Debugging Proxy/Sniffer</h3>
