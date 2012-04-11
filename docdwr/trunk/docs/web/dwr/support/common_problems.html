@@ -23,7 +23,6 @@
     <ol>
         <li><a href="#server_logs">Use the server logs</a></li>
 		<li><a href="#jsDebugging">Debug your JavaScript</a></li>
-        <li><a href="#firebug">Debugging with Firebug</a> and if not available use <a href="#to_descriptive_string">toDescriptiveString.</a></li>
         <li>Use an <a href="#debugging_proxies">HTTP Debugging proxy/Sniffer</a> to examine the request/response.</li>
     </ol>
     <li>If all else fails?  Search for your issue on the <a href="index.html#mailing_lists">DWR users mailing list</a>, if you can't find a solution send a message to the mailing list.  Make sure you include all of the information you have gathered from your troubleshooting!</li>
@@ -59,10 +58,7 @@ This situation indicates that you have a Javascript problem on your custom page.
   <li><b>Simplify, Simplify, Simplify</b> -
     Trim your script and simplify it as much as possible. If you are using
     any third party libraries remove them.</li>
-  <li><b>Debug</b> - Look for JavaScript errors
-    in the browser. If you are using IE try using Firefox as it generally
-    gives you a much better description of any errors. You can open the
-    Error Console in Firefox through the Tools menu. Another option is to use <a href="#firebug">Firebug</a> to debug through your JavaScript code.</li>
+  <li><b>Debug</b> - <a href="#jsDebugging">Debug your JavaScript</a>.</li>
 </ul>
 <h3><a name="test_page_broken"></a>What to do
 when things don't work from the DWR test page or a custom page</h3>
@@ -106,32 +102,13 @@ classpath will result in the following error:
 The logs are there for a reason -- use them. Many times reading the
 logs will guide you to a quick solution.
 <h3><a name="jsDebugging"></a>JavaScript Debugging</h3>
-<p>Many modern web browsers have enhanced JavaScript debugging tools.  When encountering problems in a web browser it is recommended to first check your browsers error console (in Firefox: Tools -> Error Console).  If you see problems in the console you can discover more about the problem by using the browsers debugging features.</p>
-<h3><a name="firebug"></a>Debugging with Firefox/Firebug</h3>
-<p>Firebug is an invaluable tool when you are having
-  problems with your DWR application and need to inspect what you are
-  sending to or receiving from DWR. Firebug is an add-on for Firefox that
-  allows you to: </p>
-<ul>
-  <li>Set breakpoints and step through JavaScript code.</li>
-  <li>Inspect requests and responses.</li>
+<p>All modern web browsers have  JavaScript debugging tools.  When encountering problems in a web browser it is recommended to first check your browsers error console.  If you see problems in the console you can discover more about the problem by using the browsers debugging features.
+<ul><li>Firefox - <a href="http://getfirebug.com/javascript" target="_blank">Firebug</a> is the most popular tool for debugging in Firefox.  If you are unfamiliar with Firebug the <a href="http://getfirebug.com/wiki/index.php/Main_Page" target="_blank">"Introduction To Firebug"</a> on the <a href="http://getfirebug.com/wiki/index.php/Main_Page" target="_blank">Firebug Wiki</a> will help you get started.</li>
+<li>Google Chrome - Google Chrome has advanced developer tools built-in.  For more information view the <a href="https://developers.google.com/chrome-developer-tools/docs/scripts" target="_blank">Google Chrome documenation</a>.</li>
+<li>Internet Explorer - Internet Explorer 8 has build in development tools.  You can read more about these tools on <a href="http://msdn.microsoft.com/en-us/library/dd565627%28v=vs.85%29.aspx" target="_blank">MSDN</a>.  If you are using a version of IE older than 8 you may use <a href="http://getfirebug.com/firebuglite">Firebug Lite</a>.</li>
+<li>Other Browsers - Please search for the browser you are using to find out what tools are available.  If your browser does not have built-in debugging tools check <a href="http://getfirebug.com/firebuglite" target="_blank">Firebug Lite</a> for compatibility.</li>
 </ul>
-<p>You can learn more about Firebug and download it on the <a href="http://getfirebug.com/" target="new">Firebug
-site</a>. If you would like to use Firebug with a browser other
-than Firefox take a look at <a href="http://getfirebug.com/lite.html" target="new">Firebug
-Lite.</a></p><h3><a name="to_descriptive_string"></a>dwr.util.toDescriptiveString</h3>
-<p> If for some reason you cannot use Firebug or you are having problems in an older browser that does not offer debugging tools the
-  dwr.util.toDescriptiveString function will allow you to display the
-  JavaScript objects you are sending to or receiving from DWR. This
-  function is located in DWR's util.js and you must include this file in
-  your HTML page in order to use it. The function takes three arguments: </p>
-<ol>
-  <li>The JavaScript object you would like to display.</li>
-  <li>The depth you would like to traverse the object.</li>
-  <li>An options object that can be used to customize the
-    display.</li>
-</ol>
-You can read more about the dwr.util.toDescriptiveString method in the <a href="../browser/util/toDescriptiveString.html">DWR manual</a>.
+</p>
 <h3><a name="debugging_proxies"></a>Using an HTTP Debugging Proxy/Sniffer</h3>
 <p> HTTP debugging proxies are a nice tool to have in your
   arsenal. These tools allow you to inspect all HTTP traffic and even
