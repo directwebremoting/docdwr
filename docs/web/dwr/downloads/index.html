@@ -90,8 +90,34 @@ instructions.</p>
 <h2><a name="maven"></a>Maven</h2>
 
 <p>At the time of our last development build (3.0 RC2) we did not have a process in place to upload artifacts to Maven Central.  If you are a Maven user and want to use 3.0 RC2 we recommend that you download the DWR artifacts and install them into your local Maven repository.  We DO NOT recommend using the 3.0.M1 release that is in Maven Central.  We apologize for the inconvenience and this will be resolved for our next release as a process is now in place.</p>
-<p>Our latest 2.x releases are in Maven Central.  You may also download the latest development Snapshots from <a href="https://oss.sonatype.org/content/repositories/snapshots/org/directwebremoting/dwr/">Sonatype's OSS repository</a>.  
+<p>Our latest 2.x releases are in Maven Central.  You may also download the latest development Snapshots from <a href="https://oss.sonatype.org/content/repositories/snapshots/org/directwebremoting/dwr/">Sonatype's OSS repository</a>.  Below is a pom snippet for pulling in the latest 3.0.0-rc3 development snapshot from Sonatype's OSS repository.
 
+<pre>
+  &lt;dependency&gt;
+    &lt;groupId&gt;org.directwebremoting&lt;/groupId&gt;
+    &lt;artifactId&gt;dwr&lt;/artifactId&gt;
+    &lt;version&gt;3.0.0-rc3-SNAPSHOT&lt;/version&gt;
+  &lt;/dependency&gt;
+
+  &lt;dependency>
+    &lt;!-- Optional non-CLA components see DWR documentation for details --&gt;
+    &lt;groupId&gt;org.directwebremoting&lt;/groupId&gt;
+    &lt;artifactId&gt;dwr&lt;/artifactId&gt;
+    &lt;classifier&gt;noncla&lt;/classifier&gt;
+    &lt;version&gt;3.0.0-rc3-SNAPSHOT&lt;/version&gt;
+  &lt;/dependency&gt;
+
+  &lt;repositories&gt;
+    &lt;repository&gt;
+      &lt;!-- Please consider setting up your own on-site repository proxy such as with Nexus and pointing the url element below at that instead ---&gt;
+      &lt;id&gt;oss-sonatype-snapshots&lt;/id&gt;
+      &lt;name&gt;OSS Sonatype Snapshots Repository&lt;/name&gt;
+	  &lt;url&gt;http://oss.sonatype.org/content/repositories/snapshots&lt;/url&gt;
+      &lt;releases&gt;false&lt;/releases&gt;
+      &lt;snapshots&gt;true&lt;/snapshots&gt;
+    &lt;/repository&gt;
+  &lt;/repositories&gt; 
+</pre>
 
 <h2><a name="ciBuilds"></a>Continuous Integration Builds - Bamboo</h2>
 
