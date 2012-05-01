@@ -79,7 +79,7 @@ dwr.engine.setActiveReverseAjax(true);
 <p>DWR makes use of Jetty Continuations from version 2.0.  The Jetty support is automatic, no special configuration is needed. </p>
 
 <h3>Tomcat</h3>
-<p><b>Note:</b>This feature is not currently working.  Please see/watch <a href="http://directwebremoting.org/jira/browse/DWR-143">DWR-143</a> for updates.</p>
+<p><b>Note:</b>This feature is not currently working.  You can still use DWR's reverse AJAX features with Tomcat but DWR will not take advantage of Tomcat's Asynchronous APIs (server will block).  Please see/watch <a href="http://directwebremoting.org/jira/browse/DWR-143">DWR-143</a> for updates.</p>
 <p>For Tomcat you need to register a special version of the DwrServlet as follows:</p>
 <pre>
 &lt;servlet&gt;
