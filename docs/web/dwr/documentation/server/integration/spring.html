@@ -231,7 +231,7 @@ In fact, AOP proxies work fine with DWR. Just configure Spring accordingly.
   &lt;url-pattern>/&lt;/url-pattern&gt;
 &lt;/servlet-mapping&gt;
 </pre>
-This mapping is problematic for DWR.  The problem arises when Spring sends the request to the DWR Controller Servlet - the path info will be null due to the / or /* mapping.  This situation will prevent DWR from functioning properly.  To resolve this issue always include a /dwr/* mapping before any root mappings (/, /*, etc.). Example (do this)
+This mapping is problematic for DWR.  The problem arises when Spring sends the request to the DWR Controller Servlet - the path info will be null due to the / or /* mapping.  This situation will prevent DWR from functioning properly.  To resolve this issue always include a /dwr/* mapping before any root mappings (/, /*, etc.). Example (do this):
 <pre>
 &lt;servlet>
   &lt;servlet-name&gt;springDispatcher&lt;/servlet-name&gt;
