@@ -23,7 +23,7 @@
 		<ul>
 		  <li><a href="#namespace">Use the DWR/Spring namespace</a> (Spring 2.5 or greater, DWR 2.x or greater, dwr.xml not required or recommended)</li>
     	  <li><a href="#annotation_tags">Use the DWR/Spring namespace with annotations</a> (Spring 2.5 or greater, DWR 2.x or greater, dwr.xml not required or recommended)</li>
-          <li><a href="#springCreator">Use the DWRSpringServlet</a> (Will work for older versions of Spring and DWR - dwr.xml required.  Not the recommended approach.)</li>
+          <li><a href="#springCreator">Use the Spring Creator</a> (Will work for older versions of Spring and DWR - dwr.xml required.  Not the recommended approach.)</li>
 		</ul>
 	</li>
 	<li><a href="#common_problems">Solving Common Problems</a></li>
@@ -68,7 +68,7 @@
   &lt;url-pattern>/dwr/*&lt;/url-pattern&gt;
 &lt;/servlet-mapping&gt;
 </pre>
-<p>The only thing you need to add is the mapping of /dwr/* to the Spring dispatcher servlet.  If you are mapping your dispatcher servlet to / or /*, you will still need the /dwr/* mapping.  Please see our <a href="#root_mapping">common problems</a> section for more details.  A complete working example of this configuration can be found <a href="http://www.butterdev.com/dwr/2009/12/dwr-3-x-and-spring/" target="new">here</a>.</p>
+<p>The only thing you need to add is the mapping of /dwr/* to the Spring dispatcher servlet.  If you are mapping your dispatcher servlet to / or /*, you will still need the /dwr/* mapping and it must be defined before the global mapping.  Please see our <a href="#root_mapping">common problems</a> section for more details.</p><p>A complete working example of this configuration can be found <a href="http://www.butterdev.com/dwr/2009/12/dwr-3-x-and-spring/" target="new">here</a>.</p>
 <h4><a name="dwrSpringServlet"></a>Use the DWRSpringServlet</h4>
 <p>The DwrSpringServlet can be used if you are not using Spring MVC.  This servlet gains access to the Spring context configured in your web.xml.  Example web.xml:</p>
 <p>
@@ -104,7 +104,7 @@ A complete working example of this configuration can be found <a href="http://ww
 <ol>
     <li><a href="#namespace">Use the DWR/Spring namespace (Spring 2.5 or greater, DWR 2.x or greater, dwr.xml not required or recommended)</a></li>
     <li><a href="#annotation_tags">Use the DWR/Spring namespace with annotations (Spring 2.5 or greater, DWR 2.x or greater, dwr.xml not required or recommended)</a></li>
-    <li><a href="#springCreator">Use the DWRSpringServlet (Will work for older versions of Spring or DWR - dwr.xml required.  Not the recommended approach.)</a></li>
+    <li><a href="#springCreator">Use the Spring Creator (Will work for older versions of Spring or DWR - dwr.xml required.  Not the recommended approach.)</a></li>
 </ol>
 <h4><a name="namespace"></a>The namespace</h4>
 <p>The first task you need to accomplish is adding the following lines (in bold, below) to any of your Spring XML files that includes at least one DWR specific tag. Add them inside the <code>beans</code> declaration (at the beginning of the file):</p>
@@ -155,9 +155,16 @@ You may also specify configuration parameters for the dwrController:
 <p>It is also possible to remote a bean already defined in a reachable application context indicating the reference to it by using the proxy-ref element.</p>
 <p>Two complete (one with Spring MVC, one without) working examples of DWR and Spring using the namespace can be <a href="http://www.butterdev.com/dwr/2009/12/dwr-3-x-and-spring/" target="new">found here</a>.</p>
 <h4><a name="annotation_tags"></a>The namespace with Annotations</h4>
-<p>Please see <a href="#namespace">The namespace</a> before reading this section.  Several of the namespace sections apply to annotation configuration as well.</p>
-<p>If you would like to use annotations to remote your Spring beans DWR provides two tags that make it easy.<ol><li><b>annotation-scan</b> - This option can be used if your beans have not been registered with a Spring context.  It enables DWR to scan the classpath, detect beans annotated with @RemoteProxy & @RemoteMethod, and register the Spring beans and DWR Creator proxies for them.  Because DWR is registering the beans into the Spring context for you all Spring annotated beans (@Service, @Component, @Controller, etc.) will be ignored to avoid duplicate registration.  This element has several available attributes: </li><ul><li>base-package - The base package to initiate scanning from - i.e. com.myApp.*.</li><li>regex - A regular expression that will be used in the classpath scanner.</li><li>scanRemoteProxy - Should DWR scan for remote proxies? Defaults to true.</li><li>scanDataTransferObject - Should DWR scan for converters?  Defaults to true.</li><li>scanGlobalFilter - Defaults to true.  </li></ul><li><b>annotation-config</b> - This option can be used if your beans have already been registered with a Spring context (for example using Spring's context:component-scan). It enables DWR to scan the Spring context, detect beans annotated with @RemoteProxy & @RemoteMethod and register the DWR Creator proxies for them.</li></ol></p>
-<p>A complete working example of this configuration can be <a href="http://www.butterdev.com/dwr/2010/10/dwr-spring-and-annotations/" target="new">found here</a>.</p>
+<p>Before attempting to integrate DWR and Spring with annotations you should be familiar with the <a href="#namespace">DWR/Spring namespace</a>.  Below is a listing of the most important DWR annotations and their functional namespace equivalents:<ul><li>@RemoteProxy - Functional namespace equivalent = dwr:remote</li><li>@RemoteMethod - Functional namespace equivalent = dwr:include method="methodName"</li><li>@DataTransferObject - Functional namespace equivalent = dwr:convert</li></ul></p>
+<p>If you would like to use annotations to remote your Spring beans DWR provides two tags that make it easy.<ol><li><b>annotation-scan</b> - Enables DWR to <b>scan the classpath</b> and: <ul><li>Detect beans annotated with @RemoteProxy & @RemoteMethod, and register the Spring beans and DWR Creator proxies for them.  Because DWR is registering the beans into the Spring context for you all Spring annotated beans (@Service, @Component, @Controller, etc.) will be ignored to avoid duplicate registration.</li><li>Detect DWR converters annotated with @DataTransferObject.</li></ul>This element has several available attributes: </li><ul><li>base-package - The base package to initiate scanning from - i.e. com.myApp.*.</li><li>regex - A regular expression that will be used in the classpath scanner.</li><li>scanRemoteProxy - Should DWR scan for remote proxies? Defaults to true.</li><li>scanDataTransferObject - Should DWR scan for converters?  Defaults to true.</li><li>scanGlobalFilter - Defaults to true.  </li></ul><p><p>A complete working example of a dwr:annotation-scan configuration can be <a href="http://www.butterdev.com/dwr/2010/10/dwr-spring-and-annotations/" target="new">found here</a>.</p></p><li><b>annotation-config</b> - Enables DWR to <b>scan the Spring context</b>, detect beans annotated with @RemoteProxy & @RemoteMethod and register the DWR Creator proxies for them.</li></ol></p>
+<h5>Annotations - An example of the configuration required for a typical use-case</h5>
+<pre>
+  &lt;dwr:annotation-config id="dwrAnnotationConfig" /&gt;
+  &lt;dwr:annotation-scan base-package="com.yourpackage.whatever" scanDataTransferObject="true" scanRemoteProxy="false" /&gt;
+</pre>
+<p>In the example above:
+<ol><li>The dwr:annotation-config tag scans the Spring context and adds DWR creator proxies for beans annotated with @RemoteProxy.</li>
+<li>The dwr:annotation-scan tag scans the classpath and adds DWR converters for all beans annotated with @DataTransferObject.  We have disabled the scanning for remote proxies - in this case it is assumed the DWR creator proxies are existing beans in the Spring context and the dwr:annotation-config tag will add them.</li></ol>
 <h4><a name="springCreator"></a>The Spring Creator and dwr.xml</h4>
 <p>If you feel comfortable using dwr.xml you may use the Spring creator. This creator will lookup beans in your Spring &lt;beans>.xml file and rely on Spring to instantiate them. This creator will be useful to you if you already use Spring and totally useless if you don't.</p>
 <p>You allow DWR to use the spring creator to create and remote your beans as follows:</p>
