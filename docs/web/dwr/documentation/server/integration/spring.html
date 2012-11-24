@@ -22,11 +22,11 @@
 	<li>DWR and Spring step by step - Step 2 - Configure DWR's remoting
 		<ul>
 		  <li><a href="#namespace">Use the DWR/Spring namespace</a> (Spring 2.5 or greater, DWR 2.x or greater, dwr.xml not required or recommended)</li>
-    	  <li><a href="#namespaceAnnotations">Use the DWR/Spring namespace with annotations</a> (Spring 2.5 or greater, DWR 2.x or greater, dwr.xml not required or recommended)</li>
+    	  <li><a href="#annotation_tags">Use the DWR/Spring namespace with annotations</a> (Spring 2.5 or greater, DWR 2.x or greater, dwr.xml not required or recommended)</li>
           <li><a href="#springCreator">Use the DWRSpringServlet</a> (Will work for older versions of Spring and DWR - dwr.xml required.  Not the recommended approach.)</li>
 		</ul>
 	</li>
-	<li><a href=#common_problems">Solving Common Problems</a></li>
+	<li><a href="#common_problems">Solving Common Problems</a></li>
 </ul>
 
 <h2><a name="initial_considerations"></a>Initial considerations</h2>
@@ -103,7 +103,7 @@ A complete working example of this configuration can be found <a href="http://ww
 <p>The next and final step is to configure DWR's remoting - once again there are several options.  In the past (3 below) this step was accomplished in the dwr.xml via Creators and Converters.  However, Spring 2.x introduced a new feature named XML Namespace Handlers.  This allows DWR and Spring MVC to remote Spring beans easily with a custom syntax and removes the need for dwr.xml.  Configuration for the custom namespace is covered in 1 and 2 below.  
 <ol>
     <li><a href="#namespace">Use the DWR/Spring namespace (Spring 2.5 or greater, DWR 2.x or greater, dwr.xml not required or recommended)</a></li>
-    <li><a href="#namespaceAnnotations">Use the DWR/Spring namespace with annotations (Spring 2.5 or greater, DWR 2.x or greater, dwr.xml not required or recommended)</a></li>
+    <li><a href="#annotation_tags">Use the DWR/Spring namespace with annotations (Spring 2.5 or greater, DWR 2.x or greater, dwr.xml not required or recommended)</a></li>
     <li><a href="#springCreator">Use the DWRSpringServlet (Will work for older versions of Spring or DWR - dwr.xml required.  Not the recommended approach.)</a></li>
 </ol>
 <h4><a name="namespace"></a>The namespace</h4>
@@ -231,7 +231,7 @@ In fact, AOP proxies work fine with DWR. Just configure Spring accordingly.
   &lt;url-pattern>/&lt;/url-pattern&gt;
 &lt;/servlet-mapping&gt;
 </pre>
-This mapping is problematic for DWR.  In this case all DWR requests will be handled by the Spring dispatcher servlet.  The problem arises when Spring sends the requests to the DWR Controller Servlet - the path info will be null due to the / or /* mapping.  This situation will prevent DWR from functioning properly.  To resolve this issue always include a /dwr/* mapping before any root mappings (/, /*, etc.). Example (do this)
+This mapping is problematic for DWR.  The problem arises when Spring sends the request to the DWR Controller Servlet - the path info will be null due to the / or /* mapping.  This situation will prevent DWR from functioning properly.  To resolve this issue always include a /dwr/* mapping before any root mappings (/, /*, etc.). Example (do this)
 <pre>
 &lt;servlet>
   &lt;servlet-name&gt;springDispatcher&lt;/servlet-name&gt;
