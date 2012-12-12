@@ -9,18 +9,13 @@
 
 <h1>engine.js Functions</h1>
 
-<p><code>engine.js</code> is vital to DWR since it is used to marshal calls from the dynamically generated interface JavaScript function, so it is needed wherever DWR is used.</p>
-
-<p>All engine.js functions have the <code>dwr.engine</code> prefix.</p>
-
-<p>The engine.js file</p>
-<p>All DWR pages need the following script element to import the main DWR engine.</p>
-
-<pre>
+<p><code>engine.js</code> is vital to DWR since it is used to marshal calls from the dynamically generated  JavaScript interfaces to the server. All  pages where DWR will be used  require the inclusion of engine.js:<pre>
 &lt;script type='text/javascript'
     src='/<i>[YOUR-WEB-APP]</i>/dwr/engine.js'&gt;
 &lt;/script&gt;
-</pre>
+</pre></p>
+
+<p>All engine.js functions have the <code>dwr.engine</code> prefix.</p>
 
 <h2>Using the options</h2>
 
@@ -28,7 +23,7 @@
 
 <pre>dwr.engine.setTimeout(1000);</pre>
 
-<p>Or at a call level (Assume Remote is exported by DWR):</p>
+<p>Or on a per call basis:</p>
 
 <pre>
 Remote.singleMethod(params, {
@@ -48,11 +43,11 @@ dwr.engine.endBatch({
 });
 </pre>
 
-<p>It is possible to mix these styles, in which case call or batch level settings override global settings (as you would expect). When if you set an option several times in a batch, the last setting is taken. So if the <code>Remote.singleMethod()</code> example above was included in the batch, a timeout of 3000ms would be used for the batch.</p>
+<p>It is possible to mix these styles, in which case call or batch level settings override global settings (as you would expect). If you set an option several times in a batch, the last setting will be used. So if the <code>Remote.singleMethod()</code> example discussed previously was included in the batch example above, a timeout of 3000ms would be used for the batch.</p>
 
-<p>2 of the options, callback and exceptionHandler, are always specific to a call and not to a batch.</p>
+Two of the options, callback and exceptionHandler, are always specific to a call and not to a batch.
 
-<p>2 of the options, preHook and postHook, are additive, that is you can have multiple hooks per call. The global preHook is called before the batch and call preHooks. The global postHook is called after the call and batch postHooks.</p>
+<p>Two of the options, preHook and postHook, are additive, that is you can have multiple hooks per call. The global preHook is called before the batch and call preHooks. The global postHook is called after the call and batch postHooks.</p>
 
 <p>If all of this sounds confusing then don't worry. DWR is designed to do what you expect, so it should not be complex.</p>
 
@@ -74,8 +69,7 @@ dwr.engine.endBatch({
 		<td>1.1</td>
 		<td>1.1</td>
 		<td>1.1</td>
-		<td>Set to <code>false</code> for asynchronous behaviour (not
-		recommended).</td>
+		<td>Set to <code>false</code> for asynchronous behaviour (highly discouraged).</td>
 	</tr>
 
 	<tr>
@@ -172,7 +166,7 @@ dwr.engine.endBatch({
 	</tr>
 
 	<tr>
-		<td><a href="../extra-data.html">callbackArg&nbsp</a></td>
+		<td><a href="../extra-data.html">callbackArg</a></td>
 		<td>-</td>
 		<td>-</td>
 		<td>3.0</td>
@@ -199,7 +193,7 @@ dwr.engine.endBatch({
 	</tr>
 
 	<tr>
-		<td><a href="../extra-data.html#scope">callbackScope&nbsp</a></td>
+		<td><a href="../extra-data.html#scope">callbackScope</a></td>
 		<td>-</td>
 		<td>-</td>
 		<td>3.0</td>
@@ -272,8 +266,7 @@ dwr.engine.endBatch({
 		<td>3.0 RC2</td>
 		<td>-</td>
 		<td>-</td>
-		<td>For reverse AJAX calls. The number of times we should
-		re-attempt failed calls after DWR has went offline.  Defaults to -1, unlimited.</td>
+		<td>  Defaults to -1, unlimited.<br><br>Please see our <a href="../../reverse-ajax/retry.html">Retry handling</a> documentation.</td>
 	</tr>
 
 	<tr>
@@ -281,19 +274,14 @@ dwr.engine.endBatch({
 		<td>3.0 RC2</td>
 		<td>-</td>
 		<td>-</td>
-		<td>For reverse AJAX calls. An array specifying the default time
-		between retries (in seconds). Defaults to: <br>
-		[ 1, 1, 10 ]<br>
-		<br>retryIntervals.length - 1 = The number of retry attempts until DWR is offline.<br><br>retryIntervals[retryIntervals.length - 1] = The interval used to poll the server while DWR is offline.<br><br>
-		In this case the first retry will occur in 1 second and the second retry
-		will occur in 1 second - DWR will be offline if both of these retries are unsuccessful.  While DWR is offline we will continue to poll for server status every 10 seconds until maxRetries is reached.  When DWR goes offline or online <a href="#pollStatusHandler">pollStatusHandler</a> will be called.</td>
+		<td>Defaults to [1, 1, 3].<br><br>Please see our <a href="../../reverse-ajax/retry.html">Retry handling</a> documentation.</td>
 	</tr>
     <tr>
 		<td><a name="pollStatusHandler"></a>pollStatusHandler</td>
 		<td>3.0 RC2</td>
 		<td>-</td>
 		<td>-</td>
-		<td>Function to call when the server comes online or offline.  For reverse Ajax polling.</td>
+		<td>Defaults to the errorHandler.  This default should generally be overridden for active Reverse Ajax users.  <br><br>Please see our <a href="../../reverse-ajax/retry.html">Retry handling</a> documentation.</td>
 	</tr>
 </table>
 
