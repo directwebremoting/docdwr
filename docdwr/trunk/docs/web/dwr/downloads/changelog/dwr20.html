@@ -2,29 +2,154 @@
 <html>
 <head>
   <title>New in Version 2.0</title>
-  <meta name='weight' content='2'>
-  <meta name='alias' content='/dwr/releases/changelog/dwr20m3'>
-  <meta name='navTitle' content='New in v2.0.7'>
+  <meta name='weight' content='6'>
+  <meta name='alias' content='/dwr/releases/changelog/dwr20'>
+  <meta name='navTitle' content='New in v2.0'>
   <link rel="stylesheet" type="text/css" href="../../media/styles.css">
 </head>
 <body>
 
-<h1>DWR version 2.0.7</h1>
+<h1>DWR version 2 - New and Noteworthy</h1>
 
-<p>Our latest 2.0.7 release is a minor bug fix release.</p>
+<p>Version 2 contains 3 big new features and a host of smaller ones.</p>
 
-<ul>
-<li>[<a href='http://bugs.directwebremoting.org/bugs/browse/DWR-60'>DWR-60</a>] -         Synchronized block in DefaultScriptSessionManager locking entire appserver
-</li>
-<li>[<a href='http://bugs.directwebremoting.org/bugs/browse/DWR-144'>DWR-144</a>] -         DWR annotation with IBM JDK 1.4 makes dwr throws an exception when first ajax call is done
-</li>
-<li>[<a href='http://bugs.directwebremoting.org/bugs/browse/DWR-291'>DWR-291</a>] -         deadlock between DefaultScriptSession and JettyContinuationSleeper
-</li>
-<li>[<a href='http://bugs.directwebremoting.org/bugs/browse/DWR-446'>DWR-446</a>] -         A timeout with id 0 is not cleared
-</li>
-<li>[<a href='http://bugs.directwebremoting.org/bugs/browse/DWR-461'>DWR-461</a>] -         DefaultConverterManager.converters not synchronized
-</li>
-</ul>
+<p>For the impatient: <a href="../../downloads/index.html">Download DWR</a>.</p>
+
+<p>Important note: DWR version 2.0.1 and before contained 2 XSS vulnerabilities. You are advised to upgrade to the latest version.</p>
+
+<h2>JavaScript Proxy API</h2>
+
+<p>DWR can dynamically generate JavaScript from a Java API. This is done at runtime rather than compile time, so we can use it to remote control many browsers. This makes it very easy to write things like chat applications, or anything particularly dynamic. Messages are sent to clients using Reverse Ajax.</p>
+
+<p>DWR currently features Java APIs to <a href="http://script.aculo.us/">Script.aculo.us</a> <a href="http://github.com/madrobby/scriptaculous/wikis/core-effects">Effects</a> and DWR's own DHTML library. We'll be adding more soon.</p>
+
+<pre>
+import org.directwebremoting.proxy.scriptaculous.Effect;
+
+Effect effect = new Effect(aBrowser);
+effect.fade(&quot;id&quot;);
+</pre>
+
+<h2>Reverse Ajax</h2>
+
+<p>DWR supports 3 ways to asynchronously transfer messages from the server to the browser: Comet (long-lived HTTP connections), Polling and Piggyback. Of these Comet and Polling are active (fast but require extra network traffic) and Piggyback is passive (slower but doesn't need extra network traffic). DWR automatically selects the best method transparently to the programmer.</p>
+
+<p>Since chat is the &quot;Hello, World&quot; of Ajax this is our chat example:</p>
+
+<pre>
+WebContext wctx = WebContextFactory.get();
+String chatPage = wctx.getCurrentPage();
+
+<span class="codecomment">// Find all the browser on window open on the chat page:</span>
+Collection sessions = wctx.getScriptSessionsByPage(chatPage);
+
+<span class="codecomment">// Use the Javascript Proxy API to empty the chatlog &lt;ul&gt; element</span>
+<span class="codecomment">// and re-fill it with new messages</span>
+Util utilAll = new Util(sessions);
+utilAll.removeAllOptions("chatlog");
+utilAll.addOptions("chatlog", messages, "text");
+
+<span class="codecomment">// That's it.</span>
+</pre>
+
+<p>DWR takes care of comet and polling, of distinguishing multiple windows in a single browser, and of fixing bugs in IE.</p>
+
+<p>Other uses for this technology include progress bars, online games, stock tickers and any system where server state changes and we need to push updates to a browser or browsers.</p>
+
+<h2>Security</h2>
+
+<p>Two of the the biggest generic dangers to ajax applications today are <a href="http://en.wikipedia.org/wiki/Cross_site_scripting">Cross-Site Scripting</a> (XSS), which most people are aware of, and the new tool in the hack-box: <a href="http://en.wikipedia.org/wiki/Cross-site_request_forgery">Cross-Site Request Forgery</a> (CSRF). DWR helps you protect your site against these attacks by providing automatic protection against CSRF attacks for many configurations, and by defaulting to a mode where XSS attacks are reduced.</p>
+
+<h2>Other New Features</h2>
+
+<h3>Much Expanded WAR File</h3>
+
+<p>The dwr.war download is significantly larger than in version 1.1. It contains a number of demos and worked examples all with fully explained source code.</p>
+
+<p>Among these expanded demos is an integration with <a href="http://www.tibco.com/mk/gi/?CID=DWR">TIBCO GI</a> that uses Reverse Ajax and the Open Ajax Hub.</p>
+
+<h3>New &#39;Script&#39; Scope for Ajax Pages</h3>
+
+<p>With normal servlets there are 4 scopes; application, session, page and request. DWR2 introduces a new scope: &#39;script&#39;. Script scope applies to a single web page (rather than a whole browser), however long the page lives. It works even when cookies are turned off. Script scope is available programmatically:</p>
+
+<pre>
+WebContextFactory.get().getScriptSession().setAttribute(&quot;key&quot;, value);
+</pre>
+
+<p>And also to Creators in dwr.xml:</p>
+
+<pre>
+&lt;create creator=&quot;new&quot; javascript=&quot;Test&quot; scope=&quot;<strong>script</strong>&quot;&gt;
+  &lt;param name=&quot;class&quot; value=&quot;com.example.Test&quot;/&gt;
+&lt;/create&gt;
+</pre>
+
+<h3>Spring Namespace Support</h3>
+
+<p>You can now do away with dwr.xml and replace it with configuration in your Spring Beans XML file like this:</p>
+
+<pre>
+&lt;beans&gt;
+  &lt;bean id="Clock" class="com.eg.Clock"&gt;
+    &lt;property name="foo" ref="foo"/&gt;
+    &lt;dwr:remote javascript="Clock"/&gt;
+  &lt;/bean&gt;
+  ...
+&lt;/beans&gt;
+</pre>
+
+<h3>Guice Support</h3>
+
+<p>DWR now supports <a href="http://code.google.com/p/google-guice/">Guice</a>. Thanks to Tim Peierls, DWR and Guice play really well together. You can read more about the background <a href="http://tembrel.blogspot.com/2007/04/guice-support-in-dwr.html">on Tim's blog</a>.</p>
+
+<h3>Cross Domain Ajax: &lt;script&gt; Tag Manipulation</h3>
+
+<p>Should you need to access servers in a different domain we've enabled a new remoting scheme. From DWR 2.0 you can use manipulation of &lt;script&gt; tags in addition to XMLHttpRequest or iframes.<br />
+</p>
+
+<h3>Jetty Continuations</h3>
+
+<p>The ongoing work with Reverse Ajax is to ensure that no webservers get hurt as a result of the extra load. The first piece of the puzzle is from <a href="http://jetty.mortbay.org/jetty/index.html">Jetty</a>. If Reverse Ajax is turned on in a Jetty servlet engine then DWR will automatically use Jetty's <a href="http://www.mortbay.com/MB/log/gregw/?permalink=Jetty6Continuations.html">Ajax Continuations</a> to save on server threads.</p>
+
+<h3>Template-based HTML Updates</h3>
+
+<p>dwr.util (the new name for DWRUtil) has a new function. dwr.util.cloneNode(elementId) enables you to use HTML fragments as templates that are repeated. For example:</p>
+
+<pre>
+<span class="codecomment">// Loop over all the beans</span>
+<span class="java_keyword">for</span> (var i <span class="java_operator">=</span> 0; i &lt; beanArray.length; i++) {
+  <span class="codecomment">// Fill in the blanks in the template.</span>
+  dwr.util.setValues(beanArray[i]);
+  <span class="codecomment">// Clone the parent node so we don't overwrite it next time</span>
+  dwr.util.cloneNode("template");
+}
+ 
+<span class="codecomment">// Finally hide the template</span>
+dwr.util.byId("template").style.display = "none";
+</pre>
+
+<h3>Automatic &lt;signatures&gt; in Java5+</h3>
+
+<p>DWR 1.x sometimes needs a &lt;signatures&gt; element to help it get the type conversion right. If you are using DWR 2.0 with JDK5 generic types then you probably don't need &lt;signatures&gt; any more. DWR will automagically get the right type conversion.</p>
+
+<h3>Annotations</h3>
+
+<p>If you are using Java 5 then you can make use of the new DWR annotations. New annotations include @RemoteProxy, @DataTransferObject, @RemoteMethod and @RemoteProperty. For more detail see the <a href="../../documentation/server/configuration/annotations.html">annotations documentation</a>.<br />
+</p>
+
+<h3>Servlet Session Timeout Support</h3>
+
+<p>A number of security mechanisms automatically send a login page back to the user if some security constraint times out. DWR2 enables you to define what to do if a timeout occurs. Commonly a simple page reload is all you need:</p>
+
+<pre>
+dwr.engine.setTextHtmlHandler(function() {
+  document.location.reload();
+});
+</pre>
+
+<h3>Other Stuff</h3>
+
+<p>There are hundreds of other small changes too small for this list that make DWR 2 a great release. Please tell us what you think on <a href="../../support/index.html">the DWR mailing list</a>.</p>
 
 </body>
 </html>
