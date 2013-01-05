@@ -44,7 +44,7 @@
 <p>Since &lt;script&gt; tag remoting does not allow you to process the JSON or JavaScript before it is eval()ed you can protect your JSON by forcing it to be manipulated before it is eval()ed. There are 3 ways to do this (DWR implements the first):</p>
 
 <ol>
-<li>Prefix the script with '<code>throw new Error("message");</code>'. This is the approach taken by DWR and is a neat solution in that it allows you to explain what is wrong to users that get the message by mistake.
+<li>Prefix the script with '<code>throw new Error("message");</code>'. This is the approach taken by DWR and it is a neat solution in that it allows you to explain what is wrong to users that get the message by mistake.
 <br/>
 It is potentially vulnerable to some browser allowing an attacker to redefine the Error or String constructors to prevent the throw from happening, however this does not work on any browser that I know of, and it's hard to see how it could happen.
 <br/>
