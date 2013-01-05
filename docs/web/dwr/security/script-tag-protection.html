@@ -10,7 +10,7 @@
 
 <h1>About DWR's JavaScript Security</h1>
 
-<p>DWR protection from several JavaScript vulnerabilities out of the box:
+<p>DWR offers protection from several JavaScript vulnerabilities out of the box:
 
 <ul>
     <li><a href="#xss">DWR's Protection against XSS</a></li>
@@ -20,7 +20,7 @@
 </p>
 
 <h2><a name="xss"></a>DWR's Protection against XSS</h2>
-<p>When using DWR's util.js dangerous characters will be escaped automatically.  You can read more about how our XSS protection works <a href="../documentation/browser/util/escapeHtml.html">in our client documentation.</a></p>
+<p>All relevant functions in DWR's util.js automatically escape dangerous characters which could be used in an XSS attack.  You can read more about how our XSS protection works <a href="../documentation/browser/util/escapeHtml.html">in our client documentation.</a></p>
 
 <h2><a name="scriptTagHack"></a>DWR's Protection against the &lt;script&gt; tag hack and CSRF</h2>
 
