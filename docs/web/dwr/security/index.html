@@ -8,12 +8,12 @@
 <h1>Security</h1>
 
 <p>We take security very seriously with DWR and thought it was worth
-explaining the steps we have gone through to avoid mistakes. We take
+explaining the steps we have gone through to avoid mistakes. Out of the box DWR protects users against <a href="script-tag-protection.html">CSRF</a> and <a href="script-tag-protection.html">XSF attacks</a>.  We take
 steps to ensure that methods on the server are only executed when they
-should be, and that scripts sent to browsers are only sent to the
-correct browsers. The latter deserves it's own section. See <a href="script-tag-protection.html">script tag protection</a>.</p>
+should be, that scripts sent to browsers are only <a href="script-tag-protection.html">sent to the
+correct browsers</a>.</p>
 
-<p>Firstly DWR takes the view that you should always know exactly what
+<p>First DWR takes the view that you should always know exactly what
 is being remoted, and how. The principle is that DWR should only be
 calling methods on your code with your explicit permission.</p>
 
@@ -28,9 +28,9 @@ there is <a href="../server/configuration/dwrxml/converters/bean.html">fine grai
 control</a> over which properties of the beans get converted.</p>
 
 <p>An obvious point, but one that is worth making - don't run with the
-test/debug console turned on in live. Turning the debug console on and
+test/debug console turned on in a production environment. Turning the debug console on and
 off is covered in the <a href="../server/configuration/servlet/test.html">section on
-web.xml</a>.</p>
+web.xml configuration</a>.</p>
 
 <h2>Security Support</h2>
 
