@@ -1,106 +1,173 @@
 <!DOCTYPE html>
 <html>
-<head>
-  <title>setValues</title>
-  <meta name='alias' content='/dwr/browser/util/setvalues'>
-  <link rel="stylesheet" type="text/css" href="../../../media/styles.css">
-</head>
-<body>
-
-<script type='text/javascript' src='../../../media/util.js'> </script>
-<script type='text/javascript' src='../../../media/eval.js'> </script>
-<script type="text/javascript">
-function doSetValues()
-{
-    var text = dwr.util.getValue('setvalues');
-    var object = objectEval(text);
-    dwr.util.setValues(object);
-}
-</script>
-
-<h1>dwr.util.setValues(object/array, options)</h1>
-
-<p>Similar to setValue except that the input is a Javascript object that contains name/value pairs. The names are assumed to be the IDs of HTML elements, and the values, what we should set the contents of the elements.</p>
-
-<!--break-->
-
-<p>
-<code>dwr.util.setValues</code>(
-<textarea rows="5" cols="30" id="setvalues" style="vertical-align:top;" onchange="dwr.util.onReturn(event, doSetValues)">{
+   <head>
+      <title>setValues</title>
+      <meta name="alias" content="/dwr/browser/util/setvalues" />
+      <link rel="stylesheet" type="text/css" href="../../../media/styles.css" />
+      <style>
+         .small { font-size:80%; }
+         .testblock { width: 100%; margin:10px; background-color:#fff8dd; padding:10px }
+      </style>
+   </head>
+   <body>
+      <script type="text/javascript" src="../../../media/util.js"> </script>
+      <script type="text/javascript" src="../../../media/eval.js"> </script>
+      <script type="text/javascript">
+         var nodesCloned = false;
+         function doSetValues()
+         {
+             var text = dwr.util.getValue('setValuesForObjectTextArea');
+             var object = objectEval(text);
+             dwr.util.setValues(object);
+         }
+         
+         function doSetValuesForArray()
+         {
+             var text = dwr.util.getValue('setValuesForArrayTextArea');
+             var arr = eval(text);
+             dwr.util.setValues(arr, { idPrefix : 'person' });
+         }
+         
+         function doSetValuesForArrayWithClone()
+         {
+             var text = dwr.util.getValue('setValuesForArrayWithCloneTextArea');
+             var arr = eval(text);
+             if (!nodesCloned) {
+               dwr.util.cloneNodeForValues('personWithClone', arr, {updateCloneStyle:{display:""}});
+             }
+             nodesCloned = true;
+             dwr.util.setValues(arr, { idPrefix : 'personWithClone' });
+         }
+      </script>
+      <h1>dwr.util.setValues(object/array, options)</h1>
+      <p>Similar to setValue except that the input can be either a Javascript object or an array of Javascript objects.  The objects should contain name/value pairs. The names are assumed to be the IDs of HTML elements, and the values, what we should set the contents of the elements.</p>
+      <ul>
+      	<li><a href="#setValuesObjectLink">dwr.util.setValues(object)</a> - An example of using setValues to populate a form with object values.</li>
+      	<li><a href="#setValuesArrayLink">dwr.util.setValues(array, { idPrefix : 'yourPrefixHere' }</a> - An example of populating several div/spans with an array of object values.</li>
+      	<li><a href="#setValuesArrayWithCloneLink">dwr.util.setValues(array, { idPrefix : 'yourPrefixHere' }</a> - Similar to the second example except we are using dwr.util.cloneNodeForValues to dynamically generate the HTML elements for each element in the array of objects.</li>
+      </ul>
+      <h2><a name="setValuesObjectLink"></a>dwr.util.setValues(object) - Populate a form with object values</h2>
+      <p>In this example we are using dwr.util.setValues to populate a form with data from an object.  Please modify the object definition in the textarea and click the setValues button to experiment.</p>
+      <p>         
+         <code>dwr.util.setValues</code>(
+         <textarea rows="5" cols="50" id="setValuesForObjectTextArea" style="vertical-align:top;" onchange="dwr.util.onReturn(event, doSetValues)">{
   div: "new div content",
-  password: "1234567890"
+  textarea: "Go ahead, try it.  Modify me!"
 }</textarea> )
-<input type="button" value="setValues" onclick="doSetValues()"/>
+         <input type="button" value="setValues" onclick="doSetValues()" />
+      </p>
+      <h3>Results:</h3>     
+      <div class="testblock">
+         <p><b>HTML Test Elements</b></p>
+         <div style="border:1px solid #999;" id="div">A div element with id="div".</div>
+         <table>
+            <tr>
+               <td>Text area <span class="small">(id="textarea")</span>:</td>
+               <td><textarea id="textarea"></textarea></td>
+               <td>Selection list <span class="small">(id="select")</span>:</td>
+               <td>
+                  <select id="select">
+                     <option selected="selected" value="value one">text one</option>
+                     <option value="value two">text two</option>
+                     <option value="value three">text three</option>
+                  </select>
+               </td>
+            </tr>
+            <tr>
+               <td>Text input <span class="small">(id="text")</span>:</td>
+               <td><input id="text" value="" /></td>
+               <td>Password input <span class="small">(id="password")</span>:</td>
+               <td><input id="password" value="password" type="password" /></td>
+            </tr>
+            <tr>
+               <td>Form button <span class="small">(id="formbutton")</span>:</td>
+               <td><input id="formbutton" value="button" type="button" /></td>
+               <td>Fancy button <span class="small">(id="button")</span>:</td>
+               <td><button id="button">button</button></td>
+            </tr>
+         </table>
+      </div>
+      <h2><a name="setValuesArrayLink"></a>dwr.util.setValues(array, { idPrefix : 'yourPrefixHere' }</h2>
+      <p>In this example we are using dwr.util.setValues to populate a series of divs/spans with data from an array of objects.  Please modify the object definition in the textarea and click the setValues button to experiment.</p>
+      <p>
+         <code>var peopleArr = </code><textarea rows="13" cols="50" id="setValuesForArrayTextArea" style="vertical-align:top;" onchange="dwr.util.onReturn(event, doSetValuesForArray)">[{
+         firstName : 'Mary', 
+         lastName : 'Hutchkins', 
+         address : '5434 Maplewood Drive' 
+         }, {
+         firstName : 'John', 
+         lastName : 'Doe', 
+         address : '2767 Green Acres Street' 
+         }, {
+         firstName : 'Mike', 
+         lastName : 'Johnson', 
+         address : '6 Wrong Way Avenue' 
+         }]</textarea>         
+      </p>
+      <p>
+      <code>dwr.util.setValues</code>(peopleArr, { idPrefix : 'person' });</code> <input type="button" value="setValues" onclick="doSetValuesForArray()" />
+      </p> 
+      <h3>Results:</h3>     
+      <div class="testblock">
+         <div>Name: <span id="person[0].firstName"></span> <span id="person[0].lastName"></span></div>
+         <div>Address: <span id="person[0].address"></span></div>
+      </div>
+      <div class="testblock">
+         <div>Name: <span id="person[1].firstName"></span> <span id="person[1].lastName"></span></div>
+         <div>Address: <span id="person[1].address"></span></div>
+      </div>
+      <div class="testblock">
+         <div>Name: <span id="person[2].firstName"></span> <span id="person[2].lastName"></span></div>
+         <div>Address: <span id="person[2].address"></span></div>
+      </div>
+      <p>When an array is passed into setValues the id of the elements should be idPrefix[index].objectPropertyName.  To illustrate this here is the HTML for the results above:
+      <pre>
+<code>
+&lt;div&gt;&lt;span id="person[0].firstName"&gt;&lt;/span&gt; &lt;span id="person[0].lastName">&lt;/span&gt;&lt;/div&gt;
+&lt;div&gt;&lt;div&gt;Address: &lt;span id="person[0].address"&gt;&lt;/span>&lt;/div&gt;&lt;/div&gt;
+&lt;div&gt;&lt;span id="person[1].firstName"&gt;&lt;/span&gt; &lt;span id="person[1].lastName">&lt;/span&gt;&lt;/div&gt;
+&lt;div&gt;&lt;div&gt;Address: &lt;span id="person[1].address"&gt;&lt;/span>&lt;/div&gt;&lt;/div&gt;
+&lt;div&gt;&lt;span id="person[2].firstName"&gt;&lt;/span&gt; &lt;span id="person[2].lastName">&lt;/span&gt;&lt;/div&gt;
+&lt;div&gt;&lt;div&gt;Address: &lt;span id="person[2].address"&gt;&lt;/span>&lt;/div&gt;&lt;/div&gt;
+</code>
+</pre>
+      </p>
+      <h2><a name="setValuesArrayWithCloneLink"></a>dwr.util.setValues(array, { idPrefix : 'yourPrefixHere' } with dwr.util.cloneNodeForValues</h2>
+      <p>This example is very similar to the previous example.  The difference is that we are also using dwt.util.cloneNodeForValues so that we do not have to create all of the HTML elements.</p>
+      <p>
+         <code>var peopleArr = </code><textarea rows="13" cols="50" id="setValuesForArrayWithCloneTextArea" style="vertical-align:top;" onchange="dwr.util.onReturn(event, doSetValuesForArrayWithClone)">[{
+         firstName : 'Mary', 
+         lastName : 'Hutchkins', 
+         address : '5434 Maplewood Drive' 
+         }, {
+         firstName : 'John', 
+         lastName : 'Doe', 
+         address : '2767 Green Acres Street' 
+         }, {
+         firstName : 'Mike', 
+         lastName : 'Johnson', 
+         address : '6 Wrong Way Avenue' 
+         }]</textarea>         
+      </p>
+            <p>
+      <code>
+      dwr.util.cloneNodeForValues('personWithClone', peopleArr, {updateCloneStyle:{display:""}});<br>      
+      dwr.util.setValues</code>(peopleArr, { idPrefix : 'personWithClone' });</code> <input type="button" value="setValues" onclick="doSetValuesForArrayWithClone()" />
+      </p> 
+      <h3>Results:</h3>     
+      <div id="personWithClone" style="display:none" class="testblock">
+         <div>Name: <span id="personWithClone.firstName"></span> <span id="person.lastName"></span></div>
+         <div>Address: <span id="personWithClone.address"></span></div>
+      </div>      
+      <p>The HTML below (all that is needed for this example) illustrates the work that dwr.util.cloneNodeForValues performs:
+      <pre>
+<code>
+&lt;div id="person" style="display:none" class="testblock"&gt;
+  &lt;div&gt;Name: &lt;span id="person.firstName">&lt;/span&gt; &lt;span id="person.lastName">&lt;/span>&lt;/div&gt;
+  &lt;div&gt;Address: &lt;span id="person.address">&lt;/span&gt;&lt;/div&gt;
+&lt;/div&gt;  
+</code>
+</pre>
 </p>
-
-<!-- START COPIED BLOCK: Source: node/75 Copies: node/76-79 -->
-
-<style>
-.small { font-size:80%; }
-.testblock { margin:10px; background-color:#fff8dd; padding:10px }
-</style>
-
-<div class="testblock">
-
-<p><b>HTML Test Elements</b></p>
-
-<div style="border:1px solid #999;" id="div">A div element with id="div".</div>
-
-<table>
-<tr>
-
-<td>Text area <span class="small">(id="textarea")</span>:</td>
-<td><textarea id="textarea"></textarea></td>
-
-<td>Selection list <span class="small">(id="select")</span>:</td>
-<td>
-  <select id="select">
-    <option selected="selected" value="value one">text one</option>
-    <option value="value two">text two</option>
-    <option value="value three">text three</option>
-  </select>
-</td>
-
-</tr>
-<tr>
-
-<td>Text input <span class="small">(id="text")</span>:</td>
-<td><input id="text" value="" /></td>
-
-<td>Password input <span class="small">(id="password")</span>:</td>
-<td><input id="password" value="password" type="password" /></td>
-
-<!--
-
-</tr>
-<tr>
-
-<td>Radio buttons <span class="small">(id="radio")</span>:</td>
-<td>
-  <input id="radio" name="radio" value="one" type="radio" checked="checked"/>one<br/>
-  <input id="radio" name="radio" value="two" type="radio"/>two
-</td>
-
-<td>Check box <span class="small">(id="checkbox")</span>:</td>
-<td><input id="checkbox" value="input checkbox" type="checkbox" />input</td>
-
--->
-
-</tr>
-<tr>
-
-<td>Form button <span class="small">(id="formbutton")</span>:</td>
-<td><input id="formbutton" value="button" type="button" /></td>
-
-<td>Fancy button <span class="small">(id="button")</span>:</td>
-<td><button id="button">button</button></td>
-
-</tr>
-</table>
-
-</div>
-
-<!-- END COPIED BLOCK -->
-
-</body>
+   </body>
 </html>
