@@ -17,9 +17,8 @@
 /**
  * Declare an object to which we can add real functions.
  */
-if (dwr == null) var dwr = {};
-if (dwr.util == null) dwr.util = {};
-if (DWRUtil == null) var DWRUtil = dwr.util;
+if (typeof dwr == 'undefined') dwr = {};
+if (!dwr.util) dwr.util = {};
 
 /** @private The flag we use to decide if we should escape html */
 dwr.util._escapeHtml = true;
@@ -29,7 +28,7 @@ dwr.util._escapeHtml = true;
  */
 dwr.util.setEscapeHtml = function(escapeHtml) {
   dwr.util._escapeHtml = escapeHtml;
-}
+};
 
 /** @private Work out from an options list and global settings if we should be esccaping */
 dwr.util._shouldEscapeHtml = function(options) {
@@ -37,28 +36,23 @@ dwr.util._shouldEscapeHtml = function(options) {
     return options.escapeHtml;
   }
   return dwr.util._escapeHtml;
-}
+};
 
 /**
- * Return a string with &, <, >, ' and " replaced with their entities
+ * Return a string with &, < and > replaced with their entities
  * @see TODO
  */
 dwr.util.escapeHtml = function(original) {
-  var div = document.createElement('div');
-  var text = document.createTextNode(original);
-  div.appendChild(text);
-  return div.innerHTML;
-}
+  return original.replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;').replace(/"/g,'&quot;').replace(/'/g,'&#039;');
+};
 
 /**
  * Replace common XML entities with characters (see dwr.util.escapeHtml())
  * @see TODO
  */
 dwr.util.unescapeHtml = function(original) {
-  var div = document.createElement('div');
-  div.innerHTML = original.replace(/<\/?[^>]+>/gi, '');
-  return div.childNodes[0] ? div.childNodes[0].nodeValue : '';
-}
+  return original.replace(/&lt;/g,'<').replace(/&gt;/g,'>').replace(/&quot;/g,'"').replace(/&#039;/g,"'").replace(/&amp;/g,'&');
+};
 
 /**
  * Replace characters dangerous for XSS reasons with visually similar characters
@@ -71,7 +65,7 @@ dwr.util.replaceXmlCharacters = function(original) {
   original = original.replace("\'", "\u2018");
   original = original.replace("\"", "\u201C");
   return original;
-}
+};
 
 /**
  * Return true iff the input string contains any XSS dangerous characters
@@ -79,11 +73,11 @@ dwr.util.replaceXmlCharacters = function(original) {
  */
 dwr.util.containsXssRiskyCharacters = function(original) {
   return (original.indexOf('&') != -1
-    && original.indexOf('<') != -1
-    && original.indexOf('>') != -1
-    && original.indexOf('\'') != -1
-    && original.indexOf('\"') != -1);
-}
+    || original.indexOf('<') != -1
+    || original.indexOf('>') != -1
+    || original.indexOf('\'') != -1
+    || original.indexOf('\"') != -1);
+};
 
 /**
  * Enables you to react to return being pressed in an input
@@ -117,45 +111,55 @@ dwr.util.selectRange = function(ele, start, end) {
  * Find the element in the current HTML document with the given id or ids
  * @see http://getahead.org/dwr/browser/util/$
  */
-if (document.getElementById) {
-  dwr.util.byId = function() {
-    var elements = new Array();
-    for (var i = 0; i < arguments.length; i++) {
-      var element = arguments[i];
-      if (typeof element == 'string') {
-        element = document.getElementById(element);
+dwr.util.byId = function() {
+  var elems = [];
+  for (var i = 0; i < arguments.length; i++) {
+    var idOrElem = arguments[i];
+    var elem;
+    if (typeof idOrElem == 'string') {
+      var elem = document.getElementById(idOrElem);
+      // Workaround for IE and Opera that may return element based on name
+      if (document.all && elem && dwr.util._getId(elem) != idOrElem) {
+        elem = null;
+        var maybeElems = document.all[idOrElem];
+        if (maybeElems.tagName) maybeElems = [maybeElems];
+        for (var j = 0; j < maybeElems.length; j++) {
+          if (dwr.util._getId(maybeElems[j]) == idOrElem) {
+            elem = maybeElems[j];
+            break;
+          }
+        }
       }
-      if (arguments.length == 1) {
-        return element;
-      }
-      elements.push(element);
     }
-    return elements;
-  };
-}
-else if (document.all) {
-  dwr.util.byId = function() {
-    var elements = new Array();
-    for (var i = 0; i < arguments.length; i++) {
-      var element = arguments[i];
-      if (typeof element == 'string') {
-        element = document.all[element];
-      }
-      if (arguments.length == 1) {
-        return element;
-      }
-      elements.push(element);
+    else {
+      elem = idOrElem;
     }
-    return elements;
-  };
+    if (arguments.length == 1) {
+      return elem;
+    }
+    elems.push(elem);
+  }
+  return elems;
 }
+
+dwr.util._getId = function(elem) {
+  // Get the element's real id. In some situations IE may (wrongly)
+  // return another element from the getAttribute() call so we watch out for 
+  // this case and use the attributes.id value instead. Note that the use of 
+  // the attributes collection may cause problems in IE7 together with 
+  // cloneNode so we avoid hitting it when possible.  
+  var elemId = elem.getAttribute("id");
+  if (dwr.util._isObject(elemId)) {
+    elemId = elem.attributes.id.value;
+  }
+  return elemId;
+};
 
 /**
  * Alias $ to dwr.util.byId
  * @see http://getahead.org/dwr/browser/util/$
  */
-var $;
-if (!$) {
+if (typeof $ == 'undefined') {
   $ = dwr.util.byId;
 }
 
@@ -176,10 +180,10 @@ dwr.util.toDescriptiveString = function(data, showLevels, options) {
     shortStringMaxLength: 13,
     propertyNameMaxLength: 30 
   };
-  for (var p in defaultoptions) if (!(p in opt)) opt[p] = defaultoptions[p];
-  if (typeof options == "number") {
-    var baseDepth = options;
-    opt.baseIndent = dwr.util._indent2(baseDepth, opt);
+  for (var p in defaultoptions) {
+    if (!(p in opt)) {
+      opt[p] = defaultoptions[p];
+    }
   }
 
   var skipDomProperties = {
@@ -199,7 +203,7 @@ dwr.util.toDescriptiveString = function(data, showLevels, options) {
     var reply = "";
     try {
       // string
-      if (typeof data == "string") {
+      if (dwr.util._isString(data)) {
         var str = data;
         if (showLevels == 0 && str.length > options.shortStringMaxLength)
           str = str.substring(0, options.shortStringMaxLength-3) + "...";
@@ -232,12 +236,12 @@ dwr.util.toDescriptiveString = function(data, showLevels, options) {
       }
       
       // function
-      else if (typeof data == "function") {
+      else if (dwr.util._isFunction(data)) {
         reply = "function";
       }
     
       // Array
-      else if (dwr.util._isArray(data)) {
+      else if (dwr.util._isArrayLike(data)) {
         if (showLevels == 0) { // Short format (don't show items)
           if (data.length > 0)
             reply = "[...]";
@@ -249,7 +253,7 @@ dwr.util.toDescriptiveString = function(data, showLevels, options) {
           strarr.push("[");
           var count = 0;
           for (var i = 0; i < data.length; i++) {
-            if (! (i in data)) continue;
+            if (!(i in data) && data != "[object NodeList]") continue;
             var itemvalue = data[i];
             if (count > 0) strarr.push(", ");
             if (showLevels == 1) { // One-line format
@@ -295,7 +299,7 @@ dwr.util.toDescriptiveString = function(data, showLevels, options) {
           for (var prop in data) {
             var propvalue = data[prop];
             if (isDomObject) {
-              if (!propvalue) continue;
+              if (propvalue == null) continue;
               if (typeof propvalue == "function") continue;
               if (skipDomProperties[prop]) continue;
               if (prop.toUpperCase() == prop) continue;
@@ -343,7 +347,7 @@ dwr.util.toDescriptiveString = function(data, showLevels, options) {
   };
   
   return recursive(data, showLevels, 0, opt);
-}
+};
 
 /**
  * Setup a GMail style loading message.
@@ -364,6 +368,11 @@ dwr.util.useLoadingMessage = function(message) {
       disabledZone.style.top = "0px";
       disabledZone.style.width = "100%";
       disabledZone.style.height = "100%";
+      // IE need a background color to block click. Use an invisible background.
+      if (window.ActiveXObject) {
+        disabledZone.style.background = "white";
+        disabledZone.style.filter = "alpha(opacity=0)";
+      }
       document.body.appendChild(disabledZone);
       var messageZone = document.createElement('div');
       messageZone.setAttribute('id', 'messageZone');
@@ -374,7 +383,7 @@ dwr.util.useLoadingMessage = function(message) {
       messageZone.style.color = "white";
       messageZone.style.fontFamily = "Arial,Helvetica,sans-serif";
       messageZone.style.padding = "4px";
-      disabledZone.appendChild(messageZone);
+      document.body.appendChild(messageZone);
       var text = document.createTextNode(loadingMessage);
       messageZone.appendChild(text);
       dwr.util._disabledZoneUseCount = 1;
@@ -383,12 +392,14 @@ dwr.util.useLoadingMessage = function(message) {
       dwr.util.byId('messageZone').innerHTML = loadingMessage;
       disabledZone.style.visibility = 'visible';
       dwr.util._disabledZoneUseCount++;
+      dwr.util.byId('messageZone').style.visibility = 'visible';
     }
   });
   dwr.engine.setPostHook(function() {
     dwr.util._disabledZoneUseCount--;
     if (dwr.util._disabledZoneUseCount == 0) {
       dwr.util.byId('disabledZone').style.visibility = 'hidden';
+      dwr.util.byId('messageZone').style.visibility = 'hidden';
     }
   });
 };
@@ -411,7 +422,7 @@ dwr.util._yellowFadeProcess = function(ele, colorIndex) {
   ele = dwr.util.byId(ele);
   if (colorIndex < dwr.util._yellowFadeSteps.length) {
     ele.style.backgroundColor = "#ffff" + dwr.util._yellowFadeSteps[colorIndex];
-    setTimeout("dwr.util._yellowFadeProcess('" + ele.id + "'," + (colorIndex + 1) + ")", 200);
+    setTimeout("dwr.util._yellowFadeProcess('" + dwr.util._getId(ele) + "'," + (colorIndex + 1) + ")", 200);
   }
   else {
     ele.style.backgroundColor = "transparent";
@@ -431,7 +442,7 @@ dwr.util._borderFadeProcess = function(ele, colorIndex) {
   ele = dwr.util.byId(ele);
   if (colorIndex < dwr.util._borderFadeSteps.length) {
     ele.style.borderColor = "#ff" + dwr.util._borderFadeSteps[colorIndex] + dwr.util._borderFadeSteps[colorIndex];
-    setTimeout("dwr.util._borderFadeProcess('" + ele.id + "'," + (colorIndex + 1) + ")", 200);
+    setTimeout("dwr.util._borderFadeProcess('" + dwr.util._getId(ele) + "'," + (colorIndex + 1) + ")", 200);
   }
   else {
     ele.style.backgroundColor = "transparent";
@@ -470,18 +481,9 @@ dwr.util.highlight = function(ele, options) {
 dwr.util.setValue = function(ele, val, options) {
   if (val == null) val = "";
   if (options == null) options = {};
-  if (dwr.util._shouldEscapeHtml(options) && typeof(val) == "string") {
-    val = dwr.util.escapeHtml(val);
-  }
 
   var orig = ele;
-  if (typeof ele == "string") {
-    ele = dwr.util.byId(ele);
-    // We can work with names and need to sometimes for radio buttons, and IE has
-    // an annoying bug where getElementById() returns an element based on name if
-    // it doesn't find it by id. Here we don't want to do that, so:
-    if (ele && ele.id != orig) ele = null;
-  }
+  ele = dwr.util.byId(ele); // Returns null if argument is a name, even on IE
   var nodes = null;
   if (ele == null) {
     // Now it is time to look by name
@@ -512,14 +514,16 @@ dwr.util.setValue = function(ele, val, options) {
           if (dwr.util._isArray(val)) {
             node.checked = false;
             for (var j = 0; j < val.length; j++)
-              if (val[i] == node.value) node.checked = true;
+              if (val[j] == node.value) node.checked = true;
           }
           else {
             node.checked = (node.value == val);
           }
         }
       }
-      else ele.checked = (val == true);
+      else {
+        ele.checked = (val == true);
+      }
     }
     else ele.value = val;
 
@@ -528,6 +532,11 @@ dwr.util.setValue = function(ele, val, options) {
 
   if (dwr.util._isHTMLElement(ele, "textarea")) {
     ele.value = val;
+    return;
+  }
+
+  if (dwr.util._isHTMLElement(ele, "img")) {
+    ele.src = val;
     return;
   }
 
@@ -540,8 +549,15 @@ dwr.util.setValue = function(ele, val, options) {
     return;
   }
 
-  // Fall back to innerHTML
-  ele.innerHTML = val;
+  // Fall back to innerHTML and friends
+  if (dwr.util._shouldEscapeHtml(options)) {
+    if ("textContent" in ele) ele.textContent = val.toString();
+    else if ("innerText" in ele) ele.innerText = val.toString();
+    else ele.innerHTML = dwr.util.escapeHtml(val.toString());
+  }
+  else {
+    ele.innerHTML = val;
+  }
 };
 
 /**
@@ -552,7 +568,7 @@ dwr.util.setValue = function(ele, val, options) {
 dwr.util._selectListItems = function(ele, val) {
   // We deal with select list elements by selecting the matching option
   // Begin by searching through the values
-  var found  = false;
+  var found  = 0;
   var i;
   var j;
   for (i = 0; i < ele.options.length; i++) {
@@ -560,11 +576,12 @@ dwr.util._selectListItems = function(ele, val) {
     for (j = 0; j < val.length; j++) {
       if (ele.options[i].value == val[j]) {
         ele.options[i].selected = true;
+        found++;
       }
     }
   }
   // If that fails then try searching through the visible text
-  if (found) return;
+  if (found == val.length) return;
 
   for (i = 0; i < ele.options.length; i++) {
     for (j = 0; j < val.length; j++) {
@@ -599,12 +616,7 @@ dwr.util._selectListItem = function(ele, val) {
   if (found) return;
 
   for (i = 0; i < ele.options.length; i++) {
-    if (ele.options[i].text == val) {
-      ele.options[i].selected = true;
-    }
-    else {
-      ele.options[i].selected = false;
-    }
+    ele.options[i].selected = (ele.options[i].text == val);
   }
 };
 
@@ -615,13 +627,7 @@ dwr.util._selectListItem = function(ele, val) {
 dwr.util.getValue = function(ele, options) {
   if (options == null) options = {};
   var orig = ele;
-  if (typeof ele == "string") {
-    ele = dwr.util.byId(ele);
-    // We can work with names and need to sometimes for radio buttons, and IE has
-    // an annoying bug where getElementById() returns an element based on name if
-    // it doesn't find it by id. Here we don't want to do that, so:
-    if (ele && ele.id != orig) ele = null;
-  }
+  ele = dwr.util.byId(ele); // Returns null if argument is a name, even on IE
   var nodes = null;
   if (ele == null) {
     // Now it is time to look by name
@@ -693,6 +699,9 @@ dwr.util.getValue = function(ele, options) {
       }
       return ele.checked;
     }
+    if (ele.type == "file") {
+      return ele;
+    }
     return ele.value;
   }
 
@@ -701,8 +710,8 @@ dwr.util.getValue = function(ele, options) {
   }
 
   if (dwr.util._shouldEscapeHtml(options)) {
-    if (ele.textContent) return ele.textContent;
-    else if (ele.innerText) return ele.innerText;
+    if ("textContent" in ele) return ele.textContent;
+    else if ("innerText" in ele) return ele.innerText;
   }
   return ele.innerHTML;
 };
@@ -738,20 +747,23 @@ dwr.util.getText = function(ele) {
  */
 dwr.util.setValues = function(data, options) {
   var prefix = "";
-  if (options && options.prefix) prefix = options.prefix;
-  if (options && options.idPrefix) prefix = options.idPrefix;
-  dwr.util._setValuesRecursive(data, prefix);
+  var depth = 100;
+  if (options && "prefix" in options) prefix = options.prefix;
+  if (options && "idPrefix" in options) prefix = options.idPrefix;
+  if (options && "depth" in options) depth = options.depth;
+  dwr.util._setValuesRecursive(data, prefix, depth, options);
 };
 
 /**
  * @private Recursive helper for setValues()
  */
-dwr.util._setValuesRecursive = function(data, idpath) {
+dwr.util._setValuesRecursive = function(data, idpath, depth, options) {
+  if (depth == 0) return;
   // Array containing objects -> add "[n]" to prefix and make recursive call
   // for each item object
   if (dwr.util._isArray(data) && data.length > 0 && dwr.util._isObject(data[0])) {
     for (var i = 0; i < data.length; i++) {
-      dwr.util._setValuesRecursive(data[i], idpath+"["+i+"]");
+      dwr.util._setValuesRecursive(data[i], idpath+"["+i+"]", depth-1, options);
     }
   }
   // Object (not array) -> handle nested object properties
@@ -759,9 +771,9 @@ dwr.util._setValuesRecursive = function(data, idpath) {
     for (var prop in data) {
       var subidpath = idpath ? idpath+"."+prop : prop;
       // Object (not array), or array containing objects -> call ourselves recursively
-      if (dwr.util._isObject(data[prop]) && !dwr.util._isArray(data[prop]) 
+      if (dwr.util._isObject(data[prop]) && !dwr.util._isArray(data[prop]) && !dwr.util._isDate(data[prop]) 
           || dwr.util._isArray(data[prop]) && data[prop].length > 0 && dwr.util._isObject(data[prop][0])) {
-        dwr.util._setValuesRecursive(data[prop], subidpath);
+        dwr.util._setValuesRecursive(data[prop], subidpath, depth-1, options);
       }
       // Functions -> skip
       else if (typeof data[prop] == "function") {
@@ -772,7 +784,7 @@ dwr.util._setValuesRecursive = function(data, idpath) {
       else {
         // Are there any elements with that id or name
         if (dwr.util.byId(subidpath) != null || document.getElementsByName(subidpath).length >= 1) {
-          dwr.util.setValue(subidpath, data[prop]);
+          dwr.util.setValue(subidpath, data[prop], options);
         }
       }
     }
@@ -793,9 +805,11 @@ dwr.util.getValues = function(data, options) {
   }
   else {
     var prefix = "";
-    if (options != null && options.prefix) prefix = options.prefix;
-    if (options != null && options.idPrefix) prefix = options.idPrefix;
-    dwr.util._getValuesRecursive(data, prefix);
+    var depth = 100;
+    if (options != null && "prefix" in options) prefix = options.prefix;
+    if (options != null && "idPrefix" in options) prefix = options.idPrefix;
+    if (options != null && "depth" in options) depth = options.depth;
+    dwr.util._getValuesRecursive(data, prefix, depth, options);
     return data;
   }
 };
@@ -808,11 +822,11 @@ dwr.util.getValues = function(data, options) {
 dwr.util.getFormValues = function(eleOrNameOrId) {
   var ele = null;
   if (typeof eleOrNameOrId == "string") {
-    ele = document.forms[eleOrNameOrId];
-    if (ele == null) ele = dwr.util.byId(eleOrNameOrId);
+    ele = document.forms[eleOrNameOrId]; // arg is name
+    if (ele == null) ele = dwr.util.byId(eleOrNameOrId); // arg is id
   }
   else if (dwr.util._isHTMLElement(eleOrNameOrId)) {
-    ele = eleOrNameOrId;
+    ele = eleOrNameOrId; // arg is element
   }
   if (ele != null) {
     if (ele.elements == null) {
@@ -842,12 +856,13 @@ dwr.util.getFormValues = function(eleOrNameOrId) {
 /**
  * @private Recursive helper for getValues().
  */
-dwr.util._getValuesRecursive = function(data, idpath) {
+dwr.util._getValuesRecursive = function(data, idpath, depth, options) {
+  if (depth == 0) return;
   // Array containing objects -> add "[n]" to idpath and make recursive call
   // for each item object
   if (dwr.util._isArray(data) && data.length > 0 && dwr.util._isObject(data[0])) {
     for (var i = 0; i < data.length; i++) {
-      dwr.util._getValuesRecursive(data[i], idpath+"["+i+"]");
+      dwr.util._getValuesRecursive(data[i], idpath+"["+i+"]", depth-1, options);
     }
   }
   // Object (not array) -> handle nested object properties
@@ -857,7 +872,7 @@ dwr.util._getValuesRecursive = function(data, idpath) {
       // Object, or array containing objects -> call ourselves recursively
       if (dwr.util._isObject(data[prop]) && !dwr.util._isArray(data[prop])
           || dwr.util._isArray(data[prop]) && data[prop].length > 0 && dwr.util._isObject(data[prop][0])) {
-        dwr.util._getValuesRecursive(data[prop], subidpath);
+        dwr.util._getValuesRecursive(data[prop], subidpath, depth-1, options);
       }
       // Functions -> skip
       else if (typeof data[prop] == "function") {
@@ -889,46 +904,73 @@ dwr.util.addOptions = function(ele, data/*, options*/) {
     return;
   }
   if (data == null) return;
+  
+  var argcount = arguments.length;
+  var options = {};
+  var lastarg = arguments[argcount - 1]; 
+  if (argcount > 2 && dwr.util._isObject(lastarg)) {
+    options = lastarg;
+    argcount--;
+  }
+  var arg3 = null; if (argcount >= 3) arg3 = arguments[2];
+  var arg4 = null; if (argcount >= 4) arg4 = arguments[3];
+  if (!options.optionCreator && useOptions) options.optionCreator = dwr.util._defaultOptionCreator;
+  if (!options.optionCreator && useLi) options.optionCreator = dwr.util._defaultListItemCreator;
+  options.document = ele.ownerDocument;
 
   var text, value, li;
   if (dwr.util._isArray(data)) {
     // Loop through the data that we do have
     for (var i = 0; i < data.length; i++) {
+      options.data = data[i];
+      options.text = null;
+      options.value = null;
       if (useOptions) {
-        if (arguments[2] != null) {
-          if (arguments[3] != null) {
-            text = dwr.util._getValueFrom(data[i], arguments[3]);
-            value = dwr.util._getValueFrom(data[i], arguments[2]);
+        if (arg3 != null) {
+          if (arg4 != null) {
+            options.text = dwr.util._getValueFrom(data[i], arg4);
+            options.value = dwr.util._getValueFrom(data[i], arg3);
           }
-          else text = value = dwr.util._getValueFrom(data[i], arguments[2]);
+          else options.text = options.value = dwr.util._getValueFrom(data[i], arg3);
         }
-        else text = value = dwr.util._getValueFrom(data[i], arguments[3]);
+        else options.text = options.value = dwr.util._getValueFrom(data[i]);
 
-        if (text != null || value) ele.options[ele.options.length] = new Option(text, value);
+        if (options.text != null || options.value) {
+          var opt = options.optionCreator(options);
+          opt.text = options.text;
+          opt.value = options.value;
+          ele.options[ele.options.length] = opt;
+        }
       }
       else {
-        value = dwr.util._getValueFrom(data[i], arguments[2]);
-        if (value != null) {
-          li = document.createElement("li");
-          if (dwr.util._shouldEscapeHtml(arguments[3])) {
-            value = dwr.util.escapeHtml(value);
+        options.value = dwr.util._getValueFrom(data[i], arg3);
+        if (options.value != null) {
+          li = options.optionCreator(options);
+          if (dwr.util._shouldEscapeHtml(options)) {
+            options.value = dwr.util.escapeHtml(options.value);
           }
-          li.innerHTML = value;
+          li.innerHTML = options.value;
           ele.appendChild(li);
         }
       }
     }
   }
-  else if (arguments[3] != null) {
+  else if (arg4 != null) {
     if (!useOptions) {
       alert("dwr.util.addOptions can only create select lists from objects.");
       return;
     }
     for (var prop in data) {
-      value = dwr.util._getValueFrom(data[prop], arguments[2]);
-      text = dwr.util._getValueFrom(data[prop], arguments[3]);
+      options.data = data[prop];
+      options.value = dwr.util._getValueFrom(data[prop], arg3);
+      options.text = dwr.util._getValueFrom(data[prop], arg4);
 
-      if (text || value) ele.options[ele.options.length] = new Option(text, value);
+      if (options.text != null || options.value) {
+        var opt = options.optionCreator(options);
+        opt.text = options.text;
+        opt.value = options.value;
+        ele.options[ele.options.length] = opt;
+      }
     }
   }
   else {
@@ -937,15 +979,27 @@ dwr.util.addOptions = function(ele, data/*, options*/) {
       return;
     }
     for (var prop in data) {
-      if (typeof data[prop] != "function") {
-        if (arguments[2]) ele.options[ele.options.length] = new Option(prop, data[prop]);
-        else ele.options[ele.options.length] = new Option(data[prop], prop);
+      if (typeof data[prop] == "function") continue;
+      options.data = data[prop];
+      if (arg3 == null) {
+        options.value = prop;
+        options.text = data[prop];
+      }
+      else {
+        options.value = data[prop];
+        options.text = prop;
+      }
+      if (options.text != null || options.value) {
+        var opt = options.optionCreator(options);
+        opt.text = options.text;
+        opt.value = options.value;
+        ele.options[ele.options.length] = opt;
       }
     }
   }
 
   // All error routes through this function result in a return, so highlight now
-  dwr.util.highlight(ele, null); // TODO: forward options instead of null 
+  dwr.util.highlight(ele, options); 
 };
 
 /**
@@ -955,6 +1009,20 @@ dwr.util._getValueFrom = function(data, method) {
   if (method == null) return data;
   else if (typeof method == 'function') return method(data);
   else return data[method];
+};
+
+/**
+ * @private Default option creation function
+ */
+dwr.util._defaultOptionCreator = function(options) {
+  return options.document.createElement("option");
+};
+
+/**
+ * @private Default list item creation function
+ */
+dwr.util._defaultListItemCreator = function(options) {
+  return options.document.createElement("li");
 };
 
 /**
@@ -994,6 +1062,7 @@ dwr.util.addRows = function(ele, data, cellFuncs, options) {
   if (!options) options = {};
   if (!options.rowCreator) options.rowCreator = dwr.util._defaultRowCreator;
   if (!options.cellCreator) options.cellCreator = dwr.util._defaultCellCreator;
+  options.document = ele.ownerDocument;
   var tr, rowNum;
   if (dwr.util._isArray(data)) {
     for (rowNum = 0; rowNum < data.length; rowNum++) {
@@ -1024,6 +1093,11 @@ dwr.util.addRows = function(ele, data, cellFuncs, options) {
 };
 
 /**
+ * @private The contents we put in empty table cells to workaround IE's border bug.
+ */
+dwr.util._emptyTableCellReplacement = "<div style='width:0;height:0;overflow:hidden;'></div>";
+
+/**
  * @private Internal function to draw a single row of a table.
  */
 dwr.util._addRowInner = function(cellFuncs, options) {
@@ -1036,7 +1110,7 @@ dwr.util._addRowInner = function(cellFuncs, options) {
     options.cellNum = cellNum;
     var td = options.cellCreator(options);
     if (td != null) {
-      if (options.data != null) {
+      if ("data" in options) {
         if (dwr.util._isHTMLElement(options.data)) td.appendChild(options.data);
         else {
           if (dwr.util._shouldEscapeHtml(options) && typeof(options.data) == "string") {
@@ -1046,6 +1120,9 @@ dwr.util._addRowInner = function(cellFuncs, options) {
             td.innerHTML = options.data;
           }
         }
+      }
+      else {
+        td.innerHTML = dwr.util._emptyTableCellReplacement;
       }
       tr.appendChild(td);
     }
@@ -1057,14 +1134,14 @@ dwr.util._addRowInner = function(cellFuncs, options) {
  * @private Default row creation function
  */
 dwr.util._defaultRowCreator = function(options) {
-  return document.createElement("tr");
+  return options.document.createElement("tr");
 };
 
 /**
  * @private Default cell creation function
  */
 dwr.util._defaultCellCreator = function(options) {
-  return document.createElement("td");
+  return options.document.createElement("td");
 };
 
 /**
@@ -1144,7 +1221,7 @@ dwr.util.cloneNode = function(ele, options) {
   if (ele == null) return null;
   if (options == null) options = {};
   var clone = ele.cloneNode(true);
-  if (options.idPrefix || options.idSuffix) {
+  if ("idPrefix" in options || "idSuffix" in options) {
     dwr.util._updateIds(clone, options);
   }
   else {
@@ -1159,8 +1236,11 @@ dwr.util.cloneNode = function(ele, options) {
  */
 dwr.util._updateIds = function(ele, options) {
   if (options == null) options = {};
-  if (ele.id) {
-    ele.setAttribute("id", (options.idPrefix || "") + ele.id + (options.idSuffix || ""));
+  if (dwr.util._getId(ele)) {
+    ele.setAttribute("id", 
+      ("idPrefix" in options ? options.idPrefix : "") 
+      + dwr.util._getId(ele) 
+      + ("idSuffix" in options ? options.idSuffix : ""));
   }
   var children = ele.childNodes;
   for (var i = 0; i < children.length; i++) {
@@ -1175,7 +1255,7 @@ dwr.util._updateIds = function(ele, options) {
  * @private Remove all the Ids from an element
  */
 dwr.util._removeIds = function(ele) {
-  if (ele.id) ele.removeAttribute("id");
+  if (dwr.util._getId(ele)) ele.removeAttribute("id");
   var children = ele.childNodes;
   for (var i = 0; i < children.length; i++) {
     var child = children.item(i);
@@ -1197,7 +1277,7 @@ dwr.util.cloneNodeForValues = function(templateEle, data, options) {
   if (options.idPrefix != null)
     idpath = options.idPrefix;
   else
-    idpath = templateEle.id || ""; 
+    idpath = dwr.util._getId(templateEle) || ""; 
   return dwr.util._cloneNodeForValuesRecursive(templateEle, data, idpath, options);
 };
 
@@ -1227,7 +1307,7 @@ dwr.util._cloneNodeForValuesRecursive = function(templateEle, data, idpath, opti
         clone.style[propname] = options.updateCloneStyle[propname];
       }
     }
-    dwr.util._replaceIds(clone, templateEle.id, idpath);
+    dwr.util._replaceIds(clone, dwr.util._getId(templateEle), idpath);
     templateEle.parentNode.insertBefore(clone, templateEle);
     dwr.util._cloneSubArrays(data, idpath, options);
     return clone;
@@ -1242,16 +1322,17 @@ dwr.util._cloneNodeForValuesRecursive = function(templateEle, data, idpath, opti
  * element ids tree, and remove ids that don't match the idpath. 
  */
 dwr.util._replaceIds = function(ele, oldidpath, newidpath) {
-  if (ele.id) {
+  var currId = dwr.util._getId(ele);
+  if (currId) {
     var newId = null;
-    if (ele.id == oldidpath) {
+    if (currId == oldidpath) {
       newId = newidpath;
     }
-    else if (ele.id.length > oldidpath.length) {
-      if (ele.id.substr(0, oldidpath.length) == oldidpath) {
-        var trailingChar = ele.id.charAt(oldidpath.length);
+    else if (currId.length > oldidpath.length) {
+      if (currId.substr(0, oldidpath.length) == oldidpath) {
+        var trailingChar = currId.charAt(oldidpath.length);
         if (trailingChar == "." || trailingChar == "[") {
-          newId = newidpath + ele.id.substr(oldidpath.length);
+          newId = newidpath + currId.substr(oldidpath.length);
         }
       }
     }
@@ -1294,7 +1375,7 @@ dwr.util._cloneSubArrays = function(data, idpath, options) {
       dwr.util._cloneSubArrays(value, idpath + "." + prop, options);
     }
   }
-}
+};
 
 /**
  * @private Helper to turn a string into an element with an error message
@@ -1358,17 +1439,44 @@ dwr.util._isObject = function(data) {
 };
 
 /**
- * @private Array detector.
+ * @private Array detector. Note: instanceof doesn't work with multiple frames.
  */
 dwr.util._isArray = function(data) {
-  return (data && data.join);
+  return (data && Object.prototype.toString.call(data)=="[object Array]");
 };
 
 /**
- * @private Date detector.
+ * @private Array like detector. Note: instanceof doesn't work with multiple frames.
+ */
+dwr.util._isArrayLike = function(data) {
+  return data 
+    && (typeof data.length == "number") // must have .length
+    && ((data.propertyIsEnumerable && data.propertyIsEnumerable("length")==false) || !data.constructor || data!="[object Object]") // .length must be native prop
+    && !dwr.util._isString(data) // don't be fooled by string
+    && !dwr.util._isFunction(data) // don't be fooled by function
+    && !data.tagName; // don't be fooled by elements
+};
+
+/**
+ * @private String detector.
+ */
+dwr.util._isString = function(data) {
+  return (data && (typeof data == "string" || Object.prototype.toString.call(data) == "[object String]"));
+};
+
+/**
+ * @private Function detector.
+ */
+dwr.util._isFunction = function(data) {
+  return (data && (typeof data == "function" || Object.prototype.toString.call(data) == "[object Function]") 
+    && data != "[object NodeList]"); // need to workaround NodeList on Safari
+};
+
+/**
+ * @private Date detector. Note: instanceof doesn't work with multiple frames.
  */
 dwr.util._isDate = function(data) {
-  return (data && data instanceof Date);
+  return (data && Object.prototype.toString.call(data)=="[object Date]");
 };
 
 /**
@@ -1387,7 +1495,7 @@ dwr.util._importNode = function(doc, importedNode, deep) {
       }
     }
 
-    if (typeof importedNode.style != "undefined") {
+    if (importedNode.style != null) {
       newNode.style.cssText = importedNode.style.cssText;
     }
   }
