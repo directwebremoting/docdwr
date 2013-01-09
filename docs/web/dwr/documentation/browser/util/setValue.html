@@ -19,6 +19,24 @@ function doSetValue()
 
 <p><code>dwr.util.setValue(id, value, <a href="escapeHtml.html">options</a>)</code> finds the element with the id specified in the first parameter and alters its contents to be the value in the second parameter.</p>
 
+<p>By default DWR protects against XSS in dwr.util.setValue by performing output escaping. The optional options object parameter allows output escaping to be disabled <a href='escapeHtml.html'>{ escapeHtml:false }</a>.</p><p>For example:</p>
+
+<pre>
+&lt;span id="x"&gt;&lt;/span&gt;
+
+dwr.util.setValue('x', "&lt;b&gt;Hi&lt;/b&gt;");
+</pre>
+
+<p>Will create a span that looks like this: <span>&lt;b&gt;Hi&lt;/b&gt;</span>. But on the other hand, this:</p>
+
+<pre>
+&lt;span id="x"&gt;&lt;/span&gt;
+
+dwr.util.setValue('x', "&lt;b&gt;Hi&lt;/b&gt;", { escapeHtml:false });
+</pre>
+
+<p>Will create a span that looks like this:<span><b>Hi</b></span></p>
+
 <p>This method works for almost all HTML elements including selects (where the option with a matching value and not text is selected), input elements (including textareas) divs and spans.</p>
 
 <p>For example:</p>
@@ -100,29 +118,9 @@ function doSetValue()
 
 <!-- END COPIED BLOCK -->
 
-<h3>More Information</h3>
-
-<p>setValue() allows use of an options object which allows the <a href='escapeHtml.html'>escapeHtml:false</a> option to prevent DWR from performing output escaping. For example:</p>
-
-<pre>
-&lt;span id="x"&gt;&lt;/span&gt;
-
-dwr.util.setValue('x', "&lt;b&gt;Hi&lt;/b&gt;");
-</pre>
-
-<p>Will create a span that looks like this: <span>&lt;b&gt;Hi&lt;/b&gt;</span>. But on the other hand, this:</p>
-
-<pre>
-&lt;span id="x"&gt;&lt;/span&gt;
-
-dwr.util.setValue('x', "&lt;b&gt;Hi&lt;/b&gt;", { escapeHtml:false });
-</pre>
-
-<p>Will create a span that looks like this:<span><b>Hi</b></span></p>
-
 <h3>See Also</h3>
 
-<p>See also <code>setValue<b>s</b>()</code> and the corresponding <code>getValue[s]()</code> methods.</p>
+<p>See also <a href="setValues.html"><code>setValue<b>s</b>()</code></a> and the corresponding <a href="getValue.html"><code>getValue[s]()</code></a> methods.</p>
 
 </body>
 </html>

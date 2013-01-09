@@ -19,6 +19,8 @@ function doGetValue() {
 
 <p><code>dwr.util.getValue(id, <a href="escapeHtml.html">options</a>)</code> is the read version of <code>setValue()</code>. This gets the values out of the HTML elements without you needing to worry about how a selection list differs from a div.</p>
 
+<p>By default DWR protects against XSS in dwr.util.getValue by escaping potentially dangerous characters. The optional options object parameter allows output escaping to be disabled. Please see the <a href='escapeHtml.html'>escapeHtml page</a> for more information.</p>
+
 <p>This method works for most HTML elements including selects (where the option with a matching value and not text is selected), input elements (including textareas) divs and spans.</p>
 
 <p>For example:</p>

@@ -40,7 +40,8 @@
          }
       </script>
       <h1>dwr.util.setValues(object/array, options)</h1>
-      <p>Similar to setValue except that the input can be either a Javascript object or an array of Javascript objects.  The objects should contain name/value pairs. The names are assumed to be the IDs of HTML elements, and the values, what we should set the contents of the elements.</p>
+      <p>Similar to <a href="setValue.html">setValue</a> except that the input can be either a Javascript object or an array of Javascript objects.  The objects should contain name/value pairs. The names are assumed to be the IDs of HTML elements, and the values, what we should set the contents of the elements.</p>
+      <p>By default DWR protects against XSS in dwr.util.setValues by performing output escaping. The optional options object parameter allows output escaping to be disabled. Please see the <a href='escapeHtml.html'>escapeHtml page</a> for more information.</p>
       <ul>
       	<li><a href="#setValuesObjectLink">dwr.util.setValues(object)</a> - An example of using setValues to populate a form with object values.</li>
       	<li><a href="#setValuesArrayLink">dwr.util.setValues(array, { idPrefix : 'yourPrefixHere' }</a> - An example of populating several div/spans with an array of object values.</li>
