@@ -20,6 +20,7 @@
   <li>For DWR 1.x the Javascript libraries had the prefixes DWREngine and DWRUtil. These were deprecated in version 2.0 in favor of dwr.engine and dwr.util. In version 3.0, the prefixes DWREngine and DWRUtil have been removed. The best way to upgrade is to change all code to use the new method. Alternatively you can use the two-liner: <code>DWREngine = dwr.engine; DWRUtil = dwr.util;</code> to re-enable the old behavior.</li>
   <li>DWR 3.0 RC2 requires that engine.js is included before the DWR interface JavaScript files.</li>
   <li>DWR 3.0 RC2 - If you are using Jetty 6 with reverse AJAX you will need to either upgrade to Jetty 7+ or follow the directions here: <a href="http://www.butterdev.com/dwr/2010/01/dwr-3-x-and-jetty-continuations-on-jetty-6-x/">http://www.butterdev.com/dwr/2010/01/dwr-3-x-and-jetty-continuations-on-jetty-6-x/</a>.  Due to changes in the Jetty Continuation API.
+  <li>DOMConverter - If you are using the DOMConverter it will now return either an Element or a Document based on the type of data.  Prior to 3.x the DOMConverter always returned a Document.</li>
   <li>Spring Schema Change - Creator configuration is no longer allowed inside the dwr:configuration element.  Please see <a href="http://dwr.2114559.n2.nabble.com/Creators-in-a-Spring-context-tt4432553.html">this discussion on the mailing list</a> for more information.</li>
 </ul>
 
