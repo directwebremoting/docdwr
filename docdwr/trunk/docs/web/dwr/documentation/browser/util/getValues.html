@@ -24,6 +24,8 @@ function doGetValues() {
 
 <p>getValues(object, <a href="escapeHtml.html">options</a>) is similar to getValue(id, <a href="escapeHtml.html">options</a>) except that the input is a Javascript object that contains name/value pairs. The names are assumed to be the IDs of HTML elements, and the values are altered to reflect the contents of those IDs. This method does not return the object in question, it alters the value that you pass to it.</p>
 
+<p>By default DWR protects against XSS in dwr.util.getValues by escaping potentially dangerous characters. The optional options object parameter allows output escaping to be disabled. Please see the <a href='escapeHtml.html'>escapeHtml page</a> for more information.</p>
+
 <!--break-->
 
 <p>

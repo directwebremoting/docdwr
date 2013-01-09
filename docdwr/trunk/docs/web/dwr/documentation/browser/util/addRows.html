@@ -27,6 +27,8 @@ for each member in array
     create cell from cellfunc(array[i])
 </pre>
 
+<p>By default DWR protects against XSS in dwr.util.addRows by performing output escaping. The optional options object parameter allows output escaping to be disabled. Please see the <a href='escapeHtml.html'>escapeHtml page</a> for more information.</p>
+
 <h5>Parameters:</h5>
 
 <ul>
