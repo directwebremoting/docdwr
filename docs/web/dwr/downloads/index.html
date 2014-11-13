@@ -25,37 +25,37 @@ instructions.</p>
 	<li><a href="#ciBuilds">CI builds</a></li>
 </ul>
 
-<h2><a name="devRelease"></a>Development Release: Version 3 release candidate 2 (3.0 RC2)</h2>
+<h2><a name="devRelease"></a>Development Release: Version 3 release candidate 3 (3.0 RC3)</h2>
 
 <p>DWR version 3 is under development. This is the current best version of DWR.</p>
 <table class="rowed">
   <tbody>
     <tr>
       <th>Download</th>
-      <th>Version 3.0.RC2</th>
+      <th>Version 3.0.RC3</th>
       <th>Notes</th>
     </tr>
     <tr>
       <td><b>JAR File</b>:</td>
-      <td><a href="http://java.net/projects/dwr/downloads/download/DWR_3.x/3.0_RC2/dwr.jar">dwr.jar</a>
+      <td><a href="http://java.net/projects/dwr/downloads/download/DWR_3.x/3.0_RC3/dwr.jar">dwr.jar</a>
       <small>(1.1Mb)</small></td>
       <td>To DWR enable your web-app</td>
     </tr>
     <tr>
       <td><b>WAR File (DWR Demo application)</b>:</td>
-      <td><a href="http://java.net/projects/dwr/downloads/download/DWR_3.x/3.0_RC2/dwr.war">dwr.war</a>
+      <td><a href="http://java.net/projects/dwr/downloads/download/DWR_3.x/3.0_RC3/dwrdemo.war">dwrdemo.war</a>
       <small>(13.1Mb)</small></td>
       <td>Demos/Examples of what DWR can do</td>
     </tr>
     <tr>
       <td><b>Sources</b>:</td>
-      <td><a href="http://java.net/projects/dwr/downloads/download/DWR_3.x/3.0_RC2/dwr-src.jar">dwr-src.jar</a>
+      <td><a href="http://java.net/projects/dwr/downloads/download/DWR_3.x/3.0_RC3/dwr-src.jar">dwr-src.jar</a>
       <small>(863.5Mb)</small></td>
       <td>See also the sources from SVN</td>
     </tr>
     <tr>
       <td><b>Non-CLA JAR</b>:</td>
-      <td><a href="http://java.net/projects/dwr/downloads/download/DWR_3.x/3.0_RC2/dwr-noncla.jar">dwr-noncla.jar</a>
+      <td><a href="http://java.net/projects/dwr/downloads/download/DWR_3.x/3.0_RC3/dwr-noncla.jar">dwr-noncla.jar</a>
       <small>(18.1kb)</small></td>
       <td>Code that we don't have a CLA for</td>
     </tr>
@@ -89,14 +89,13 @@ instructions.</p>
 
 <h2><a name="maven"></a>Maven</h2>
 
-<p>At the time of our last development build (3.0 RC2) we did not have a process in place to upload artifacts to Maven Central.  If you are a Maven user and want to use 3.0 RC2 we recommend that you download the DWR artifacts and install them into your local Maven repository.  We DO NOT recommend using the 3.0.M1 release that is in Maven Central.  We apologize for the inconvenience and this will be resolved for our next release as a process is now in place.</p>
-<p>Our latest 2.x releases are in Maven Central.  You may also download the latest development Snapshots from <a href="https://oss.sonatype.org/content/repositories/snapshots/org/directwebremoting/dwr/">Sonatype's OSS repository</a>.  Below is a pom snippet for pulling in the latest 3.0.0-rc3 development snapshot from Sonatype's OSS repository.
+<p>Our latest 2.x and 3.x releases are in Maven Central.  You may also download the latest development Snapshots from <a href="https://oss.sonatype.org/content/repositories/snapshots/org/directwebremoting/dwr/">Sonatype's OSS repository</a>.  Below is a pom snippet for pulling in the 3.0.0 development snapshot from Sonatype's OSS repository.
 
 <pre>
   &lt;dependency&gt;
     &lt;groupId&gt;org.directwebremoting&lt;/groupId&gt;
     &lt;artifactId&gt;dwr&lt;/artifactId&gt;
-    &lt;version&gt;3.0.0-rc3-SNAPSHOT&lt;/version&gt;
+    &lt;version&gt;3.0.0-SNAPSHOT&lt;/version&gt;
   &lt;/dependency&gt;
 
   &lt;dependency>
@@ -104,7 +103,7 @@ instructions.</p>
     &lt;groupId&gt;org.directwebremoting&lt;/groupId&gt;
     &lt;artifactId&gt;dwr&lt;/artifactId&gt;
     &lt;classifier&gt;noncla&lt;/classifier&gt;
-    &lt;version&gt;3.0.0-rc3-SNAPSHOT&lt;/version&gt;
+    &lt;version&gt;3.0.0-SNAPSHOT&lt;/version&gt;
   &lt;/dependency&gt;
 
   &lt;repositories&gt;
