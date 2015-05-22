@@ -183,25 +183,14 @@ var person2 = new Employee();
 
 <p>All of this is possible because by default DWR will add the JavaScript types for each mapping to every interface proxy script - see <a href="../../servlet/index.html#generateDtoClasses">this page for more configuration options.</a></p>
 
-<p>It is worth noting that DWR does not set up inheritance between generated JavaScript
-classes, so <code>instanceof</code> tests will result in:</p>
+<p>It is worth noting that DWR sets up inheritance between generated JavaScript
+classes, so <code>instanceof</code> tests will produce the expected results:</p>
 
 <pre>
 person1 instanceof Person // true
 person1 instanceof Employee // false
-person2 instanceof Person // false (unexpected!)
-person2 instanceof Employee // true
-</pre>
-
-<p>This is solved by setting up Employee's prototype chain in JavaScript before the 
-first objects are created:</p>
-
-<pre>
-// Set up Employee to inherit from Person
-Employee.prototype = new Person();
-Employee.prototype.constructor = Employee;
-...
 person2 instanceof Person // true
+person2 instanceof Employee // true
 </pre>
 
 <h2><a name="lightweightMapping"></a>Mapping Java classes to JavaScript classes (Lightweight)</h2>
