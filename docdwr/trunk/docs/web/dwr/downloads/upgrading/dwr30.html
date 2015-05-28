@@ -12,11 +12,13 @@
 
 <p>If you are upgrading from a version prior to 2.0, see the full upgrade notes.</p>
 
+<p>DWR 3.0.0 is a major release containing <a href="https://directwebremoting.atlassian.net/browse/DWR-649?filter=10180">hundreds of bug fixes</a>.  This list may not be exhaustive.  If you run into issues not reported here please let us know on the <a href="../support/index.html#">dwr-users mailing list</a>.</p>
+
 <p>These are the changes that you must make to upgrade from version 2.0 to version 3.0:</p>
 
 <ul>
-  <li>For DWR 1.x the Javascript libraries had the prefixes DWREngine and DWRUtil. These were deprecated in version 2.0 in favor of dwr.engine and dwr.util. In version 3.0, the prefixes DWREngine and DWRUtil have been removed. The best way to upgrade is to change all code to use the new method. Alternatively you can use the two-liner: <code>DWREngine = dwr.engine; DWRUtil = dwr.util;</code> to re-enable the old behavior.</li>
   <li>Starting with DWR 3.0 RC2 engine.js must be included before the DWR interface JavaScript files.</li>
+  <li>For DWR 1.x the Javascript libraries had the prefixes DWREngine and DWRUtil. These were deprecated in version 2.0 in favor of dwr.engine and dwr.util. In version 3.0, the prefixes DWREngine and DWRUtil have been removed. The best way to upgrade is to change all code to use the new method. Alternatively you can use the two-liner: <code>DWREngine = dwr.engine; DWRUtil = dwr.util;</code> to re-enable the old behavior.</li>
   <li>Starting with DWR 3.0 RC2 if you are using Jetty 6 with reverse AJAX you will need to either upgrade to Jetty 7+ or follow the directions here: <a href="http://www.butterdev.com/dwr/2010/01/dwr-3-x-and-jetty-continuations-on-jetty-6-x/">http://www.butterdev.com/dwr/2010/01/dwr-3-x-and-jetty-continuations-on-jetty-6-x/</a>.  Due to changes in the Jetty Continuation API.
   <li>Starting with DWR 3.0 RC3 full streaming is now the default for browsers that support it. Use the maxWaitAfterWrite setting if desired to go back to Early Close Mode for all connections.</li>
   <li>DOMConverters - If you are using a DOMConverter (DOM4JConverter.java, DOMConverter.java, JDOMConverter.java or XOMConverter.java) it will now return either an Element or a Document based on the type of data. Prior to 3.x a DOMConverter always returned a Document.</li>
