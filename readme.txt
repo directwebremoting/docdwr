@@ -15,8 +15,13 @@ This project is not currently open sourced. All rights to the documentation
 provided is preserved by its authors. This means that you do not have the right
 to redistribute, build on, copy or publish any of the material in this project.
 The official publishing location is under http://directwebremoting.org/
-This restriction is in place to help the authors to potentially publish a book
-using this content.
+
+
+How to build files for publishing
+---------------------------------
+Just run the template/main/java/org.directwebremoting.doc.template.Generate 
+class. It requires a program argument of the location of the docs. That builds 
+out the docs in a target/publish dir.
 
 
 Editing Rules
